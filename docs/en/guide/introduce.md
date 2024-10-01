@@ -4,24 +4,23 @@
 
 `fluth` is a stream programming library based on `promise`.
 
-If we consider `promise` as a publisher and the `then` method as a subscriber,
+If we consider `promise` as a publisher and the `then` method as a subscriber, The publishing behavior of `promise` occurs only once.
 
-The publishing behavior of `promise` occurs only once. `fluth` enhances `promise`, allowing `promise` to publish continuously!
-
+`fluth` enhances `promise`, allowing `promise` to publish continuously!
 
 ```javascript
-import { Stream } from 'fluth'
+import { Stream } from "fluth";
 
-const promise$ = new Stream()
+const promise$ = new Stream();
 
 promise$.then(
-  (r) => console.log('resolve', r),
-  (e) => console.log('reject', e),
-)
+  (r) => console.log("resolve", r),
+  (e) => console.log("reject", e)
+);
 
-promise$.next(1)
-promise$.next(Promise.reject(2))
-promise$.next(3)
+promise$.next(1);
+promise$.next(Promise.reject(2));
+promise$.next(3);
 
 // Logs:
 // resolve 1
@@ -56,17 +55,16 @@ After adopting `fluth`, the original web-like reactive logic becomes traceable s
    - `rxjs` has rich `operators` to implement powerful data processing capabilities, but `observers` are concurrent
    - `fluth` is based on `promise` and is better at orchestrating `observers`
 
-
 ```javascript
 // rxjs:
-stream$.pipe(operator1).pipe(operator2).pipe(operator3)
-stream$.subscribe(observer1)
-stream$.subscribe(observer2)
-stream$.subscribe(observer3)
+stream$.pipe(operator1).pipe(operator2).pipe(operator3);
+stream$.subscribe(observer1);
+stream$.subscribe(observer2);
+stream$.subscribe(observer3);
 ```
 
 ```javascript
 //fluth:
-stream$.then(observer1).then(observer2).then(observer3)
-stream$.next(1)
+stream$.then(observer1).then(observer2).then(observer3);
+stream$.next(1);
 ```

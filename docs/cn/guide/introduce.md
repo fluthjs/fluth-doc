@@ -4,23 +4,23 @@
 
 `fluth`是一个基于`promise`的流式编程库。
 
-假如认为`promise`是发布者而`then`方法是订阅者，
+假如认为`promise`是发布者而`then`方法是订阅者，`promise`的发布行为则只有一次。
 
-`promise`的发布行为则只有一次，`fluth`加强了`promise`，让`promise`可以不断的发布！
+`fluth`加强了`promise`，让`promise`可以不断的发布！
 
 ```javascript
-import { Stream } from 'fluth'
+import { Stream } from "fluth";
 
-const promise$ = new Stream()
+const promise$ = new Stream();
 
 promise$.then(
-  (r) => console.log('resolve', r),
-  (e) => console.log('reject', e),
-)
+  (r) => console.log("resolve", r),
+  (e) => console.log("reject", e)
+);
 
-promise$.next(1)
-promise$.next(Promise.reject(2))
-promise$.next(3)
+promise$.next(1);
+promise$.next(Promise.reject(2));
+promise$.next(3);
 
 // Logs:
 // resolve 1
@@ -28,7 +28,7 @@ promise$.next(3)
 // resolve 3
 ```
 
-相比其他流式编程库，fluth更注重异步场景的流程处理，通过`fluth`可以轻松用流的方式组织异步逻辑，代码的语义和时序将更加清晰。
+相比其他流式编程库，fluth 更注重异步场景的流程处理，通过`fluth`可以轻松用流的方式组织异步逻辑，代码的语义和时序将更加清晰。
 
 ## 适用场景
 
@@ -46,7 +46,7 @@ promise$.next(3)
 
 ![image](/structure.drawio.png)
 
-## 对比rxjs
+## 对比 rxjs
 
 [rxjs](https://rxjs.dev/)是当前主流的流式编程库，和`fluth`相比而言有两个明显的区别：
 
@@ -57,14 +57,14 @@ promise$.next(3)
 
 ```javascript
 // rxjs:
-stream$.pipe(operator1).pipe(operator2).pipe(operator3)
-stream$.subscribe(observer1)
-stream$.subscribe(observer2)
-stream$.subscribe(observer3)
+stream$.pipe(operator1).pipe(operator2).pipe(operator3);
+stream$.subscribe(observer1);
+stream$.subscribe(observer2);
+stream$.subscribe(observer3);
 ```
 
 ```javascript
 //fluth:
-stream$.then(observer1).then(observer2).then(observer3)
-stream$.next(1)
+stream$.then(observer1).then(observer2).then(observer3);
+stream$.next(1);
 ```
