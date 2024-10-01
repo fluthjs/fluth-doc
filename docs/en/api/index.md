@@ -9,13 +9,13 @@ import Subjection from '../../components/subjection.vue'
 
 <Stream />
 
-The `then`, `thenOnce`, `catch`, and `finally` methods of a `Stream` instance all return [Subjection](#subjection) instances, enabling chain calls.
+The `then` and `thenOnce` methods of a `Stream` instance return [Subjection](#subjection) instances
 
 ## Subjection
 
 <Subjection />
 
-The `then`, `thenOnce`, `catch`, and `finally` methods of a `Subjection` instance all return [Subjection](#subjection) instances, enabling chain calls.
+The `then` and `thenOnce` methods of a `Subjection` instance also return [Subjection](#subjection) instances
 
 ## plugin
 
@@ -133,7 +133,7 @@ The `then`, `thenOnce`, `catch`, and `finally` methods of a `Subjection` instanc
 - Type
 
   ```typescript
-  finish: Promise<any>
+  finish: Promise<any>;
   ```
 
 - Details

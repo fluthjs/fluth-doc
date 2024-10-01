@@ -1,15 +1,15 @@
 # Basic Concepts
 
-## Streams
+## Stream
 
 In `fluth`, there are two types of streams: [Stream](/en/api/index#stream) and [Subjection](/en/api/index#subjection). A stream is a subscribable data source.
 
 ```typescript
-import { Stream } from 'fluth'
+import { Stream } from "fluth";
 
-const promise$ = new Stream()
+const promise$ = new Stream();
 
-const subjection$ = promise$.then(xxx)
+const subjection$ = promise$.then(xxx);
 ```
 
 ## Completion
@@ -17,11 +17,11 @@ const subjection$ = promise$.then(xxx)
 Only [Stream](/en/api/index#stream) can be completed. Completion means the stream will no longer push new data.
 
 ```typescript
-import { Stream } from 'fluth'
+import { Stream } from "fluth";
 
-const promise$ = new Stream()
+const promise$ = new Stream();
 
-promise$.next(1, true) // true indicates completion, the final data push
+promise$.next(1, true); // true indicates completion, the final data push
 ```
 
 After executing this final data push, each subscription node will trigger the [finish](/en/api/index#finish) promise and then automatically unsubscribe.

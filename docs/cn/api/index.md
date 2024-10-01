@@ -9,14 +9,13 @@ import Subjection from '../../components/subjection.vue'
 
 <Stream />
 
-The `then`, `thenOnce`, `catch`, and `finally` methods of a `Stream` instance all return [Subjection](#subjection) instances, enabling chain calls.
+`Stream`实例的`then`, `thenOnce`方法返回的是[Subjection](#subjection)实例
 
 ## Subjection
 
 <Subjection />
 
-The `then`, `thenOnce`, `catch`, and `finally` methods of a `Subjection` instance all return [Subjection](#subjection) instances, enabling chain calls.
-
+`Subjection`实例的`then`, `thenOnce`方法返回的还是[Subjection](#subjection)实例
 
 ## plugin
 
@@ -37,7 +36,6 @@ The `then`, `thenOnce`, `catch`, and `finally` methods of a `Subjection` instanc
   `plugin` can define two types of plugins: `then` plugins and `execute` plugins.
 
   `then` plugins are executed when the `then` method is called. They are passed the node's `unsubscribe` function, allowing for unified unsubscription capability. `execute` plugins are executed after the `execute` method is called. They are passed the current node's `promise` and the node's `unsubscribe` function. The returned `promise` is passed to subsequent nodes.
-
 
 ## then
 
@@ -135,7 +133,7 @@ The `then`, `thenOnce`, `catch`, and `finally` methods of a `Subjection` instanc
 - 类型
 
   ```typescript
-  finish: Promise<any>
+  finish: Promise<any>;
   ```
 
 - 详情
