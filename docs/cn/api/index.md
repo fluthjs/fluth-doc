@@ -33,9 +33,9 @@ import Subjection from '../../components/subjection.vue'
 
 - Details
 
-  `plugin` can define two types of plugins: `then` plugins and `execute` plugins.
+  `plugin` 可以定义两种插件: `then`插件和`execute`插件。
 
-  `then` plugins are executed when the `then` method is called. They are passed the node's `unsubscribe` function, allowing for unified unsubscription capability. `execute` plugins are executed after the `execute` method is called. They are passed the current node's `promise` and the node's `unsubscribe` function. The returned `promise` is passed to subsequent nodes.
+  `then`插件在[then](#then)方法被调用时执行。它们将当前节点的`unsubscribe`函数作为参数，可以实现统一的取消订阅功能。`execute`插件在[execute](#execute)方法被调用时执行。它们将当前节点的`promise`和当前节点的`unsubscribe`函数作为参数，返回的`promise`将被传递给下一个`execute`插件，最终返回的`promise`数据将传递给下一个的`then`节点。
 
 ## then
 

@@ -35,7 +35,7 @@ The `then` and `thenOnce` methods of a `Subjection` instance also return [Subjec
 
   `plugin` can define two types of plugins: `then` plugins and `execute` plugins.
 
-  `then` plugins are executed when the `then` method is called. They are passed the node's `unsubscribe` function, allowing for unified unsubscription capability. `execute` plugins are executed after the `execute` method is called. They are passed the current node's `promise` and the node's `unsubscribe` function. The returned `promise` is passed to subsequent nodes.
+  `then` plugins are executed when the `then` method is called. They are passed the node's `unsubscribe` function, allowing for unified unsubscription capability. `execute` plugins are executed after the `execute` method is called. They are passed the current node's `promise` and the node's `unsubscribe` function. The returned `promise` will be passed to the next `execute` plugin. The final returned `promise` data will be passed to the next `then` node.
 
 ## then
 
