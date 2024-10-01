@@ -14,8 +14,8 @@ export default defineConfig({
     theme: "github-dark",
   },
   head: [
-    ["link", { rel: "icon", href: "/favicon.ico" }],
-    ["link", { rel: "icon", href: "/logo.svg", sizes: "any", type: "image/svg+xml" }],
+    ["link", { rel: "icon", href: "/fluth-doc/favicon.ico" }],
+    ["link", { rel: "icon", href: "/fluth-doc/logo.svg", sizes: "any", type: "image/svg+xml" }],
   ],
   themeConfig: {
     logo: "/logo.svg",
