@@ -33,9 +33,10 @@ import Subjection from '../../components/subjection.vue'
 
 - Details
 
-  `plugin` 可以定义两种插件: `then`插件和`execute`插件。
+  `plugin` 可以定义两种插件: `then`插件和`execute`插件：
 
-  `then`插件在[then](#then)方法被调用时执行。它们将当前节点的`unsubscribe`函数作为参数，可以实现统一的取消订阅功能。`execute`插件在[execute](#execute)方法被调用时执行。它们将当前节点的`promise`和当前节点的`unsubscribe`函数作为参数，返回的`promise`将被传递给下一个`execute`插件，最终返回的`promise`数据将传递给下一个的`then`节点。
+  - `then`插件在[then](#then)方法被调用时执行。它们将当前节点的`unsubscribe`函数作为参数，可以实现统一的取消订阅功能。
+  - `execute`插件在[execute](#execute)方法被调用时执行。它们将当前节点的`promise`和当前节点的`unsubscribe`函数作为参数，返回的`promise`将被传递给下一个`execute`插件，最终返回的`promise`数据将传递给下一个的`then`节点。
 
 ## then
 
