@@ -19,6 +19,6 @@ export default defineConfig({
   ],
   themeConfig: {
     logo: "/logo.svg",
-    socialLinks: [{ icon: "github", link: "https://github.com/vuejs/vitepress" }],
+    socialLinks: [{ icon: "github", link: "https://github.com/fluthjs/fluth" }],
   },
 });
