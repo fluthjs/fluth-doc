@@ -1,6 +1,6 @@
 # finish
 
-Combines the data after the input [streams](/en/api/index#stream) or [subjections](/en/api/index#subjection) have finished, returning a new stream.
+Combines the data after the input [streams](/en/api/stream#stream) or [subjections](/en/api/stream#subjection) have finished, returning a new stream.
 
 ![image](/finish.drawio.svg)
 

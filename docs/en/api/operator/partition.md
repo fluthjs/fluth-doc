@@ -1,6 +1,6 @@
 # partition
 
-Partitions the input [stream](/en/api/index#stream) or [subjection](/en/api/index#subjection) based on a predicate function, returning two streams: the first stream contains values that satisfy the condition, and the second stream contains values that do not satisfy the condition.
+Partitions the input [stream](/en/api/stream#stream) or [subjection](/en/api/stream#subjection) based on a predicate function, returning two streams: the first stream contains values that satisfy the condition, and the second stream contains values that do not satisfy the condition.
 
 ![image](/partition.drawio.svg)
 

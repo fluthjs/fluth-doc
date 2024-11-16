@@ -1,6 +1,6 @@
 # combine
 
-Combines input [streams](/en/api/index#stream) or [subjections](/en/api/index#subjection) and returns a new stream.
+Combines input [streams](/en/api/stream#stream) or [subjections](/en/api/stream#subjection) and returns a new stream.
 
 ![image](/combine.drawio.svg)
 

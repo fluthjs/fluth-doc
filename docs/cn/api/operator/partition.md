@@ -1,6 +1,6 @@
 # partition
 
-将输入的[ stream ](/cn/api/index#stream)或者[ subjection ](/cn/api/index#subjection)按照条件函数进行分区，返回两个流，第一个是满足条件的流，第二个是不满足条件的流
+将输入的[ stream ](/cn/api/stream#stream)或者[ subjection ](/cn/api/stream#subjection)按照条件函数进行分区，返回两个流，第一个是满足条件的流，第二个是不满足条件的流
 
 ![image](/partition.drawio.svg)
 

@@ -1,6 +1,6 @@
 # race
 
-输入的[ stream ](/cn/api/index#stream)或者[ subjection ](/cn/api/index#subjection)进行竞争，返回一个新的流，`fork`最先推送数据的那个流
+输入的[ stream ](/cn/api/stream#stream)或者[ subjection ](/cn/api/stream#subjection)进行竞争，返回一个新的流，`fork`最先推送数据的那个流
 
 ![image](/race.drawio.svg)
 

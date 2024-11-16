@@ -1,6 +1,6 @@
 # concat
 
-将输入的[ stream ](/cn/api/index#stream)或者[ subjection ](/cn/api/index#subjection)按照顺序结合，返回一个新的流
+将输入的[ stream ](/cn/api/stream#stream)或者[ subjection ](/cn/api/stream#subjection)按照顺序结合，返回一个新的流
 
 ![image](/concat.drawio.svg)
 

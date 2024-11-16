@@ -1,6 +1,6 @@
 # race
 
-The input [streams](/en/api/index#stream) or [subjections](/en/api/index#subjection) compete, returning a new stream that forks from the stream that pushes data first.
+The input [streams](/en/api/stream#stream) or [subjections](/en/api/stream#subjection) compete, returning a new stream that forks from the stream that pushes data first.
 
 ![image](/race.drawio.svg)
 

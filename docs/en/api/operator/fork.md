@@ -1,11 +1,11 @@
 # fork
 
-Creates a new stream from the input [stream](/en/api/index#stream) or [subjection](/en/api/index#subjection)
+Creates a new stream from the input [stream](/en/api/stream#stream) or [subjection](/en/api/stream#subjection)
 
 - Type
 
   ```typescript
-  type fork = (arg$: Stream | Subjection) => Stream
+  type fork = (arg$: Stream | Subjection) => Stream;
   ```
 
 - Details

@@ -1,6 +1,6 @@
 # merge
 
-Merges the input [streams](/en/api/index#stream) or [subjections](/en/api/index#subjection), returning a new stream.
+Merges the input [streams](/en/api/stream#stream) or [subjections](/en/api/stream#subjection), returning a new stream.
 
 ![image](/merge.drawio.svg)
 

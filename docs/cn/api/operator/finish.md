@@ -1,6 +1,6 @@
 # finish
 
-将输入的[ stream ](/cn/api/index#stream)或者[ subjection ](/cn/api/index#subjection)结束后的数据进行组合，返回一个新的流
+将输入的[ stream ](/cn/api/stream#stream)或者[ subjection ](/cn/api/stream#subjection)结束后的数据进行组合，返回一个新的流
 
 ![image](/finish.drawio.svg)
 
