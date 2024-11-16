@@ -5,6 +5,8 @@ import Subjection from '../../components/subjection.vue'
 
 # 预览
 
+[[toc]]
+
 ## Stream
 
 <Stream />
