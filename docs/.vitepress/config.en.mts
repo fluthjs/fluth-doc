@@ -8,6 +8,7 @@ export default {
     nav: [
       { text: "Guide", link: "/en/guide/introduce" },
       { text: "API", link: "/en/api/stream" },
+      { text: "changelog", link: "https://github.com/fluthjs/fluth/blob/master/CHANGELOG.md" },
     ],
     sidebar: {
       "/en/": [
@@ -27,6 +28,7 @@ export default {
             {
               text: "Operators",
               items: [
+                { text: "pipe", link: "/en/api/operator/pipe" },
                 { text: "fork", link: "/en/api/operator/fork" },
                 { text: "finish", link: "/en/api/operator/finish" },
                 { text: "combine", link: "/en/api/operator/combine" },

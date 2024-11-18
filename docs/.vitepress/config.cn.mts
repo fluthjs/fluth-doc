@@ -8,6 +8,7 @@ export default {
     nav: [
       { text: "指南", link: "/cn/guide/introduce" },
       { text: "API", link: "/cn/api/stream" },
+      { text: "changelog", link: "https://github.com/fluthjs/fluth/blob/master/CHANGELOG.md" },
     ],
     sidebar: {
       "/cn/": [
@@ -27,6 +28,7 @@ export default {
             {
               text: "操作符",
               items: [
+                { text: "pipe", link: "/cn/api/operator/pipe" },
                 { text: "fork", link: "/cn/api/operator/fork" },
                 { text: "finish", link: "/cn/api/operator/finish" },
                 { text: "combine", link: "/cn/api/operator/combine" },

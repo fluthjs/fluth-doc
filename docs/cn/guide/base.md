@@ -28,7 +28,7 @@ promise$.next(1, true); // true表示结束，最后一次推流
 
 ## 订阅节点
 
-`fluth`采用`promise`的形式进行数据流的推送，通过[then](/cn/api/stream#then)、[thenOnce](/cn/api/stream#thenonce)方法对流新增一个订阅节点，返回订阅节点的`Subjection`实例，整体使用和`promise`保持一致。
+`fluth`采用`promise`的形式进行数据流的推送，通过[then](/cn/api/stream#then)、[thenOnce](/cn/api/stream#thenonce)方法对流新增一个订阅节点，返回订阅节点`Subjection`实例，整体使用和`promise`保持一致。
 
 ## 链式订阅
 
