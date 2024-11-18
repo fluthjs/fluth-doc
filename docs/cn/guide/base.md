@@ -12,19 +12,19 @@ const promise$ = new Stream();
 const subjection$ = promise$.then(xxx);
 ```
 
-## 结束
+## 发布数据
 
-只有[ Stream ](/cn/api/stream#stream)流才可以结束，结束意味着流不在推送新的数据。
+[ Stream ](/cn/api/stream#stream)流可以进行数据的推送，使用`next`方法进行数据的推送，所有订阅节点都能收到推送的数据
 
 ```typescript
 import { Stream } from "fluth";
 
 const promise$ = new Stream();
 
-promise$.next(1, true); // true表示结束，最后一次推流
-```
+promise$.then((data) => console.log(data));
 
-每个订阅节点在执行完最后这次数据推送后都会触发[finish](/cn/api/stream#finish)这个`promise`，然后自动取消订阅。
+promise$.next("hello"); // 打印 hello
+```
 
 ## 订阅节点
 
@@ -41,3 +41,17 @@ promise$.next(1, true); // true表示结束，最后一次推流
 ## 主动执行
 
 调用订阅节点的[subjection](/cn/api/stream#subjection)的`execute`方法重新执行上一次订阅的数据流
+
+## 结束
+
+只有[ Stream ](/cn/api/stream#stream)流才可以结束，结束意味着流不在推送新的数据。
+
+```typescript
+import { Stream } from "fluth";
+
+const promise$ = new Stream();
+
+promise$.next(1, true); // true表示结束，最后一次推流
+```
+
+每个订阅节点在执行完最后这次数据推送后都会触发[finish](/cn/api/stream#finish)这个`promise`，然后自动取消订阅。
