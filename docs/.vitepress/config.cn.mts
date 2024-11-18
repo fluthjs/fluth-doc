@@ -9,6 +9,7 @@ export default {
       { text: "指南", link: "/cn/guide/introduce" },
       { text: "API", link: "/cn/api/stream" },
       { text: "changelog", link: "https://github.com/fluthjs/fluth/blob/master/CHANGELOG.md" },
+      { text: "fluth-vue", link: "https://fluthjs.github.io/fluth-vue/index.html" },
     ],
     sidebar: {
       "/cn/": [
