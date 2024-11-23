@@ -2,7 +2,7 @@
 
 ## 基本概念
 
-`fluth`是一个基于`promise`的流式编程库。
+`fluth`是一个基于`promise`的流式编程库，擅于异步流程的编排。
 
 假如认为`promise`是发布者而`then`方法是订阅者，`promise`的发布行为则只有一次。
 
