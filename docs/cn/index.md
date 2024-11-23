@@ -3,8 +3,8 @@
 layout: home
 
 hero:
-  name: 'fluth'
-  text: '基于promise的流'
+  name: "fluth"
+  text: "基于promise的流"
   tagline: 简单易用，1分钟上手！
   image:
     src: /logo.svg
@@ -20,7 +20,7 @@ hero:
 features:
   - icon: 🤞
     title: 简单
-    details: 基于promise，快速上手
+    details: 基于promise
   - icon: 😋
     title: 简洁
     details: 语义清晰，时序清楚

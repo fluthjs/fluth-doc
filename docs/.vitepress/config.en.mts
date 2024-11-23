@@ -2,7 +2,7 @@ export default {
   label: "English",
   lang: "en",
   title: "fluth",
-  description: "a javascript promise stream library",
+  description: "A Promise-based asynchronous flow control library",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [

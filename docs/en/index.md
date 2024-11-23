@@ -3,8 +3,8 @@
 layout: home
 
 hero:
-  name: 'fluth'
-  text: 'Promise-based streams'
+  name: "fluth"
+  text: "A Promise-based asynchronous flow control library"
   tagline: Simple to use, learn in 1 minute!
   image:
     src: /logo.svg
@@ -20,7 +20,7 @@ hero:
 features:
   - icon: 🤞
     title: Simple
-    details: Based on promise, quick to learn
+    details: Based on promise
   - icon: 😋
     title: Concise
     details: Clear semantics, clear sequence

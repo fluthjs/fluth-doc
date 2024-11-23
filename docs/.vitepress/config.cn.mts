@@ -2,7 +2,7 @@ export default {
   label: "简体中文",
   lang: "cn",
   title: "fluth",
-  description: "一个基于javascript promise的流",
+  description: "基于 Promise 的异步流程控制库",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
