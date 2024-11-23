@@ -57,7 +57,7 @@ const subjection2$ = promise2$.then((data) => {
 ### 触发 Subjection 流
 
 ![image](/branching-subjection.drawio.png)
-触发[ Subjection ](/cn/api/stream#subjection)节点则无法推动数据
+触发[ Subjection ](/cn/api/stream#subjection)节点则无法推送数据
 
 ```typescript
 import { Stream } from "fluth";

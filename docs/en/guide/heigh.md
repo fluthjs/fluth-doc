@@ -57,7 +57,7 @@ const subjection2$ = promise2$.then((data) => {
 ### Triggering Subjection Flow
 
 ![image](/branching-subjection.drawio.png)
-Triggering [Subjection](/en/api/stream#subjection) nodes cannot push data:
+Triggering [Subjection](/en/api/stream#subjection) node cannot push data:
 
 ```typescript
 import { Stream } from "fluth";
