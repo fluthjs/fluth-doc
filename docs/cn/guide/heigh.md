@@ -31,25 +31,47 @@ promise$.plugin.execute.push((promise) =>
 );
 ```
 
-## 合流
+## 分流
 
-合流指的是在一条流中触发另一条流节点的运行：
-![image](/merge.drawio.png)
-对于不需要传递数据的合流，只需要调用另一个流节点的[ execute ](/cn/api/stream#execute)就可以达到合流目的
+分流指的是在一条流中触发另一条流节点的运行
+
+### 触发 Stream 流
+
+![image](/branching-stream.drawio.png)
+
+触发[ Stream ](/cn/api/stream#stream)节点则可以推送数据
 
 ```typescript
 import { Stream } from "fluth";
 
 const promise1$ = new Stream();
-const subjection11$ = promise1$.then((data) => data + 1);
-const subjection12$ = subjection11$.then((data) => data % 1);
+const subjection1$ = promise1$.then((data) => console.log(data));
 
 const promise2$ = new Stream();
-const subjection21$ = promise2$.then((data) => {
-  subjection11$.execute();
-  return data + 1;
+// 在一条流中触发另一条流
+const subjection2$ = promise2$.then((data) => {
+  promise1$.next(data + 1);
 });
-const subjection22$ = subjection21$.then((data) => data % 2);
 ```
 
-如果要传递多条流的数据，需要看看操作符[ combine ](/cn/api/operator/combine)、[ merge ](/cn/api/operator/merge)、[ concat ](/cn/api/operator/concat)等来进行合流。
+### 触发 Subjection 流
+
+![image](/branching-subjection.drawio.png)
+触发[ Subjection ](/cn/api/stream#subjection)节点则无法推动数据
+
+```typescript
+import { Stream } from "fluth";
+
+const promise1$ = new Stream();
+const subjection1$ = promise1$.then((data) => console.log(data));
+
+const promise2$ = new Stream();
+// 在一条流中触发另一条流
+const subjection2$ = promise2$.then((data) => {
+  subjection1$.execute();
+});
+```
+
+## 合流
+
+如果需要合并多条流的数据，需要看看操作符[ combine ](/cn/api/operator/combine)、[ merge ](/cn/api/operator/merge)、[ concat ](/cn/api/operator/concat)等来进行合流。

@@ -49,6 +49,10 @@ const subjectionApi = [
     address: "#thenonce",
   },
   {
+    name: "thenImmediate",
+    address: "#thenimmediate",
+  },
+  {
     name: "catch",
     address: "#catch",
   },

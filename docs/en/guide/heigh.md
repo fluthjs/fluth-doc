@@ -31,25 +31,47 @@ promise$.plugin.execute.push((promise) =>
 );
 ```
 
-## Merging Streams
+## Stream Branching
 
-Merging streams refers to triggering the execution of nodes in another stream within one stream:
-![image](/merge.drawio.png)
-For merging that doesn't need to pass data, simply calling the [execute](/en/api/stream#execute) of another stream node can achieve the merging purpose.
+Stream branching refers to triggering the execution of another stream's nodes within one stream.
+
+![image](/branching-stream.drawio.png)
+
+### Triggering Stream Flow
+
+Triggering [Stream](/en/api/stream#stream) nodes allows pushing data:
 
 ```typescript
 import { Stream } from "fluth";
 
 const promise1$ = new Stream();
-const subjection11$ = promise1$.then((data) => data + 1);
-const subjection12$ = subjection11$.then((data) => data % 1);
+const subjection1$ = promise1$.then((data) => console.log(data));
 
 const promise2$ = new Stream();
-const subjection21$ = promise2$.then((data) => {
-  subjection11$.execute();
-  return data + 1;
+// Trigger another stream within one stream
+const subjection2$ = promise2$.then((data) => {
+  promise1$.next(data + 1);
 });
-const subjection22$ = subjection21$.then((data) => data % 2);
 ```
 
-If you need to pass data from multiple streams, you should look at operators like [combine](/en/api/operator/combine), [merge](/en/api/operator/merge), [concat](/en/api/operator/concat), etc., to perform stream merging.
+### Triggering Subjection Flow
+
+![image](/branching-subjection.drawio.png)
+Triggering [Subjection](/en/api/stream#subjection) nodes cannot push data:
+
+```typescript
+import { Stream } from "fluth";
+
+const promise1$ = new Stream();
+const subjection1$ = promise1$.then((data) => console.log(data));
+
+const promise2$ = new Stream();
+// Trigger another stream within one stream
+const subjection2$ = promise2$.then((data) => {
+  subjection1$.execute();
+});
+```
+
+## Stream Merging
+
+If you need to merge data from multiple streams, you should look at operators like [combine](/en/api/operator/combine), [merge](/en/api/operator/merge), [concat](/en/api/operator/concat), etc., to perform stream merging.

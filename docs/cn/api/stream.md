@@ -72,9 +72,23 @@ import Subjection from '../../components/subjection.vue'
   ): Subjection
   ```
 
+## thenImmediate
+
+- 类型
+
+  ```typescript
+  type OnFulfilled<T> = Parameters<Promise<T>['then']>[0]
+  type OnRejected<T> = Parameters<Promise<T>['catch']>[0]
+
+  thenImmediate<T>(
+    onFulfilled: OnFulfilled<T>,
+    onRejected?: OnRejected<unknown>,
+  ): Subjection
+  ```
+
 - 详情
 
-  `thenOnce`相比`then`方法差异点在于执行一次就会被自动取消订阅
+  `thenImmediate`相比`then`方法差异点在于父订阅节点如果`execute`过，则采用`thenImmediate`会立即触发订阅子节点的`execute`
 
 ## catch
 
@@ -114,7 +128,7 @@ import Subjection from '../../components/subjection.vue'
 
 - 详情
 
-  取消节点的订阅
+  取消节点的订阅，不同于`promise`的无法取消，`stream`的订阅可以随时取消
   ::: warning 警告
   取消当前节点订阅，当前节点的`then`之后的节点也会全部取消订阅
   :::

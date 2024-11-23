@@ -74,6 +74,24 @@ The `then` and `thenOnce` methods of a `Subjection` instance also return [Subjec
 
   The difference between `thenOnce` and `then` is that it automatically unsubscribes after executing once.
 
+## thenImmediate
+
+- 类型
+
+  ```typescript
+  type OnFulfilled<T> = Parameters<Promise<T>['then']>[0]
+  type OnRejected<T> = Parameters<Promise<T>['catch']>[0]
+
+  thenImmediate<T>(
+    onFulfilled: OnFulfilled<T>,
+    onRejected?: OnRejected<unknown>,
+  ): Subjection
+  ```
+
+- 详情
+
+  The difference between `thenImmediate` and `then` is that if the parent subscription node has been `execute`, using `thenImmediate` will immediately trigger the subscription child node's `execute`.
+
 ## catch
 
 - Type
@@ -112,7 +130,7 @@ The `then` and `thenOnce` methods of a `Subjection` instance also return [Subjec
 
 - Details
 
-  Cancels the node's subscription.
+  Cancels the node's subscription. Unlike `promise`'s inability to cancel, the subscription of `stream` can be canceled at any time.
   ::: warning Warning
   Canceling the current node's subscription will also cancel all subscriptions of nodes after the current node's `then`.
   :::
