@@ -1,178 +1,137 @@
 <script setup>
 import Stream from '../../components/stream.vue'
-import Subjection from '../../components/subjection.vue'
 </script>
 
-# Overview
+# Stream
 
-## Stream
+`Stream` inherits from [`Observable`](/en/api/observable). In addition to the properties and methods of `Observable`, the following methods are added:
 
 <Stream />
 
-The `then` and `thenOnce` methods of a `Stream` instance return [Subjection](#subjection) instances
-
-## Subjection
-
-<Subjection />
-
-The `then` and `thenOnce` methods of a `Subjection` instance also return [Subjection](#subjection) instances
-
-## plugin
+## next
 
 - Type
+
+  ```typescript
+  next(payload: any, finishFlag?: boolean): void;
+  ```
+
+- Details
+
+  - Pushes data to the current stream. When `payload` is `Promise.reject(xxx)`, subsequent `then` behavior is consistent with `promise`'s `then`.
+  - The second parameter indicates whether the current stream is finished. When set to `true`, subsequent `set` and `next` will not execute, and after the stream completes each node, it will trigger the node's `complete` callback function, then automatically call the node's `unsubscribe` method.
+
+- Example
+  ```typescript
+  import { $ } from "fluth";
+  const promise$ = $("1");
+  promise$.then((value) => {
+    console.log(value);
+  });
+  promise$.next("2"); // prints 2
+  ```
+
+## set
+
+- Type
+  ```typescript
+    set(setter: (value: T) => void, finishFlag?: boolean): void;
+  ```
+- Details
+
+  Pushes data to the current stream. The difference from `next` is that `set` accepts a `setter` (which can be synchronous or asynchronous) and pushes a new `immutable` data. The second parameter indicates whether the current stream is finished. When set to `true`, subsequent `set` and `next` will not execute.
+
+- Example
+
+  ```typescript
+  import { $ } from "fluth";
+  const promise$ = $({ a: 1, b: { c: 2 } });
+  const oldValue = promise$.value;
+  promise$.then((value) => {
+    console.log(value);
+  });
+  promise$.set((value) => {
+    value.a = 2;
+  }); // prints { a: 1, b: { c: 3 } }
+
+  const newValue = promise$.value;
+  console.log(oldValue === newValue); // prints false
+  console.log(oldValue.b === newValue.b); // prints true
+  ```
+
+## use
+
+- Type
+
+  `plugin` type
 
   ```typescript
   type thenPlugin = (unsubscribe: () => void) => void
-  type executePlugin = ( promise: Promise<any>, unsubscribe: () => void ) => Promise<any>
+  type ChainPluginFn<T extends Observable = Observable> = (observer: T) => Record<string, any>
+  type executePlugin = <T>(params: {
+    result: Promise<T> | T
+    set: (setter: (value: T) => Promise<void> | void) => Promise<T> | T
+    unsubscribe: () => void
+  }) => Promise<any> | any
 
-  plugin: {
-    then: thenPlugin[]
-    execute: executePlugin[]
+  type plugin: {
+    then?: thenPluginFn | thenPluginFn[]
+    execute?: executePlugin | executePlugin[]
+    chain?: ChainPluginFn
   }
   ```
 
+  `use` type
+
+  ```typescript
+  use<P extends Plugin>(plugin: P): Stream<T, I, E & ChainReturn<P, T, E>> & E & ChainReturn<P, T, E>;
+  ```
+
 - Details
 
-  `plugin` can define two types of plugins: `then` plugins and `execute` plugins:
+  Calling `use` allows you to use three types of plugins: `then` plugins, `execute` plugins, and `chain` plugins:
 
-  - `then` plugins are executed when the `then` method is called. They are passed the node's `unsubscribe` function, allowing for unified unsubscription capability.
-  - `execute` plugins are executed after the `execute` method is called. They are passed the current node's `promise` and the node's `unsubscribe` function. The returned `promise` will be passed to the next `execute` plugin. The final returned `promise` data will be passed to the next `then` node.
+  - `then` plugins are executed when the [then](/en/api/observable#then) method is called. They take the current node's `unsubscribe` function as a parameter and can implement unified unsubscription functionality.
+  - `execute` plugins are executed when the [execute](/en/api/observable#then) method is called. They take the current node's execution result, a `set` function that can generate `immutable` data, and the current node's `unsubscribe` function as parameters. The returned `promise` will be passed to the next `execute` plugin, and the final returned `promise` data will be passed to the next `then` node.
+  - `chain` plugins can add new properties and methods to the current stream's chain operations.
 
-## then
+- Example
+
+  ```typescript
+  import { $, delay } from "fluth";
+
+  const promise$ = $("1").use(delay);
+  promise$.delay(1000).then((value) => {
+    console.log(value);
+  });
+
+  promise$.next("2"); // prints 2 after 1s
+  ```
+
+## remove
 
 - Type
 
   ```typescript
-  type OnFulfilled<T> = Parameters<Promise<T>['then']>[0]
-  type OnRejected<T> = Parameters<Promise<T>['catch']>[0]
-
-  then<T>(
-    onFulfilled: OnFulfilled<T>,
-    onRejected?: OnRejected<unknown>,
-  ): Subjection
+    interface ThenOrExecutePlugin {
+        then?: thenPluginFn | thenPluginFn[];
+        execute?: executePlugin | executePlugin[];
+    }
+    remove(plugin: ThenOrExecutePlugin | ThenOrExecutePlugin[]): void;
   ```
 
 - Details
 
-  `then` subscriber, usage consistent with `promise`, returns a [Subjection](#subjection) instance of the subscription node.
+  Removes the specified `plugin`. The `plugin` can only be a `then` plugin or an `execute` plugin.
 
-## thenOnce
-
-- Type
-
+- Example
   ```typescript
-  type OnFulfilled<T> = Parameters<Promise<T>['then']>[0]
-  type OnRejected<T> = Parameters<Promise<T>['catch']>[0]
-
-  thenOnce<T>(
-    onFulfilled: OnFulfilled<T>,
-    onRejected?: OnRejected<unknown>,
-  ): Subjection
+  import { $, console } from "fluth";
+  const promise$ = $("1").use(console);
+  promise$.next("2"); // prints 2
+  promise$.remove(console);
+  promise$.next("3"); // doesn't print 3
   ```
-
-- Details
-
-  The difference between `thenOnce` and `then` is that it automatically unsubscribes after executing once.
-
-## thenImmediate
-
-- 类型
-
-  ```typescript
-  type OnFulfilled<T> = Parameters<Promise<T>['then']>[0]
-  type OnRejected<T> = Parameters<Promise<T>['catch']>[0]
-
-  thenImmediate<T>(
-    onFulfilled: OnFulfilled<T>,
-    onRejected?: OnRejected<unknown>,
-  ): Subjection
-  ```
-
-- 详情
-
-  The difference between `thenImmediate` and `then` is that if the parent subscription node has been `execute`, using `thenImmediate` will immediately trigger the subscription child node's `execute`.
-
-## catch
-
-- Type
-
-  ```typescript
-  type OnRejected<T> = Parameters<Promise<T>['catch']>[0]
-
-  catch(onRejected: OnRejected<unknown>): Subjection
-  ```
-
-- Details
-
-  Performs `catch` on the subscription node, usage consistent with `promise`, returns a [Subjection](#subjection) instance of the subscription node.
-
-## finally
-
-- Type
-
-  ```typescript
-  type OnFinally<T> = Parameters<Promise<T>['finally']>[0]
-
-  finally(onFinally: OnFinally<unknown>): Subjection
-  ```
-
-- Details
-
-  Performs `finally` on the subscription node, usage consistent with `promise`, returns a [Subjection](#subjection) instance of the subscription node.
-
-## unsubscribe
-
-- Type
-
-  ```typescript
-  unsubscribe(): void
-  ```
-
-- Details
-
-  Cancels the node's subscription. Unlike `promise`'s inability to cancel, the subscription of `stream` can be canceled at any time.
-  ::: warning Warning
-  Canceling the current node's subscription will also cancel all subscriptions of nodes after the current node's `then`.
-  :::
-
-## setUnsubscribeCallback
-
-- Type
-
-  ```typescript
-  setUnsubscribeCallback(callback: () => void): void
-  ```
-
-- Details
-
-  Sets the callback function for when the node's subscription is canceled.
-
-## finish
-
-- Type
-
-  ```typescript
-  finish: Promise<any>;
-  ```
-
-- Details
-
-  A `promise` triggered when the stream ends, which will trigger earlier than the automatic unsubscription of subscription nodes.
-
-## execute
-
-- Type
-
-  ```typescript
-  execute: () => void
-  ```
-
-- Details
-
-  Actively executes the current node. The data used is from the last time the stream passed through this node. If the node has never been executed before, it won't execute.
-  :::warning
-  Executing the current node will also execute nodes after the current node's `then`, equivalent to pushing the stream at the current node.
-  :::
 
 ## pause
 
@@ -186,6 +145,21 @@ The `then` and `thenOnce` methods of a `Subjection` instance also return [Subjec
 
   Pauses the current stream. After executing the `pause` method, all subscribed nodes will not execute.
 
+- Example
+
+  ```typescript
+  import { $, console } from "fluth";
+
+  const promise$ = $("1");
+  promise$.then((value) => {
+    console.log(value);
+  });
+
+  promise$.next("2"); // prints 2
+  promise$.pause();
+  promise$.next("3"); // doesn't print 3
+  ```
+
 ## restart
 
 - Type
@@ -196,16 +170,20 @@ The `then` and `thenOnce` methods of a `Subjection` instance also return [Subjec
 
 - Details
 
-  Restarts the current stream. After executing the `restart` method, all subscribed nodes will start accepting and executing stream pushes.
+  Restarts the current stream. After executing the `restart` method, all subscribed nodes start accepting and executing stream pushes.
 
-## next
-
-- Type
+- Example
 
   ```typescript
-  next(payload: any, finishFlag?: boolean): void;
+  import { $, console } from "fluth";
+
+  const promise$ = $("1");
+  promise$.then((value) => {
+    console.log(value);
+  });
+
+  promise$.pause();
+  promise$.next("2"); // doesn't print 2
+  promise$.restart();
+  promise$.next("3"); // prints 3
   ```
-
-- Details
-
-  Pushes data to the current stream. `payload` is the data. When set to `Promise.reject(xxx)`, subsequent `then` behavior is consistent with `promise`'s `then`. The second parameter indicates whether the current stream is finished. When set to `true`, subsequent `next` calls will not execute.

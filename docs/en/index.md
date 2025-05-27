@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "fluth"
-  text: "A Promise-based asynchronous flow control library"
+  text: "A Promise-like asynchronous flow control library"
   tagline: Simple to use, learn in 1 minute!
   image:
     src: /logo.svg

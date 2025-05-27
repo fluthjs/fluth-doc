@@ -8,11 +8,17 @@ pnpm i fluth
 
 ## Usage
 
-```javascript
-import { Stream, fork, finish, combine, concat, merge, partition, race } from "fluth";
+```typescript
+import { $, fork, finish, combine, concat, merge, partition, race } from "fluth";
 
-const promise1$ = new Stream();
-const promise2$ = new Stream();
+const promise1$ = $<string>();
+const promise2$ = $<number>();
+
+const observable1$ = promise1$.then((data) => data + "1");
+const observable2$ = promise2$.then((data) => data + 1);
+
+promise1$.next("1");
+promise2$.next(1);
 
 const forkPromise$ = fork(promise1$);
 

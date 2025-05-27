@@ -1,3 +1,5 @@
+# Advanced Features
+
 ## Unified Unsubscription
 
 Taking the `vue` framework as an example, if the stream is imported into a `vue` component from elsewhere and you want the subscription to be automatically canceled after the component is destroyed, you can use the `thenPlugin` of [plugin](/en/api/stream#plugin) for unified handling:
@@ -35,9 +37,9 @@ promise$.plugin.execute.push((promise) =>
 
 Stream branching refers to triggering the execution of another stream's nodes within one stream.
 
-![image](/branching-stream.drawio.png)
-
 ### Triggering Stream Flow
+
+![image](/branching-stream.drawio.png)
 
 Triggering [Stream](/en/api/stream#stream) nodes allows pushing data:
 

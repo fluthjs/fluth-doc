@@ -4,24 +4,20 @@
       <div>
         <span class="line"
           ><span style="color: #f97583">const</span><span style="color: #79b8ff"> promise$</span
-          ><span style="color: #f97583"> =</span><span style="color: #f97583"> new</span
-          ><span style="color: #b392f0"> Stream</span><span style="color: #e1e4e8">()</span></span
+          ><span style="color: #f97583"> =</span><span style="color: #b392f0"> $</span
+          ><span style="color: #e1e4e8">()</span></span
         >
       </div>
     </div>
     <div style="color: #e1e4e8; display: flex; align-items: flex-start; position: relative">
       <ul
         class="api"
-        style="
-          margin-left: 113px;
-          cursor: pointer;
-          padding-left: 4px;
-          border-left: 1px solid #e1e4e8;
-          border-radius: 4px;
-        "
+        style="margin-left: 230px; padding-left: 10px; border-left: 1px solid #e1e4e8; border-radius: 4px"
       >
-        <span style="position: absolute; left: 45px; top: 60px; background: #292d3e; z-index: 1">Stream</span>
-        <a :href="item.address" style="display: block" v-for="item in streamApi" :key="item.name">
+        <span style="position: absolute; left: 0px; top: 30px; background: #292d3e; color: #47c1a8; z-index: 1"
+          >Stream <span style="color: #4a92cc">extends</span> Observable</span
+        >
+        <a :href="item.address" class="item" style="display: block" v-for="item in streamApi" :key="item.name">
           {{ item.name }}
         </a>
       </ul>
@@ -36,44 +32,20 @@ defineOptions({
 
 const streamApi = [
   {
-    name: "plugin",
-    address: "#plugin",
+    name: "next",
+    address: "#next",
   },
   {
-    name: "then",
-    address: "#then",
+    name: "set",
+    address: "#set",
   },
   {
-    name: "thenOnce",
-    address: "#thenonce",
+    name: "use",
+    address: "#use",
   },
   {
-    name: "thenImmediate",
-    address: "#thenimmediate",
-  },
-  {
-    name: "catch",
-    address: "#catch",
-  },
-  {
-    name: "finally",
-    address: "#finally",
-  },
-  {
-    name: "unsubscribe",
-    address: "#unsubscribe",
-  },
-  {
-    name: "setUnsubscribeCallback",
-    address: "#setunsubscribecallback",
-  },
-  {
-    name: "finish",
-    address: "#finish",
-  },
-  {
-    name: "execute",
-    address: "#execute",
+    name: "remove",
+    address: "#remove",
   },
   {
     name: "pause",
@@ -84,13 +56,19 @@ const streamApi = [
     address: "#restart",
   },
   {
-    name: "next",
-    address: "#next",
+    name: "...observable",
+    address: "./observable",
   },
 ];
 </script>
 
 <style lang="scss" scoped>
+.item {
+  color: #d8d6a5;
+  &:hover {
+    color: #8a8a7b;
+  }
+}
 .api {
   &::before {
     content: " ";
@@ -109,8 +87,8 @@ const streamApi = [
     left: 70px;
     top: 5px;
     display: block;
-    width: 40px;
-    height: 140px;
+    width: 157px;
+    height: 80px;
     border-left: 1px dashed #e1e4e8;
     border-bottom: 1px dashed #e1e4e8;
   }

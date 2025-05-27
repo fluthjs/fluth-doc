@@ -2,8 +2,9 @@ export default {
   label: "简体中文",
   lang: "cn",
   title: "fluth",
-  description: "基于 Promise 的异步流程控制库",
+  description: "类 Promise 的异步流程控制库",
   themeConfig: {
+    outline: "deep",
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "指南", link: "/cn/guide/introduce" },
@@ -19,17 +20,27 @@ export default {
             { text: "简介", link: "/cn/guide/introduce" },
             { text: "基本概念", link: "/cn/guide/base" },
             { text: "快速开始", link: "/cn/guide/quick" },
-            { text: "高阶用法", link: "/cn/guide/heigh" },
+            { text: "适用场景", link: "/cn/guide/scene" },
+            { text: "使用插件", link: "/cn/guide/plugin" },
+            { text: "不可变数据", link: "/cn/guide/immutable" },
+            // { text: "高阶用法", link: "/cn/guide/heigh" },
+            { text: "typescript支持", link: "/cn/guide/type" },
           ],
         },
         {
           text: "API",
           items: [
-            { text: "流", link: "/cn/api/stream" },
+            {
+              text: "流",
+              items: [
+                { text: "Stream", link: "/cn/api/stream" },
+                { text: "Observable", link: "/cn/api/observable" },
+                { text: "createStream", link: "/cn/api/createStream" },
+              ],
+            },
             {
               text: "操作符",
               items: [
-                { text: "pipe", link: "/cn/api/operator/pipe" },
                 { text: "fork", link: "/cn/api/operator/fork" },
                 { text: "finish", link: "/cn/api/operator/finish" },
                 { text: "combine", link: "/cn/api/operator/combine" },
@@ -37,6 +48,16 @@ export default {
                 { text: "merge", link: "/cn/api/operator/merge" },
                 { text: "partition", link: "/cn/api/operator/partition" },
                 { text: "race", link: "/cn/api/operator/race" },
+              ],
+            },
+            {
+              text: "插件",
+              items: [
+                { text: "delayExec", link: "/cn/api/plugin/delayExec" },
+                { text: "consoleExec", link: "/cn/api/plugin/consoleExec" },
+                { text: "delay", link: "/cn/api/plugin/delay" },
+                { text: "throttle", link: "/cn/api/plugin/throttle" },
+                { text: "debounce", link: "/cn/api/plugin/debounce" },
               ],
             },
           ],

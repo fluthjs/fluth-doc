@@ -1,176 +1,137 @@
 <script setup>
 import Stream from '../../components/stream.vue'
-import Subjection from '../../components/subjection.vue'
 </script>
 
-# 预览
+# Stream
 
-[[toc]]
-
-## Stream
+`Stream`继承[`Observable`](/cn/api/observable)，除了`Observable`的属性和方法外，以下方法为新增
 
 <Stream />
 
-`Stream`实例的`then`, `thenOnce`方法返回的是[Subjection](#subjection)实例
+## next
 
-## Subjection
+- 类型
 
-<Subjection />
+  ```typescript
+  next(payload: any, finishFlag?: boolean): void;
+  ```
 
-`Subjection`实例的`then`, `thenOnce`方法返回的还是[Subjection](#subjection)实例
+- 详情
 
-## plugin
+  - 当前流推送数据，`payload`为数据，当为`Promise.reject(xxx)`或者`Promise.reject(xxx)`时，后续`then`表现和`promise`的`then`一致；
+  - 第二个参数代表当前流是否结束当设置为`true`后续`set`、`next`将不再执行，并且在流执行完每个节点后会触发节点的`complete`回调函数，然后自动调用节点的`unsubscribe`方法
 
-- Type
+- 示例
+  ```typescript
+  import { $ } from "fluth";
+  const promise$ = $("1");
+  promise$.then((value) => {
+    console.log(value);
+  });
+  promise$.next("2"); // 打印 2
+  ```
+
+## set
+
+- 类型
+  ```typescript
+    set(setter: (value: T) => void, finishFlag?: boolean): void;
+  ```
+- 详情
+
+  当前流推送数据数据，与`next`的区别是`set`接收一个`setter`（可以是同步或者是异步），推送一个新的`immutable`数据；第二个参数代表当前流是否结束，当设置为`true`后续`set`、`next`将不再执行
+
+- 示例
+
+  ```typescript
+  import { $ } from "fluth";
+  const promise$ = $({ a: 1, b: { c: 2 } });
+  const oldValue = promise$.value;
+  promise$.then((value) => {
+    console.log(value);
+  });
+  promise$.set((value) => {
+    value.a = 2;
+  }); // 打印 { a: 1, b: { c: 3 } }
+
+  const newValue = promise$.value;
+  console.log(oldValue === newValue); // 打印 false
+  console.log(oldValue.b === newValue.b); // 打印 true
+  ```
+
+## use
+
+- 类型
+
+  `plugin`类型
 
   ```typescript
   type thenPlugin = (unsubscribe: () => void) => void
-  type executePlugin = ( promise: Promise<any>, unsubscribe: () => void ) => Promise<any>
+  type ChainPluginFn<T extends Observable = Observable> = (observer: T) => Record<string, any>
+  type executePlugin = <T>(params: {
+    result: Promise<T> | T
+    set: (setter: (value: T) => Promise<void> | void) => Promise<T> | T
+    unsubscribe: () => void
+  }) => Promise<any> | any
 
-  plugin: {
-    then: thenPlugin[]
-    execute: executePlugin[]
+  type plugin: {
+    then?: thenPluginFn | thenPluginFn[]
+    execute?: executePlugin | executePlugin[]
+    chain?: ChainPluginFn
   }
   ```
 
-- Details
-
-  `plugin` 可以定义两种插件: `then`插件和`execute`插件：
-
-  - `then`插件在[then](#then)方法被调用时执行。它们将当前节点的`unsubscribe`函数作为参数，可以实现统一的取消订阅功能。
-  - `execute`插件在[execute](#execute)方法被调用时执行。它们将当前节点的`promise`和当前节点的`unsubscribe`函数作为参数，返回的`promise`将被传递给下一个`execute`插件，最终返回的`promise`数据将传递给下一个的`then`节点。
-
-## then
-
-- 类型
+  `use`类型
 
   ```typescript
-  type OnFulfilled<T> = Parameters<Promise<T>['then']>[0]
-  type OnRejected<T> = Parameters<Promise<T>['catch']>[0]
-
-  then<T>(
-    onFulfilled: OnFulfilled<T>,
-    onRejected?: OnRejected<unknown>,
-  ): Subjection
+  use<P extends Plugin>(plugin: P): Stream<T, I, E & ChainReturn<P, T, E>> & E & ChainReturn<P, T, E>;
   ```
 
 - 详情
 
-  `then`订阅者，用法和`promise`保持一致，返回订阅节点的[ Subjection ](#subjection)实例
+  调用`use`可以使用三种插件: `then`插件、`execute`插件、`chain`插件：
 
-## thenOnce
+  - `then`插件在[then](/cn/api/observable#then)方法被调用时执行。它们将当前节点的`unsubscribe`函数作为参数，可以实现统一的取消订阅功能。
+  - `execute`插件在[execute](/cn/api/observable#then)方法被调用时执行。它们将当前节点的执行结果、可以生成`immutables`数据的`set`函数、当前节点的`unsubscribe`函数作为参数，返回的`promise`将被传递给下一个`execute`插件，最终返回的`promise`数据将传递给下一个的`then`节点。
+  - `chain`插件能够对当前流的链式操作上添加新的属性和方法。
 
-- 类型
+- 示例
 
   ```typescript
-  type OnFulfilled<T> = Parameters<Promise<T>['then']>[0]
-  type OnRejected<T> = Parameters<Promise<T>['catch']>[0]
+  import { $, delay } from "fluth";
 
-  thenOnce<T>(
-    onFulfilled: OnFulfilled<T>,
-    onRejected?: OnRejected<unknown>,
-  ): Subjection
+  const promise$ = $("1").use(delay);
+  promise$.delay(1000).then((value) => {
+    console.log(value);
+  });
+
+  promise$.next("2"); // 1s后打印 2
   ```
 
-## thenImmediate
+## remove
 
 - 类型
 
   ```typescript
-  type OnFulfilled<T> = Parameters<Promise<T>['then']>[0]
-  type OnRejected<T> = Parameters<Promise<T>['catch']>[0]
-
-  thenImmediate<T>(
-    onFulfilled: OnFulfilled<T>,
-    onRejected?: OnRejected<unknown>,
-  ): Subjection
-  ```
-
-- 详情
-
-  `thenImmediate`相比`then`方法差异点在于父订阅节点如果`execute`过，则采用`thenImmediate`会立即触发订阅子节点的`execute`
-
-## catch
-
-- 类型
-
-  ```typescript
-  type OnRejected<T> = Parameters<Promise<T>['catch']>[0]
-
-  catch(onRejected: OnRejected<unknown>): Subjection
+    interface ThenOrExecutePlugin {
+        then?: thenPluginFn | thenPluginFn[];
+        execute?: executePlugin | executePlugin[];
+    }
+    remove(plugin: ThenOrExecutePlugin | ThenOrExecutePlugin[]): void;
   ```
 
 - 详情
 
-  对订阅节点进行`catch`，用法和`promise`保持一致，返回订阅节点的[ Subjection ](#subjection)实例
+  移除指定的`plugin`，`plugin`只能是`then`插件或者`execute`插件
 
-## finally
-
-- 类型
-
+- 示例
   ```typescript
-  type OnFinally<T> = Parameters<Promise<T>['finally']>[0]
-
-  finally(onFinally: OnFinally<unknown>): Subjection
+  import { $, console } from "fluth";
+  const promise$ = $("1").use(console);
+  promise$.next("2"); // 打印 2
+  promise$.remove(console);
+  promise$.next("3"); // 不打印 3
   ```
-
-- 详情
-
-  对订阅节点进行`finally`，用法和`promise`保持一致，返回订阅节点的[ Subjection ](#subjection)实例
-
-## unsubscribe
-
-- 类型
-
-  ```typescript
-  unsubscribe(): void
-  ```
-
-- 详情
-
-  取消节点的订阅，不同于`promise`的无法取消，`stream`的订阅可以随时取消
-  ::: warning 警告
-  取消当前节点订阅，当前节点的`then`之后的节点也会全部取消订阅
-  :::
-
-## setUnsubscribeCallback
-
-- 类型
-
-  ```typescript
-  setUnsubscribeCallback(callback: () => void): void
-  ```
-
-- 详情
-
-  设置取消节点订阅的回调函数
-
-## finish
-
-- 类型
-
-  ```typescript
-  finish: Promise<any>;
-  ```
-
-- 详情
-
-  流结束后触发的`promise`，会早于订阅节点自动取消订阅触发
-
-## execute
-
-- 类型
-
-  ```typescript
-  execute: () => void
-  ```
-
-- 详情
-
-  主动执行当前节点，数据采用上一次流过该节点的数据，如果节点从来没有执行过，则不会执行。
-  :::warning
-  执行当前节点，当前节点`then`之后的节点也会执行，相当于在当前节点推流
-  :::
 
 ## pause
 
@@ -184,6 +145,21 @@ import Subjection from '../../components/subjection.vue'
 
   暂停当前流，执行`pause`方法后，所有订阅的节点都不会执行
 
+- 示例
+
+  ```typescript
+  import { $, console } from "fluth";
+
+  const promise$ = $("1");
+  promise$.then((value) => {
+    console.log(value);
+  });
+
+  promise$.next("2"); // 打印 2
+  promise$.pause();
+  promise$.next("3"); // 不打印 3
+  ```
+
 ## restart
 
 - 类型
@@ -196,14 +172,18 @@ import Subjection from '../../components/subjection.vue'
 
   重启当前流，执行`restart`方法后，所有订阅的节点开始接受流的推送并执行
 
-## next
-
-- 类型
+- 示例
 
   ```typescript
-  next(payload: any, finishFlag?: boolean): void;
+  import { $, console } from "fluth";
+
+  const promise$ = $("1");
+  promise$.then((value) => {
+    console.log(value);
+  });
+
+  promise$.pause();
+  promise$.next("2"); // 不打印 2
+  promise$.restart();
+  promise$.next("3"); // 打印 3
   ```
-
-- 详情
-
-  当前流推送数据，`payload`为数据，当设置为`Promise.reject(xxx)`时，后续`then`表现和`promise`的`then`一致；第二个参数代表当前流是否结束，当设置为`true`后续`next`将不再执行
