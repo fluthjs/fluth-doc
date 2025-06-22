@@ -4,8 +4,8 @@
 
   ```typescript
   interface Plugin {
-    then: thenPluginFn[];
-    execute: executePlugin[];
+    then: thenPluginFn || thenPluginFn[];
+    execute: executePlugin || executePlugin[];
     chain: ChainPluginFn[];
   }
 
