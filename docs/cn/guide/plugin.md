@@ -38,7 +38,7 @@ import { $ } from "fluth";
 
 // 自定义execute插件, 执行节点时修改结果
 const executePlugin = {
-  execute: ({ result, set, unsubscribe }) => {
+  execute: ({ result }) => {
     return result + 1;
   },
 };

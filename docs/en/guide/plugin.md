@@ -38,7 +38,7 @@ import { $ } from "fluth";
 
 // Custom execute plugin, modify result when executing node
 const executePlugin = {
-  execute: ({ result, set, unsubscribe }) => {
+  execute: ({ result }) => {
     return result + 1;
   },
 };

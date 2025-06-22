@@ -52,17 +52,23 @@ export default {
             },
             {
               text: "Plugins",
+              link: "/en/api/plugin/plugin",
               items: [
                 {
                   text: "execute plugin",
+                  link: "/en/api/plugin/executePlugin",
                   items: [
                     { text: "delayExec", link: "/en/api/plugin/delayExec" },
                     { text: "consoleExec", link: "/en/api/plugin/consoleExec" },
                   ],
                 },
-                { text: "then plugin", items: [] },
+                {
+                  text: "then plugin",
+                  link: "/en/api/plugin/thenPlugin",
+                },
                 {
                   text: "chain plugin",
+                  link: "/en/api/plugin/chainPlugin",
                   items: [
                     { text: "delay", link: "/en/api/plugin/delay" },
                     { text: "throttle", link: "/en/api/plugin/throttle" },

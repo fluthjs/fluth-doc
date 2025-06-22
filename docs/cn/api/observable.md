@@ -281,27 +281,6 @@ import Observable from '../../components/observable.vue'
   promise$.next(3); // 打印 3
   ```
 
-## skip
-
-- 类型
-  ```typescript
-     skip(skipTime?: number): Observable;
-  ```
-- 详情
-
-  跳过`skipTime`次推流，返回订阅节点的[ Observable ](#observable)实例，skipTime 默认为 1。
-
-- 示例
-
-  ```typescript
-  import { $ } from "fluth";
-
-  const promise$ = $();
-  const observable$ = promise$.skip().then((value) => console.log(value));
-  promise$.next(1); // 不打印
-  promise$.next(2); // 打印 2
-  ```
-
 ## execute
 
 - 类型

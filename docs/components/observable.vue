@@ -88,10 +88,6 @@ const subjectionApi = [
     address: "#filter",
   },
   {
-    name: "skip",
-    address: "#skip",
-  },
-  {
     name: "execute",
     address: "#execute",
   },

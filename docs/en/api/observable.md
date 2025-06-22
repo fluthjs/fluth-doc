@@ -281,27 +281,6 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
   promise$.next(3); // prints 3
   ```
 
-## skip
-
-- Type
-  ```typescript
-     skip(skipTime?: number): Observable;
-  ```
-- Details
-
-  Skips `skipTime` stream pushes, returns an [Observable](#observable) instance of the subscription node. skipTime defaults to 1.
-
-- Example
-
-  ```typescript
-  import { $ } from "fluth";
-
-  const promise$ = $();
-  const observable$ = promise$.skip().then((value) => console.log(value));
-  promise$.next(1); // doesn't print
-  promise$.next(2); // prints 2
-  ```
-
 ## execute
 
 - Type

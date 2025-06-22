@@ -53,17 +53,23 @@ export default {
             },
             {
               text: "插件",
+              link: "/cn/api/plugin/plugin",
               items: [
                 {
                   text: "execute插件",
+                  link: "/cn/api/plugin/executePlugin",
                   items: [
                     { text: "delayExec", link: "/cn/api/plugin/delayExec" },
                     { text: "consoleExec", link: "/cn/api/plugin/consoleExec" },
                   ],
                 },
-                { text: "then插件", items: [] },
+                {
+                  text: "then插件",
+                  link: "/cn/api/plugin/thenPlugin",
+                },
                 {
                   text: "chain插件",
+                  link: "/cn/api/plugin/chainPlugin",
                   items: [
                     { text: "delay", link: "/cn/api/plugin/delay" },
                     { text: "throttle", link: "/cn/api/plugin/throttle" },
