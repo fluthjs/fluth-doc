@@ -19,7 +19,7 @@ import Stream from '../../components/stream.vue'
 - Details
 
   - Pushes data to the current stream. When `payload` is `Promise.reject(xxx)`, subsequent `then` behavior is consistent with `promise`'s `then`.
-  - The second parameter indicates whether the current stream is finished. When set to `true`, subsequent `set` and `next` will not execute, and after the stream completes each node, it will trigger the node's `complete` callback function, then automatically call the node's `unsubscribe` method.
+  - The second parameter indicates whether the current stream is finished. When set to `true`, subsequent `set` and `next` will not execute, and after the stream completes each node, it will trigger the node's `afterComplete` callback function, then automatically call the node's `unsubscribe` method.
 
 - Example
   ```typescript

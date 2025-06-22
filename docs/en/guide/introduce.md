@@ -37,7 +37,7 @@ promise$.next(3);
 
 1. `fluth` is very easy to get started with - if you know how to use `promise`, you can use it
 2. `fluth` can chain observers, while `rxjs` observers are concurrent
-3. `fluth` plugin can be called in a chain between observers
+3. `fluth` divides stream operations into `operator` and `chainPlugin`. `chainPlugin` only handles stream composition and can be called in a chain between observers
 
 ```javascript
 // rxjs:
@@ -50,13 +50,18 @@ stream$.subscribe(observer3);
 <!-- prettier-ignore-start -->
 ```javascript
 //fluth:
+stream$.use(chainPlugin1, chainPlugin2, chainPlugin3)
+
 stream$
   .then(observer1)
-  .plugin1()
+  .chainPlugin1()
   .then(observer2)
-  .plugin2()
+  .chainPlugin2()
   .then(observer3)
-  .plugin3();
+  .chainPlugin3();
 stream$.next(1);
+
+operator1(stream$1, stream$2);
+operator2(stream$2, stream$3);
 ```
 <!-- prettier-ignore-end -->

@@ -362,12 +362,12 @@ import Observable from '../../components/observable.vue'
   promise$.next(3); // 不打印
   ```
 
-## setUnsubscribeCallback
+## afterUnsubscribe
 
 - 类型
 
   ```typescript
-  setUnsubscribeCallback(callback: () => void): void
+  afterUnsubscribe(callback: () => void): void
   ```
 
 - 详情
@@ -382,19 +382,31 @@ import Observable from '../../components/observable.vue'
   const promise$ = $(1);
 
   const observable$ = promise$.then((value) => value + 1);
-  observable$.setUnsubscribeCallback(() => {
+  observable$.afterUnsubscribe(() => {
     console.log("unsubscribe");
   });
 
   observable$.unsubscribe(); // 打印 unsubscribe
   ```
 
-## complete
+## offUnsubscribe
 
 - 类型
 
   ```typescript
-    complete(callback: (value: T, status: PromiseStatus) => void): void;
+  offUnsubscribe(callback: () => void): void
+  ```
+
+- 详情
+
+  取消通过`afterUnsubscribe`设置的回调函数
+
+## afterComplete
+
+- 类型
+
+  ```typescript
+    afterComplete(callback: (value: T, status: PromiseStatus) => void): void;
   ```
 
 - 详情
@@ -408,8 +420,20 @@ import Observable from '../../components/observable.vue'
   const promise$ = $(1);
   const observable$ = promise$.then((value) => console.log(value));
 
-  observable$.complete(() => console.log("complete"));
-  observable$.setUnsubscribeCallback(() => console.log("unsubscribe"));
+  observable$.afterComplete(() => console.log("complete"));
+  observable$.afterUnsubscribe(() => console.log("unsubscribe"));
 
   promise$.next(2, true); // 打印 2 complete unsubscribe
   ```
+
+## offComplete
+
+- 类型
+
+  ```typescript
+  offComplete(callback: (value: T, status: PromiseStatus) => void): void
+  ```
+
+- 详情
+
+  取消通过`afterComplete`设置的回调函数

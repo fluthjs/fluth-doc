@@ -19,7 +19,7 @@ import Stream from '../../components/stream.vue'
 - 详情
 
   - 当前流推送数据，`payload`为数据，当为`Promise.reject(xxx)`或者`Promise.reject(xxx)`时，后续`then`表现和`promise`的`then`一致；
-  - 第二个参数代表当前流是否结束当设置为`true`后续`set`、`next`将不再执行，并且在流执行完每个节点后会触发节点的`complete`回调函数，然后自动调用节点的`unsubscribe`方法
+  - 第二个参数代表当前流是否结束当设置为`true`后续`set`、`next`将不再执行，并且在流执行完每个节点后会触发节点的`afterComplete`回调函数，然后自动调用节点的`unsubscribe`方法
 
 - 示例
   ```typescript

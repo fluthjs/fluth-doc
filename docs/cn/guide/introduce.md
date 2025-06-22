@@ -37,7 +37,7 @@ promise$.next(3);
 
 1. `fluth`上手非常简单，只要会使用`promise`就可以使用
 2. `fluth`可以对观察者的进行串联，而`rxjs`的`observer`之间是并发的
-3. `fluth`的`plugin`可以在观察者之间链式调用
+3. `fluth`的将对流的操作分为`operator`、`chainPlugin`，`chainPlugin`只做流的组合，`chainPlugin`可以在观察者之间链式调用
 
 ```javascript
 // rxjs:
@@ -50,13 +50,18 @@ stream$.subscribe(observer3);
 <!-- prettier-ignore-start -->
 ```javascript
 //fluth:
+stream$.use(chainPlugin1, chainPlugin2, chainPlugin3)
+
 stream$
   .then(observer1)
-  .plugin1()
+  .chainPlugin1()
   .then(observer2)
-  .plugin2()
+  .chainPlugin2()
   .then(observer3)
-  .plugin3();
+  .chainPlugin3();
 stream$.next(1);
+
+operator1(stream$1, stream$2);
+operator2(stream$2, stream$3);
 ```
 <!-- prettier-ignore-end -->

@@ -47,17 +47,30 @@ export default {
                 { text: "concat", link: "/cn/api/operator/concat" },
                 { text: "merge", link: "/cn/api/operator/merge" },
                 { text: "partition", link: "/cn/api/operator/partition" },
-                { text: "race", link: "/cn/api/operator/race" },
+                { text: "promiseAll", link: "/cn/api/operator/promiseAll" },
+                { text: "promiseRace", link: "/cn/api/operator/promiseRace" },
               ],
             },
             {
               text: "插件",
               items: [
-                { text: "delayExec", link: "/cn/api/plugin/delayExec" },
-                { text: "consoleExec", link: "/cn/api/plugin/consoleExec" },
-                { text: "delay", link: "/cn/api/plugin/delay" },
-                { text: "throttle", link: "/cn/api/plugin/throttle" },
-                { text: "debounce", link: "/cn/api/plugin/debounce" },
+                {
+                  text: "execute插件",
+                  items: [
+                    { text: "delayExec", link: "/cn/api/plugin/delayExec" },
+                    { text: "consoleExec", link: "/cn/api/plugin/consoleExec" },
+                  ],
+                },
+                { text: "then插件", items: [] },
+                {
+                  text: "chain插件",
+                  items: [
+                    { text: "delay", link: "/cn/api/plugin/delay" },
+                    { text: "throttle", link: "/cn/api/plugin/throttle" },
+                    { text: "debounce", link: "/cn/api/plugin/debounce" },
+                    { text: "skip", link: "/cn/api/plugin/skip" },
+                  ],
+                },
               ],
             },
           ],

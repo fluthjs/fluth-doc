@@ -4,6 +4,12 @@
 
   A [chain](/en/guide/plugin.html#chain-plugin) plugin that applies debouncing to the stream before pushing the processing result to its child subscription nodes.
 
+- Type
+
+  ```typescript
+  debounce: (debounceTime: number) => Observable;
+  ```
+
 - Example
 
   ```typescript

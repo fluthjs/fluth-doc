@@ -4,6 +4,12 @@
 
   [chain](/cn/guide/plugin.html#chain-插件)插件， 当推流到订阅节点后会进行防抖后再将处理结果推给其子订阅节点。
 
+- 类型
+
+  ```typescript
+  throttle: (throttleTime: number) => Observable;
+  ```
+
 - 示例
 
   ```typescript

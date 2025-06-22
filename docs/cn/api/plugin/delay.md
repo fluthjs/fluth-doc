@@ -4,6 +4,12 @@
 
   [chain](/cn/guide/plugin.html#chain-插件)插件，调用后会将流推迟指定时间后再推给其子订阅节点。
 
+- 类型
+
+  ```typescript
+  delay: (delayTime: number) => Observable;
+  ```
+
 - 示例
 
   ```typescript

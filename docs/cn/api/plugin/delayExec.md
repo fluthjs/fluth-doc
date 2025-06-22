@@ -4,6 +4,8 @@
 
   [execute](/cn/guide/plugin.html#execute-插件)插件， 当推流到订阅节点后会推迟指定时间后再将处理结果推给其子订阅节点。
 
+- 类型
+
 - 示例
 
   ```typescript

@@ -4,6 +4,12 @@
 
   A [chain](/en/guide/plugin.html#chain-plugin) plugin that applies throttling to the stream before pushing it to its child subscription nodes.
 
+- Type
+
+  ```typescript
+  throttle: (throttleTime: number) => Observable;
+  ```
+
 - Example
   ```typescript
   import { $, throttle } from "fluth";

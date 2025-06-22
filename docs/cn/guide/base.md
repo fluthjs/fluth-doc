@@ -87,4 +87,4 @@ const promise$ = new Stream();
 promise$.next(1, true); // true表示结束，最后一次推流
 ```
 
-每个订阅节点在执行完最后这次数据推送后都会触发[`complete`](/cn/api/observable#complete)回调，然后自动取消订阅所有的订阅者，触发所有子节点的[`setUnsubscribeCallback`](/cn/api/observable#setunsubscribecallback)。
+每个订阅节点在执行完最后这次数据推送后都会触发[`afterComplete`](/cn/api/observable#aftercomplete)回调，然后自动取消订阅所有的订阅者，触发所有子节点的[`afterUnsubscribe`](/cn/api/observable#afterunsubscribe)。

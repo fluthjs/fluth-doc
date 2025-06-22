@@ -46,17 +46,30 @@ export default {
                 { text: "concat", link: "/en/api/operator/concat" },
                 { text: "merge", link: "/en/api/operator/merge" },
                 { text: "partition", link: "/en/api/operator/partition" },
-                { text: "race", link: "/en/api/operator/race" },
+                { text: "promiseAll", link: "/en/api/operator/promiseAll" },
+                { text: "promiseRace", link: "/en/api/operator/promiseRace" },
               ],
             },
             {
               text: "Plugins",
               items: [
-                { text: "delayExec", link: "/en/api/plugin/delayExec" },
-                { text: "consoleExec", link: "/en/api/plugin/consoleExec" },
-                { text: "delay", link: "/en/api/plugin/delay" },
-                { text: "throttle", link: "/en/api/plugin/throttle" },
-                { text: "debounce", link: "/en/api/plugin/debounce" },
+                {
+                  text: "execute plugin",
+                  items: [
+                    { text: "delayExec", link: "/en/api/plugin/delayExec" },
+                    { text: "consoleExec", link: "/en/api/plugin/consoleExec" },
+                  ],
+                },
+                { text: "then plugin", items: [] },
+                {
+                  text: "chain plugin",
+                  items: [
+                    { text: "delay", link: "/en/api/plugin/delay" },
+                    { text: "throttle", link: "/en/api/plugin/throttle" },
+                    { text: "debounce", link: "/en/api/plugin/debounce" },
+                    { text: "skip", link: "/en/api/plugin/skip" },
+                  ],
+                },
               ],
             },
           ],

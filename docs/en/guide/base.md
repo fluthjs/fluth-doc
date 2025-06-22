@@ -87,4 +87,4 @@ const promise$ = new Stream();
 promise$.next(1, true); // true indicates completion, last stream push
 ```
 
-After executing this final data push, each subscription node will trigger the [`complete`](/en/api/observable#complete) callback and automatically unsubscribe all subscribers, triggering the [`setUnsubscribeCallback`](/en/api/observable#setunsubscribecallback) of all child nodes.
+After executing this final data push, each subscription node will trigger the [`afterComplete`](/en/api/observable#aftercomplete) callback and automatically unsubscribe all subscribers, triggering the [`afterUnsubscribe`](/en/api/observable#afterunsubscribe) of all child nodes.

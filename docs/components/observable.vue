@@ -100,12 +100,20 @@ const subjectionApi = [
     address: "#unsubscribe",
   },
   {
-    name: "setUnsubscribeCallback",
-    address: "#setUnsubscribeCallback",
+    name: "afterUnsubscribe",
+    address: "#afterunsubscribe",
   },
   {
-    name: "complete",
-    address: "#complete",
+    name: "offUnsubscribe",
+    address: "#offunsubscribe",
+  },
+  {
+    name: "afterComplete",
+    address: "#aftercomplete",
+  },
+  {
+    name: "offComplete",
+    address: "#offcomplete",
   },
 ];
 </script>
