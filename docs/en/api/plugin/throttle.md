@@ -2,7 +2,7 @@
 
 - Details
 
-  A [chain](/en/guide/plugin.html#chain-plugin) plugin that applies throttling to the stream before pushing it to its child subscription nodes.
+  A chain plugin that applies throttling to the stream before pushing it to its child subscription nodes.
 
 - Type
 

@@ -2,7 +2,7 @@
 
 - Details
 
-  A [chain](/en/guide/plugin.html#chain-plugin) plugin that delays pushing the stream to its child subscription nodes for a specified time after being called.
+  A chain plugin that delays pushing the stream to its child subscription nodes for a specified time after being called.
 
 - Type
 

@@ -40,12 +40,8 @@ const streamApi = [
     address: "#set",
   },
   {
-    name: "use",
-    address: "#use",
-  },
-  {
-    name: "remove",
-    address: "#remove",
+    name: "complete",
+    address: "#complete",
   },
   {
     name: "pause",

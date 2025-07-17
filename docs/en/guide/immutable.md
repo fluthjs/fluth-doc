@@ -1,10 +1,10 @@
 # Immutable Data
 
-`fluth` supports immutable data, implemented using [`limu`](https://tnfe.github.io/limu/).
+`fluth` supports immutable data, implemented using [`limu`](https://tnfe.github.io/limu/) under the hood.
 
 ## Stream
 
-The `set` method of the `Stream` object can immutably modify node data.
+The `set` method of `Stream` objects can modify node data in an `immutable` way.
 
 ```typescript
 import { $ } from "fluth";
@@ -20,7 +20,7 @@ console.log(oldValue.b === newValue.b); // true
 
 ## Observable
 
-The `$then`, `$thenOnce`, `$thenImmediate` methods of the `Observable` object can also immutably modify node data.
+The `$then`, `$thenOnce`, `$thenImmediate` methods of `Observable` objects can also modify node data in an `immutable` way.
 
 ```typescript
 import { $ } from "fluth";

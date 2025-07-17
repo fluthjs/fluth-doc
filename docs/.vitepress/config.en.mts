@@ -1,80 +1,97 @@
 export default {
-  label: "English",
-  lang: "en",
-  title: "fluth",
-  description: "A Promise-based asynchronous flow control library",
+  label: 'English',
+  lang: 'en',
+  title: 'fluth',
+  description: 'A Promise-based asynchronous flow control library',
   themeConfig: {
-    outline: "deep",
+    outline: 'deep',
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: "Guide", link: "/en/guide/introduce" },
-      { text: "API", link: "/en/api/stream" },
-      { text: "changelog", link: "https://github.com/fluthjs/fluth/blob/master/CHANGELOG.md" },
-      { text: "fluth-vue", link: "https://fluthjs.github.io/fluth-vue/index.html" },
+      { text: 'Guide', link: '/en/guide/introduce' },
+      { text: 'API', link: '/en/api/stream' },
+      { text: 'changelog', link: 'https://github.com/fluthjs/fluth/blob/master/CHANGELOG.md' },
+      { text: 'fluth-vue', link: 'https://fluthjs.github.io/fluth-vue/index.html' },
     ],
     sidebar: {
-      "/en/": [
+      '/en/': [
         {
-          text: "Guide",
+          text: 'Guide',
           items: [
-            { text: "Introduction", link: "/en/guide/introduce" },
-            { text: "Basic Concepts", link: "/en/guide/base" },
-            { text: "Quick Start", link: "/en/guide/quick" },
-            { text: "Application Scenarios", link: "/en/guide/scene" },
-            { text: "Using Plugins", link: "/en/guide/plugin" },
-            { text: "Immutable Data", link: "/en/guide/immutable" },
-            { text: "TypeScript Support", link: "/en/guide/type" },
+            { text: 'Introduction', link: '/en/guide/introduce' },
+            { text: 'Basic Concepts', link: '/en/guide/base' },
+            { text: 'Quick Start', link: '/en/guide/quick' },
+            { text: 'Application Scenarios', link: '/en/guide/scene' },
+            { text: 'Using Plugins', link: '/en/guide/plugin' },
+            { text: 'Immutable Data', link: '/en/guide/immutable' },
+            // { text: "Advanced Usage", link: "/en/guide/heigh" },
+            { text: 'TypeScript Support', link: '/en/guide/type' },
           ],
         },
         {
-          text: "API",
+          text: 'API',
           items: [
             {
-              text: "Streams",
+              text: 'Streams',
               items: [
-                { text: "Stream", link: "/en/api/stream" },
-                { text: "Observable", link: "/en/api/observable" },
-                { text: "createStream", link: "/en/api/createStream" },
+                { text: '$', link: '/en/api/$' },
+                { text: 'Stream', link: '/en/api/stream' },
+                { text: 'Observable', link: '/en/api/observable' },
               ],
             },
             {
-              text: "Operators",
+              text: 'Operators',
               items: [
-                { text: "fork", link: "/en/api/operator/fork" },
-                { text: "finish", link: "/en/api/operator/finish" },
-                { text: "combine", link: "/en/api/operator/combine" },
-                { text: "concat", link: "/en/api/operator/concat" },
-                { text: "merge", link: "/en/api/operator/merge" },
-                { text: "partition", link: "/en/api/operator/partition" },
-                { text: "promiseAll", link: "/en/api/operator/promiseAll" },
-                { text: "promiseRace", link: "/en/api/operator/promiseRace" },
+                {
+                  text: 'Creation Operators',
+                  items: [
+                    { text: 'fork', link: '/en/api/operator/fork' },
+                    { text: 'finish', link: '/en/api/operator/finish' },
+                    { text: 'combine', link: '/en/api/operator/combine' },
+                    { text: 'concat', link: '/en/api/operator/concat' },
+                    { text: 'merge', link: '/en/api/operator/merge' },
+                    { text: 'partition', link: '/en/api/operator/partition' },
+                    { text: 'promiseAll', link: '/en/api/operator/promiseAll' },
+                    { text: 'promiseRace', link: '/en/api/operator/promiseRace' },
+                  ],
+                },
+                {
+                  text: 'Filtering Operators',
+                  items: [
+                    { text: 'get', link: '/en/api/operator/get' },
+                    { text: 'change', link: '/en/api/operator/change' },
+                    { text: 'filter', link: '/en/api/operator/filter' },
+                    { text: 'skip', link: '/en/api/operator/skip' },
+                    { text: 'throttle', link: '/en/api/operator/throttle' },
+                    { text: 'debounce', link: '/en/api/operator/debounce' },
+                  ],
+                },
+                {
+                  text: 'Transformation Operators',
+                  items: [
+                    { text: 'audit', link: '/en/api/operator/audit' },
+                    { text: 'buffer', link: '/en/api/operator/buffer' },
+                  ],
+                },
               ],
             },
             {
-              text: "Plugins",
-              link: "/en/api/plugin/plugin",
+              text: 'Plugins',
+              link: '/en/api/plugin/plugin',
               items: [
                 {
-                  text: "execute plugin",
-                  link: "/en/api/plugin/executePlugin",
+                  text: 'execute plugin',
+                  link: '/en/api/plugin/executePlugin',
                   items: [
-                    { text: "delayExec", link: "/en/api/plugin/delayExec" },
-                    { text: "consoleExec", link: "/en/api/plugin/consoleExec" },
+                    { text: 'delayExec', link: '/en/api/plugin/delayExec' },
+                    { text: 'consoleNode', link: '/en/api/plugin/consoleNode' },
+                    { text: 'consoleAll', link: '/en/api/plugin/consoleAll' },
+                    { text: 'debugNode', link: '/en/api/plugin/debugNode' },
+                    { text: 'debugAll', link: '/en/api/plugin/debugAll' },
                   ],
                 },
                 {
-                  text: "then plugin",
-                  link: "/en/api/plugin/thenPlugin",
-                },
-                {
-                  text: "chain plugin",
-                  link: "/en/api/plugin/chainPlugin",
-                  items: [
-                    { text: "delay", link: "/en/api/plugin/delay" },
-                    { text: "throttle", link: "/en/api/plugin/throttle" },
-                    { text: "debounce", link: "/en/api/plugin/debounce" },
-                    { text: "skip", link: "/en/api/plugin/skip" },
-                  ],
+                  text: 'then plugin',
+                  link: '/en/api/plugin/thenPlugin',
                 },
               ],
             },
@@ -83,4 +100,4 @@ export default {
       ],
     },
   },
-};
+}

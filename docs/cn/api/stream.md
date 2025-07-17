@@ -28,7 +28,7 @@ import Stream from '../../components/stream.vue'
   promise$.then((value) => {
     console.log(value);
   });
-  promise$.next("2"); // 打印 2
+  promise$.next("2"); // 输出 2
   ```
 
 ## set
@@ -52,85 +52,34 @@ import Stream from '../../components/stream.vue'
   });
   promise$.set((value) => {
     value.a = 2;
-  }); // 打印 { a: 1, b: { c: 3 } }
+  }); // 输出 { a: 1, b: { c: 3 } }
 
   const newValue = promise$.value;
-  console.log(oldValue === newValue); // 打印 false
-  console.log(oldValue.b === newValue.b); // 打印 true
+  console.log(oldValue === newValue); // 输出 false
+  console.log(oldValue.b === newValue.b); // 输出 true
   ```
 
-## use
-
-- 类型
-
-  `plugin`类型
-
-  ```typescript
-  type thenPlugin = (unsubscribe: () => void) => void
-  type ChainPluginFn<T extends Observable = Observable> = (observer: T) => Record<string, any>
-  type executePlugin = <T>(params: {
-    result: Promise<T> | T
-    set: (setter: (value: T) => Promise<void> | void) => Promise<T> | T
-    unsubscribe: () => void
-  }) => Promise<any> | any
-
-  type plugin: {
-    then?: thenPluginFn | thenPluginFn[]
-    execute?: executePlugin | executePlugin[]
-    chain?: ChainPluginFn
-  }
-  ```
-
-  `use`类型
-
-  ```typescript
-  use<P extends Plugin>(plugin: P): Stream<T, I, E & ChainReturn<P, T, E>> & E & ChainReturn<P, T, E>;
-  ```
-
-- 详情
-
-  调用`use`可以使用三种插件: `then`插件、`execute`插件、`chain`插件：
-
-  - `then`插件在[then](/cn/api/observable#then)方法被调用时执行。它们将当前节点的`unsubscribe`函数作为参数，可以实现统一的取消订阅功能。
-  - `execute`插件在[execute](/cn/api/observable#then)方法被调用时执行。它们将当前节点的执行结果、可以生成`immutables`数据的`set`函数、当前节点的`unsubscribe`函数作为参数，返回的`promise`将被传递给下一个`execute`插件，最终返回的`promise`数据将传递给下一个的`then`节点。
-  - `chain`插件能够对当前流的链式操作上添加新的属性和方法。
-
-- 示例
-
-  ```typescript
-  import { $, delay } from "fluth";
-
-  const promise$ = $("1").use(delay);
-  promise$.delay(1000).then((value) => {
-    console.log(value);
-  });
-
-  promise$.next("2"); // 1s后打印 2
-  ```
-
-## remove
+## complete
 
 - 类型
 
   ```typescript
-    interface ThenOrExecutePlugin {
-        then?: thenPluginFn | thenPluginFn[];
-        execute?: executePlugin | executePlugin[];
-    }
-    remove(plugin: ThenOrExecutePlugin | ThenOrExecutePlugin[]): void;
+  complete: () => void
   ```
 
 - 详情
 
-  移除指定的`plugin`，`plugin`只能是`then`插件或者`execute`插件
+  调用`complete`方法后流将结束，后续的`next`、`set`将不再执行，并且会触发所有节点的`afterComplete`回调函数，然后自动调用节点的`unsubscribe`方法
 
 - 示例
+
   ```typescript
   import { $, console } from "fluth";
-  const promise$ = $("1").use(console);
-  promise$.next("2"); // 打印 2
-  promise$.remove(console);
-  promise$.next("3"); // 不打印 3
+  const promise$ = $();
+  promise$.afterComplete(() => {
+    console.log("complete");
+  });
+  promise$.complete(); // 输出 complete
   ```
 
 ## pause
@@ -155,9 +104,9 @@ import Stream from '../../components/stream.vue'
     console.log(value);
   });
 
-  promise$.next("2"); // 打印 2
+  promise$.next("2"); // 输出 2
   promise$.pause();
-  promise$.next("3"); // 不打印 3
+  promise$.next("3"); // 不输出 3
   ```
 
 ## restart
@@ -183,7 +132,7 @@ import Stream from '../../components/stream.vue'
   });
 
   promise$.pause();
-  promise$.next("2"); // 不打印 2
+  promise$.next("2"); // 不输出 2
   promise$.restart();
-  promise$.next("3"); // 打印 3
+  promise$.next("3"); // 输出 3
   ```

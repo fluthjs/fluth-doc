@@ -2,7 +2,7 @@
 
 - Details
 
-  A [chain](/en/guide/plugin.html#chain-plugin) plugin that applies debouncing to the stream before pushing the processing result to its child subscription nodes.
+  A chain plugin that applies debouncing to the stream before pushing the processing result to its child subscription nodes.
 
 - Type
 

@@ -2,11 +2,11 @@
 
 ## 插件类型
 
-`fluth`支持三种类型插件：`then`、`execute`、`chain`
+`fluth`支持四种类型插件：`then`、`thenAll`、`execute`、`executeAll`
 
 ### then 插件
 
-在`then`操作时触发，一般用于取消订阅节点
+在创建订阅节点时触发，接收取消订阅函数和当前观察者实例作为参数
 
 ```typescript
 import { $ } from "fluth";
@@ -24,21 +24,66 @@ promise$.then((data) => {
   console.log(data);
 });
 
-promise$.next(2); // 打印2
+promise$.next(2); // 输出2
 sleep(1000);
-promise$.next(3); // 不打印3
+promise$.next(3); // 不输出
+```
+
+### thenAll 插件
+
+流所有的节点创建订阅时触发，只能用于`Stream`流， `Observable`流节点使用会抛出错误
+
+```typescript
+import { $ } from "fluth";
+
+// 自定义thenAll插件, 为流所有的节点的then操作添加统一处理
+const thenAllPlugin = {
+  thenAll: (unsubscribe) => {
+    console.log("thenAll插件被触发");
+    // 可以在这里添加统一的逻辑，比如统一的取消订阅处理
+  },
+};
+
+const promise$ = $(1).use(thenAllPlugin);
+
+// 第一个then节点
+promise$.then((data) => {
+  console.log("第一个then:", data);
+  return data + 1;
+});
+
+// 第二个then节点（子节点）
+promise$.then((data) => {
+  console.log("第二个then:", data);
+  return data * 2;
+});
+
+// 第三个then节点（子节点）
+promise$.then((data) => {
+  console.log("第三个then:", data);
+});
+
+promise$.next(2);
+// 输出:
+// thenAll插件被触发
+// thenAll插件被触发
+// thenAll插件被触发
+// 第一个then: 2
+// 第二个then: 3
+// 第三个then: 6
 ```
 
 ### execute 插件
 
-在订阅节点`execute`时修改处理结果
+在节点执行时触发，可以修改执行结果，如果节点有多个`execute`插件，会按照插件的顺序依次执行, 前一个插件的结果会作为下一个插件的输入并将最后的结果作为当前节点的返回值。
 
 ```typescript
 import { $ } from "fluth";
 
 // 自定义execute插件, 执行节点时修改结果
 const executePlugin = {
-  execute: ({ result }) => {
+  execute: ({ result, root }) => {
+    console.log(`执行节点 - 是否Stream节点: ${root}, 结果: ${result}`);
     return result + 1;
   },
 };
@@ -47,41 +92,48 @@ const promise$ = $().use(executePlugin);
 
 promise$.then((data) => console.log(data));
 
-promise$.next(1); // 打印2
+promise$.next(1);
+// 输出: 执行节点 - 是否Stream节点: true, 结果: 1
+// 输出: 2
 ```
 
-### chain 插件
+### executeAll 插件
 
-为流上所有的订阅节点添加链式方法
+在节点执行时触发，可以修改执行结果，只能用于`Stream`流， `Observable`流节点使用会抛出错误。
+
+如果节点有多个`executeAll`插件，会按照插件的顺序依次执行, 前一个插件的结果会作为下一个插件的输入并将最后的结果作为当前节点的返回值。
 
 ```typescript
-import { Observable, $ } from "fluth";
+import { $ } from "fluth";
 
-// 自定义chain插件, 为流添加链式方法
-const chainPlugin = {
-  chain: (observer: Observable) => ({
-    // 添加链式自定义方法，可链式调用
-    customMethod: () => "current: " + observer.value,
-  }),
+// 自定义executeAll插件, 为根流及其所有子节点的execute操作添加统一处理
+const executeAllPlugin = {
+  executeAll: ({ result, root, onfulfilled, onrejected }) => {
+    // 跳过传递节点（没有处理函数的节点）
+    if (!root && !onfulfilled && !onrejected) {
+      return result;
+    }
+    console.log("executeAll插件被触发，结果:", result, "是否Stream节点:", root);
+    return result;
+  },
 };
 
-const promise$ = $(1).use(chainPlugin);
-const observable$ = promise$.then((data) => data + 1);
-promise$.next(2);
+const promise$ = $().use(executeAllPlugin);
 
-console.log(promise$.customMethod()); // 打印 current 2
-console.log(observable$.customMethod()); // 打印 current 3
+promise$
+  .then((data) => data + 1)
+  .then() // onfulfilled = undefined, onrejected = undefined
+  .then((data) => data * 2);
+
+promise$.next(1);
+// 输出:
+// executeAll插件被触发，结果: 1 是否Stream节点: true
+// executeAll插件被触发，结果: 2 是否Stream节点: false
+// executeAll插件被触发，结果: 4 是否Stream节点: false
 ```
 
-## 创建带默认插件的流
+## 插件使用注意
 
-流在使用插件前都需要采用`use`方法添加插件，为了避免每次都添加插件，`fluth`提供了创建带默认插件的流的方法`createStream`
-
-```typescript
-import { createStream, delay, throttle, debounce } from "fluth";
-
-// 创建带默认插件的流
-const new$ = createStream(delay, throttle, debounce);
-// 使用流
-const promise$ = new$(1);
-```
+- `thenAll`和`executeAll`插件只能用于`Stream`流，`Observable`流节点使用会抛出错误
+- `then`和`execute`插件可以用于任何节点
+- 插件可以通过`use`方法添加，通过`remove`方法移除

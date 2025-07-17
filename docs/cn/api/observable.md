@@ -19,6 +19,21 @@ import Observable from '../../components/observable.vue'
 
   当前节点的数据
 
+## status
+
+- 类型
+  ```typescript
+  enum PromiseStatus {
+    PENDING = "pending",
+    RESOLVED = "resolved",
+    REJECTED = "rejected",
+  }
+  status: PromiseStatus | null;
+  ```
+- 详情
+
+  当前节点的状态，一般处于`pending`、`fulfilled`、`rejected`状态，当流没有经过该节点或者该节点已经取消订阅，则状态为`null`
+
 ## then
 
 - 类型
@@ -71,8 +86,8 @@ import Observable from '../../components/observable.vue'
 
   const promise$ = $("1");
   const observable$ = promise$.thenOnce((value) => console.log(value));
-  promise$.next("2"); // 打印 2
-  promise$.next("3"); // 不会打印 3
+  promise$.next("2"); // 输出 2
+  promise$.next("3"); // 不会输出 3
   ```
 
 ## thenImmediate
@@ -102,7 +117,7 @@ import Observable from '../../components/observable.vue'
   import { $ } from "fluth";
 
   const promise$ = $("1");
-  const observable$ = promise$.thenImmediate((value) => console.log(value)); // 打印 1
+  const observable$ = promise$.thenImmediate((value) => console.log(value)); // 输出 1
   ```
 
 ## $then
@@ -169,7 +184,7 @@ import Observable from '../../components/observable.vue'
   observable$ = promise$.catch((error) => {
     console.log(error);
   });
-  promise$.next(Promise.reject("error")); // 打印 error
+  promise$.next(Promise.reject("error")); // 输出 error
   ```
 
 ## finally
@@ -193,92 +208,87 @@ import Observable from '../../components/observable.vue'
   observable$ = promise$.finally(() => {
     console.log("finally");
   });
-  promise$.next(1); // 打印 finally
+  promise$.next(1); // 输出 finally
   ```
 
-## get
+## use
 
 - 类型
 
+  `plugin`类型
+
   ```typescript
-    get<F>(getter: (value: T | undefined) => F): Observable<F extends PromiseLike<infer V> ? V : F, E> & E;
+  type thenPlugin = (unsubscribe: () => void) => void
+  type executePlugin = <T>(params: {
+    result: Promise<T> | T
+    set: (setter: (value: T) => Promise<void> | void) => Promise<T> | T
+    root: boolean
+    onfulfilled?: OnFulfilled
+    onrejected?: OnRejected
+    unsubscribe: () => void
+  }) => Promise<any> | any
+
+  type plugin: {
+    then?: thenPlugin | thenPlugin[]
+    thenAll?: thenPlugin | thenPlugin[]
+    execute?: executePlugin | executePlugin[]
+    executeAll?: executePlugin | executePlugin[]
+  }
   ```
 
-  - `get`订阅者，订阅当前节点的数据的`getter`部分，会立即执行并获取`getter`的结果，后续仅当这部分的值发生变化时，才会推流到订阅的字节点
-  - `getter`的结果为订阅节点的值，返回订阅节点的[ Observable ](#observable)实例。
-
-- 示例
+  `use`类型
 
   ```typescript
-  import { $ } from "fluth";
-
-  const promise$ = $({ a: 1, b: { c: 2 } });
-  // get 会立即执行
-  const observable$ = promise$.get((value) => value.b);
-
-  observable$.value; // { c: 2 }
-
-  observable$.then((value) => console.log(value));
-
-  promise$.set((value) => {
-    value.a = 3;
-  }); // 不打印
-
-  promise$.set((value) => {
-    value.b.c = 3;
-  }); // 打印 { c: 3 }
-  ```
-
-## change
-
-- 类型
-
-  ```typescript
-    change(getter: (value: T | undefined) => any): Observable
+  use<P extends Plugin>(plugin: P): Stream<T, I, E & ChainReturn<P, T, E>> & E & ChainReturn<P, T, E>;
   ```
 
 - 详情
 
-  `change`订阅者，只有上一次推流数据的`getter`结果和当前推流数据的`getter`结果不相等，才会触发订阅节点的`execute`，返回订阅节点的[ Observable ](#observable)实例。
+  调用`use`可以使用四种插件: `then`插件、`execute`插件、`thenAll`插件、`executeAll`插件：
+
+  - `then`插件在[then](/cn/api/observable#then)方法被调用时执行。它们将当前节点的`unsubscribe`函数作为参数，可以实现统一的取消订阅功能。
+  - `execute`插件在[execute](/cn/api/observable#then)方法被调用时执行。它们将当前节点的执行结果、可以生成`immutables`数据的`set`函数、当前节点的`unsubscribe`函数作为参数，返回的`promise`将被传递给下一个`execute`插件，最终返回的`promise`数据将传递给下一个的`then`节点。
+  - `thenAll`插件在根流及其所有子节点的`then`操作时触发，只能用于根流，子节点不能使用。
+  - `executeAll`插件在根流及其所有子节点的`execute`操作时触发，只能用于根流，子节点不能使用。
 
 - 示例
 
   ```typescript
-  import { $ } from "fluth";
+  import { $, delay } from "fluth";
 
-  const promise$ = $({ a: 1, b: { c: 2 } });
-  const observable$ = promise$.change((value) => value.b).then((value) => console.log(value));
+  const promise$ = $("1").use(delay);
+  promise$.delay(1000).then((value) => {
+    console.log(value);
+  });
 
-  promise$.set((value) => {
-    value.a = 3;
-  }); // 不打印
-
-  promise$.set((value) => {
-    value.b.c = 3;
-  }); // 打印 {a: 3, b: {c: 3}}
+  promise$.next("2"); // 1s后输出 2
   ```
 
-## filter
+## remove
 
 - 类型
 
   ```typescript
-    filter(condition: (value: T) => boolean): Observable
+    interface PluginParams {
+        then?: thenPlugin | thenPlugin[];
+        thenAll?: thenPlugin | thenPlugin[];
+        execute?: executePlugin | executePlugin[];
+        executeAll?: executePlugin | executePlugin[];
+    }
+    remove(plugin: PluginParams | PluginParams[]): void;
   ```
 
 - 详情
 
-  `filter`订阅者，当前节点的数据满足`condition`时，才会触发订阅节点的`execute`，返回订阅节点的[ Observable ](#observable)实例。
+  移除指定的`plugin`，`plugin`可以是`then`、`execute`、`thenAll`、`executeAll`插件
 
 - 示例
-
   ```typescript
-  import { $ } from "fluth";
-
-  const promise$ = $(1);
-  const observable$ = promise$.filter((value) => value > 2).then((value) => console.log(value));
-  promise$.next(2); // 不打印
-  promise$.next(3); // 打印 3
+  import { $, console } from "fluth";
+  const promise$ = $("1").use(console);
+  promise$.next("2"); // 输出 2
+  promise$.remove(console);
+  promise$.next("3"); // 不输出 3
   ```
 
 ## execute
@@ -305,9 +315,9 @@ import Observable from '../../components/observable.vue'
   const observable$ = promise$.then((value) => value + 1);
   observable$.then((value) => console.log(value + 1));
 
-  observable$.execute(); // 不打印
-  promise$.next(1); //  打印 3
-  observable$.execute(); // 打印 3
+  observable$.execute(); // 不输出
+  promise$.next(1); //  输出 3
+  observable$.execute(); // 输出 3
   ```
 
 ## unsubscribe
@@ -334,11 +344,11 @@ import Observable from '../../components/observable.vue'
   const observable$ = promise$.then((value) => value + 1);
   observable$.then((value) => console.log(value + 1));
 
-  promise$.next(2); // 打印 2
+  promise$.next(2); // 输出 2
 
   observable$.unsubscribe();
 
-  promise$.next(3); // 不打印
+  promise$.next(3); // 不输出
   ```
 
 ## afterUnsubscribe
@@ -365,7 +375,7 @@ import Observable from '../../components/observable.vue'
     console.log("unsubscribe");
   });
 
-  observable$.unsubscribe(); // 打印 unsubscribe
+  observable$.unsubscribe(); // 输出 unsubscribe
   ```
 
 ## offUnsubscribe
@@ -402,7 +412,7 @@ import Observable from '../../components/observable.vue'
   observable$.afterComplete(() => console.log("complete"));
   observable$.afterUnsubscribe(() => console.log("unsubscribe"));
 
-  promise$.next(2, true); // 打印 2 complete unsubscribe
+  promise$.next(2, true); // 输出 2 complete unsubscribe
   ```
 
 ## offComplete

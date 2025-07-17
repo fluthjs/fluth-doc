@@ -30,14 +30,15 @@ promise$.next(3);
 
 - 相比其他流式编程库，`fluth`更加简单易用，上手成本低，
 - 相比`promise`，`fluth`可以不断发布并且支持取消定订阅
+- 相比`promise`，`fluth`同步执行`then`方法，及时更新数据
 
 ## 对比 rxjs
 
 [`rxjs`](https://rxjs.dev/)是当前主流的流式编程库，和`fluth`相比而言有几个区别：
 
-1. `fluth`上手非常简单，只要会使用`promise`就可以使用
+1. `fluth`上手非常简单，是基于`promise`的流式编程库，只要会使用`promise`就可以使用
 2. `fluth`可以对观察者的进行串联，而`rxjs`的`observer`之间是并发的
-3. `fluth`的将对流的操作分为`operator`、`chainPlugin`，`chainPlugin`只做流的组合，`chainPlugin`可以在观察者之间链式调用
+3. `fluth`可以添加插件来扩展流的功能和添加自定义行为
 
 ```javascript
 // rxjs:
@@ -50,18 +51,17 @@ stream$.subscribe(observer3);
 <!-- prettier-ignore-start -->
 ```javascript
 //fluth:
-stream$.use(chainPlugin1, chainPlugin2, chainPlugin3)
+stream$.use(plugin1, plugin2, plugin3)
 
 stream$
+  .pipe(operator1, operator2)
   .then(observer1)
-  .chainPlugin1()
+  .pipe(operator3)
   .then(observer2)
-  .chainPlugin2()
-  .then(observer3)
-  .chainPlugin3();
+  .pipe(operator4)
+  .then(observer3);
+
 stream$.next(1);
 
-operator1(stream$1, stream$2);
-operator2(stream$2, stream$3);
 ```
 <!-- prettier-ignore-end -->

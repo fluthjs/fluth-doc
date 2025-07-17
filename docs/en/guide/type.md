@@ -1,8 +1,8 @@
-# TypeScript Type Support
+# TypeScript Support
 
 ## Automatic Type Inference for Initial Values
 
-When creating streams using `$`, `fluth` automatically infers the type of the initial value.
+When using `$` to create streams, `fluth` automatically infers the type of initial values.
 
 ```typescript
 import { $ } from "fluth";
@@ -15,7 +15,7 @@ promise$.value; // {a: string, b: number} | undefined
 
 ## Automatic Type Inference for Subscription Nodes
 
-When subscribing to streams using `then`, `fluth` automatically infers the type of the subscription node.
+When using `then` to subscribe to streams, `fluth` automatically infers the type of subscription nodes.
 
 ```typescript
 import { $ } from "fluth";
@@ -26,13 +26,13 @@ observable$.value; // {c: string, d: number}
 
 ## Automatic Type Inference for Plugins
 
-When using plugins, `fluth` automatically infers the type of the plugin.
+When using plugins, `fluth` automatically infers plugin types.
 
 ```typescript
 import { $, throttle } from "fluth";
 
 const promise$ = $().use(throttle);
 
-// Automatically infers whether the throttle method exists
+// Can automatically infer whether throttle method exists
 const observable$ = promise$.throttle(1000).then().throttle(1000);
 ```

@@ -1,12 +1,12 @@
 # Introduction
 
-## Basic
+## Basics
 
-`fluth` is a Promise-like streaming programming library that excels at reactive programming.
+`fluth` is a Promise-like streaming programming library, good at reactive programming.
 
-If we consider `promise` as a publisher and the `then` method as a subscriber, a `promise` can only publish once.
+If we consider `promise` as a publisher and the `then` method as a subscriber, then `promise`'s publishing behavior only happens once.
 
-`fluth` enhances `promise` by allowing it to publish continuously!
+`fluth` enhances `promise`, allowing `promise` to publish continuously!
 
 ```javascript
 import { $ } from "fluth";
@@ -24,20 +24,20 @@ promise$.next(3);
 
 // Logs:
 // resolve 1
-// reject 2
 // resolve 3
+// reject 2
 ```
 
-- Compared to other streaming programming libraries, `fluth` is simpler and easier to use, with low learning costs.
-- Compared to `promise`, `fluth` can publish continuously and supports subscription cancellation.
+- Compared to other streaming programming libraries, `fluth` is simpler and easier to use with a low learning curve
+- Compared to `promise`, `fluth` can publish continuously and supports unsubscription
 
-## Comparison with rxjs
+## Comparison with RxJS
 
-[`rxjs`](https://rxjs.dev/) is the current mainstream streaming programming library. Compared with `fluth`, there are several differences:
+[`rxjs`](https://rxjs.dev/) is the current mainstream streaming programming library. Compared to `fluth`, there are several differences:
 
-1. `fluth` is very easy to get started with - if you know how to use `promise`, you can use it
-2. `fluth` can chain observers, while `rxjs` observers are concurrent
-3. `fluth` divides stream operations into `operator` and `chainPlugin`. `chainPlugin` only handles stream composition and can be called in a chain between observers
+1. `fluth` is very easy to get started with. It's a Promise-based streaming programming library. If you know how to use `promise`, you can use `fluth`
+2. `fluth` can chain observers, while `rxjs`'s `observer`s are concurrent
+3. `fluth` divides stream operations into `operator`s and `plugin`s. Plugins can be used to extend stream functionality and add custom behaviors
 
 ```javascript
 // rxjs:
@@ -50,18 +50,16 @@ stream$.subscribe(observer3);
 <!-- prettier-ignore-start -->
 ```javascript
 //fluth:
-stream$.use(chainPlugin1, chainPlugin2, chainPlugin3)
+stream$.use(plugin1, plugin2, plugin3)
 
 stream$
+  .pipe(operator1, operator2)
   .then(observer1)
-  .chainPlugin1()
+  .pipe(operator3)
   .then(observer2)
-  .chainPlugin2()
-  .then(observer3)
-  .chainPlugin3();
+  .pipe(operator4)
+  .then(observer3);
 stream$.next(1);
 
-operator1(stream$1, stream$2);
-operator2(stream$2, stream$3);
 ```
 <!-- prettier-ignore-end -->

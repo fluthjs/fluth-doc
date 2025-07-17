@@ -1,81 +1,108 @@
 export default {
-  label: "简体中文",
-  lang: "cn",
-  title: "fluth",
-  description: "类 Promise 的异步流程控制库",
+  label: '简体中文',
+  lang: 'cn',
+  title: 'fluth',
+  description: '类 Promise 的异步流程控制库',
   themeConfig: {
-    outline: "deep",
+    outline: 'deep',
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: "指南", link: "/cn/guide/introduce" },
-      { text: "API", link: "/cn/api/stream" },
-      { text: "changelog", link: "https://github.com/fluthjs/fluth/blob/master/CHANGELOG.md" },
-      { text: "fluth-vue", link: "https://fluthjs.github.io/fluth-vue/index.html" },
+      { text: '指南', link: '/cn/guide/introduce' },
+      { text: 'API', link: '/cn/api/stream' },
+      { text: 'changelog', link: 'https://github.com/fluthjs/fluth/blob/master/CHANGELOG.md' },
+      { text: 'fluth-vue', link: 'https://fluthjs.github.io/fluth-vue/index.html' },
     ],
     sidebar: {
-      "/cn/": [
+      '/cn/': [
         {
-          text: "指南",
+          text: '指南',
           items: [
-            { text: "简介", link: "/cn/guide/introduce" },
-            { text: "基本概念", link: "/cn/guide/base" },
-            { text: "快速开始", link: "/cn/guide/quick" },
-            { text: "适用场景", link: "/cn/guide/scene" },
-            { text: "使用插件", link: "/cn/guide/plugin" },
-            { text: "不可变数据", link: "/cn/guide/immutable" },
+            { text: '简介', link: '/cn/guide/introduce' },
+            { text: '基本概念', link: '/cn/guide/base' },
+            { text: '快速开始', link: '/cn/guide/quick' },
+            { text: '适用场景', link: '/cn/guide/scene' },
+            { text: '使用插件', link: '/cn/guide/plugin' },
+            { text: '不可变数据', link: '/cn/guide/immutable' },
             // { text: "高阶用法", link: "/cn/guide/heigh" },
-            { text: "typescript支持", link: "/cn/guide/type" },
+            { text: 'typescript支持', link: '/cn/guide/type' },
           ],
         },
         {
-          text: "API",
+          text: 'API',
           items: [
             {
-              text: "流",
+              text: '流',
               items: [
-                { text: "Stream", link: "/cn/api/stream" },
-                { text: "Observable", link: "/cn/api/observable" },
-                { text: "createStream", link: "/cn/api/createStream" },
+                { text: '$', link: '/cn/api/$' },
+                { text: 'Stream', link: '/cn/api/stream' },
+                { text: 'Observable', link: '/cn/api/observable' },
               ],
             },
             {
-              text: "操作符",
+              text: '操作符',
               items: [
-                { text: "fork", link: "/cn/api/operator/fork" },
-                { text: "finish", link: "/cn/api/operator/finish" },
-                { text: "combine", link: "/cn/api/operator/combine" },
-                { text: "concat", link: "/cn/api/operator/concat" },
-                { text: "merge", link: "/cn/api/operator/merge" },
-                { text: "partition", link: "/cn/api/operator/partition" },
-                { text: "promiseAll", link: "/cn/api/operator/promiseAll" },
-                { text: "promiseRace", link: "/cn/api/operator/promiseRace" },
+                {
+                  text: '创建操作符',
+                  items: [
+                    { text: 'fork', link: '/cn/api/operator/fork' },
+                    { text: 'finish', link: '/cn/api/operator/finish' },
+                    { text: 'combine', link: '/cn/api/operator/combine' },
+                    { text: 'concat', link: '/cn/api/operator/concat' },
+                    { text: 'merge', link: '/cn/api/operator/merge' },
+                    { text: 'partition', link: '/cn/api/operator/partition' },
+                    { text: 'promiseAll', link: '/cn/api/operator/promiseAll' },
+                    { text: 'promiseAllNoAwait', link: '/cn/api/operator/promiseAllNoAwait' },
+                    { text: 'promiseRace', link: '/cn/api/operator/promiseRace' },
+                  ],
+                },
+                {
+                  text: '过滤操作符',
+                  items: [
+                    { text: 'get', link: '/cn/api/operator/get' },
+                    { text: 'change', link: '/cn/api/operator/change' },
+                    { text: 'filter', link: '/cn/api/operator/filter' },
+                    { text: 'skip', link: '/cn/api/operator/skip' },
+                    { text: 'throttle', link: '/cn/api/operator/throttle' },
+                    { text: 'debounce', link: '/cn/api/operator/debounce' },
+                  ],
+                },
+                {
+                  text: '转换操作符',
+                  items: [
+                    { text: 'audit', link: '/cn/api/operator/audit' },
+                    { text: 'buffer', link: '/cn/api/operator/buffer' },
+                  ],
+                },
               ],
             },
             {
-              text: "插件",
-              link: "/cn/api/plugin/plugin",
+              text: '插件',
+              link: '/cn/api/plugin/plugin',
               items: [
                 {
-                  text: "execute插件",
-                  link: "/cn/api/plugin/executePlugin",
+                  text: 'execute插件',
+                  link: '/cn/api/plugin/executePlugin',
                   items: [
-                    { text: "delayExec", link: "/cn/api/plugin/delayExec" },
-                    { text: "consoleExec", link: "/cn/api/plugin/consoleExec" },
+                    { text: 'delayExec', link: '/cn/api/plugin/delayExec' },
+                    { text: 'consoleNode', link: '/cn/api/plugin/consoleNode' },
+                    { text: 'debugNode', link: '/cn/api/plugin/debugNode' },
                   ],
                 },
                 {
-                  text: "then插件",
-                  link: "/cn/api/plugin/thenPlugin",
+                  text: 'executeAll插件',
+                  link: '/cn/api/plugin/executeAllPlugin',
+                  items: [
+                    { text: 'consoleAll', link: '/cn/api/plugin/consoleAll' },
+                    { text: 'debugAll', link: '/cn/api/plugin/debugAll' },
+                  ],
                 },
                 {
-                  text: "chain插件",
-                  link: "/cn/api/plugin/chainPlugin",
-                  items: [
-                    { text: "delay", link: "/cn/api/plugin/delay" },
-                    { text: "throttle", link: "/cn/api/plugin/throttle" },
-                    { text: "debounce", link: "/cn/api/plugin/debounce" },
-                    { text: "skip", link: "/cn/api/plugin/skip" },
-                  ],
+                  text: 'then插件',
+                  link: '/cn/api/plugin/thenPlugin',
+                },
+                {
+                  text: 'thenAll插件',
+                  link: '/cn/api/plugin/thenAllPlugin',
                 },
               ],
             },
@@ -84,4 +111,4 @@ export default {
       ],
     },
   },
-};
+}

@@ -67,17 +67,20 @@ import Stream from '../../components/stream.vue'
 
   ```typescript
   type thenPlugin = (unsubscribe: () => void) => void
-  type ChainPluginFn<T extends Observable = Observable> = (observer: T) => Record<string, any>
   type executePlugin = <T>(params: {
     result: Promise<T> | T
     set: (setter: (value: T) => Promise<void> | void) => Promise<T> | T
+    root: boolean
+    onfulfilled?: OnFulfilled
+    onrejected?: OnRejected
     unsubscribe: () => void
   }) => Promise<any> | any
 
   type plugin: {
-    then?: thenPluginFn | thenPluginFn[]
+    then?: thenPlugin | thenPlugin[]
+    thenAll?: thenPlugin | thenPlugin[]
     execute?: executePlugin | executePlugin[]
-    chain?: ChainPluginFn
+    executeAll?: executePlugin | executePlugin[]
   }
   ```
 
@@ -89,11 +92,12 @@ import Stream from '../../components/stream.vue'
 
 - Details
 
-  Calling `use` allows you to use three types of plugins: `then` plugins, `execute` plugins, and `chain` plugins:
+  Calling `use` allows you to use four types of plugins: `then` plugins, `execute` plugins, `thenAll` plugins, and `executeAll` plugins:
 
   - `then` plugins are executed when the [then](/en/api/observable#then) method is called. They take the current node's `unsubscribe` function as a parameter and can implement unified unsubscription functionality.
   - `execute` plugins are executed when the [execute](/en/api/observable#then) method is called. They take the current node's execution result, a `set` function that can generate `immutable` data, and the current node's `unsubscribe` function as parameters. The returned `promise` will be passed to the next `execute` plugin, and the final returned `promise` data will be passed to the next `then` node.
-  - `chain` plugins can add new properties and methods to the current stream's chain operations.
+  - `thenAll` plugins are triggered during all `then` operations of the root stream and all its child nodes, can only be used on root streams, child nodes cannot use them.
+  - `executeAll` plugins are triggered during all `execute` operations of the root stream and all its child nodes, can only be used on root streams, child nodes cannot use them.
 
 - Example
 
@@ -113,16 +117,18 @@ import Stream from '../../components/stream.vue'
 - Type
 
   ```typescript
-    interface ThenOrExecutePlugin {
-        then?: thenPluginFn | thenPluginFn[];
+    interface PluginParams {
+        then?: thenPlugin | thenPlugin[];
+        thenAll?: thenPlugin | thenPlugin[];
         execute?: executePlugin | executePlugin[];
+        executeAll?: executePlugin | executePlugin[];
     }
-    remove(plugin: ThenOrExecutePlugin | ThenOrExecutePlugin[]): void;
+    remove(plugin: PluginParams | PluginParams[]): void;
   ```
 
 - Details
 
-  Removes the specified `plugin`. The `plugin` can only be a `then` plugin or an `execute` plugin.
+  Removes the specified `plugin`. The `plugin` can be `then`, `execute`, `thenAll`, or `executeAll` plugins.
 
 - Example
   ```typescript

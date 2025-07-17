@@ -20,19 +20,21 @@ promise$.value; // {a: string, b: number} | undefined
 ```typescript
 import { $ } from "fluth";
 const promise$ = $({ a: "1", b: 2 });
+// 自动推导then data参数的类型为{a: string, b: number}
 const observable$ = promise$.then((data) => ({ c: state.a, d: state.b }));
-observable$.value; // {c: string, d: number}
+// 自动推导data的类型为{c: string, d: number}
+observable$.value;
 ```
 
-## 插件类型自动推导
+## 操作符类型自动推导
 
-在使用插件时，`fluth`会自动推导插件的类型。
+在使用操作符时，`fluth`会自动推导操作符的类型。
 
 ```typescript
-import { $, throttle } from "fluth";
-
-const promise$ = $().use(throttle);
-
-// 能够自动推导是否存在 throttle 方法
-const observable$ = promise$.throttle(1000).then().throttle(1000);
+import { $, get } from "fluth";
+const promise$ = $({ a: "1", b: 2 });
+// 自动推导pipe data参数的类型为{a: string, b: number}
+const observable$ = promise$.pipe(get((state) => state.a));
+// 自动推导data的类型为string
+observable$.value;
 ```

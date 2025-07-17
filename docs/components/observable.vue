@@ -43,6 +43,7 @@ defineOptions({
 
 const subjectionApi = [
   { name: "value", address: "#value" },
+  { name: "status", address: "#status" },
   {
     name: "then",
     address: "#then",
@@ -76,16 +77,12 @@ const subjectionApi = [
     address: "#finally",
   },
   {
-    name: "get",
-    address: "#get",
+    name: "use",
+    address: "#use",
   },
   {
-    name: "change",
-    address: "#change",
-  },
-  {
-    name: "filter",
-    address: "#filter",
+    name: "remove",
+    address: "#remove",
   },
   {
     name: "execute",

@@ -1,35 +1,44 @@
 # fork
 
-从输入的[ stream ](/cn/api/stream#stream)或者[ subjection ](/cn/api/stream#subjection)中分流一条新的流，新的流会订阅输入的流
+从输入的 [Stream](/cn/api/stream#stream) 或 [Observable](/cn/api/observable) 中分流一条新的流，新的流会订阅输入的流并发出相同的值。
 
-- 类型
+## 类型
 
-  ```typescript
-  type fork = (arg$: Stream | Subjection) => Stream;
-  ```
+```typescript
+type fork: <T>(arg$: Stream<T> | Observable<T>, autoUnsubscribe?: boolean) => Stream<T>;
+```
 
-- 详情
+## 参数
 
-  - 流的分流操作，返回一个新的流
-  - 输入的流取消订阅后，新的流也会取消订阅
-  - 输入的流[ 结束 ](/cn/guide/base#结束)后，新的流也会结束
+- `arg$`: 输入的 [Stream](/cn/api/stream#stream) 或 [Observable](/cn/api/observable) 实例
+- `autoUnsubscribe`: 可选参数，默认为 `true`。控制输入流取消订阅时是否自动取消分流的订阅
+  - `true`: 输入流取消订阅时，分流也会自动取消订阅
+  - `false`: 输入流取消订阅时，分流不会自动取消订阅
 
-- 示例
+## 详情
 
-  ```typescript
-  import { $, fork } from "fluth";
+- 分流操作创建一个新的流来订阅输入流
+- 新的流会发出与输入流完全相同的值（包括成功值和错误值）
+- 当 `autoUnsubscribe` 为 `true` 时，输入流[取消订阅](/cn/guide/base#取消订阅)后，新的流也会异步取消订阅
+- 当 `autoUnsubscribe` 为 `true` 时，输入流[结束](/cn/guide/base#结束)后，新的流也会结束
 
-  const source$ = $("initial value");
-  const fork$ = fork(source$);
+## 示例
 
-  fork$.then((value) => {
-    console.log("Forked value:", value);
-  });
+```typescript
+import { $, fork } from 'fluth'
 
-  console.log(fork$.value);
-  // 打印: initial value
-  source$.next("new value");
-  // 打印: Forked value: new value
-  fork$.next("new forked value");
-  // 打印: Forked value: new forked value
-  ```
+const source$ = $('initial value')
+const forked$ = fork(source$)
+
+forked$.then((value) => {
+  console.log('Forked value:', value)
+})
+
+console.log(forked$.value) // 输出: initial value
+
+source$.next('new value')
+// 输出: Forked value: new value
+
+forked$.next('new forked value')
+// 输出: Forked value: new forked value
+```

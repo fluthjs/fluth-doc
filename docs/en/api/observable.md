@@ -258,29 +258,6 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
   }); // prints {a: 3, b: {c: 3}}
   ```
 
-## filter
-
-- Type
-
-  ```typescript
-    filter(condition: (value: T) => boolean): Observable
-  ```
-
-- Details
-
-  `filter` subscriber only triggers the subscription node's `execute` when the current node's data satisfies the `condition`. Returns an [Observable](#observable) instance of the subscription node.
-
-- Example
-
-  ```typescript
-  import { $ } from "fluth";
-
-  const promise$ = $(1);
-  const observable$ = promise$.filter((value) => value > 2).then((value) => console.log(value));
-  promise$.next(2); // doesn't print
-  promise$.next(3); // prints 3
-  ```
-
 ## execute
 
 - Type

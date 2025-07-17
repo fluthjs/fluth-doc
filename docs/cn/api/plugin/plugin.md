@@ -5,8 +5,9 @@
   ```typescript
   interface Plugin {
     then: thenPluginFn || thenPluginFn[];
+    thenAll: thenPluginFn || thenPluginFn[];
     execute: executePlugin || executePlugin[];
-    chain: ChainPluginFn[];
+    executeAll: executePlugin || executePlugin[];
   }
 
   type thenPluginFn = (unsubscribe: () => void) => void;
@@ -20,5 +21,4 @@
     unsubscribe: () => void;
   }) => Promise<any> | any;
 
-  type ChainPluginFn<T extends Observable = Observable> = (observer: T) => Record<string, any>;
   ```

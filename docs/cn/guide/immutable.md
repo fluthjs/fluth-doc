@@ -20,7 +20,7 @@ console.log(oldValue.b === newValue.b); // true
 
 ## Observable
 
-`Observable`对象的`$then`、`$thenOnce`、`$thenImmediate`方法也可以`immutable`的修改节点的数据。
+`Observable`对象的`$then`、`$thenOnce`、`$thenImmediate`方法也可以`immutable`的修改流经当前节点的数据。
 
 ```typescript
 import { $ } from "fluth";

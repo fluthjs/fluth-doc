@@ -1,8 +1,8 @@
-# Advanced Features
+# Advanced Usage
 
 ## Unified Unsubscription
 
-Taking the `vue` framework as an example, if the stream is imported into a `vue` component from elsewhere and you want the subscription to be automatically canceled after the component is destroyed, you can use the `thenPlugin` of [plugin](/en/api/stream#plugin) for unified handling:
+Taking the `vue` framework as an example, if a stream is imported from elsewhere into a `vue` component and you want subscriptions to automatically cancel when the component is destroyed, you can use the `thenPlugin` of [plugin](/en/api/stream#plugin) for unified handling:
 
 ```javascript
 import { getCurrentScope, onScopeDispose } from "vue";
@@ -15,11 +15,11 @@ promise$.plugin.then.push((unsubscribe) => {
 });
 ```
 
-Nodes subscribed in the `vue` single-file `setup` function will automatically unsubscribe when the `vue` component is destroyed, avoiding memory leaks.
+Subscription nodes created in the `setup` function of `vue` single-file components will automatically unsubscribe when the `vue` component is destroyed, avoiding memory leaks.
 
 ## Unified Error Handling
 
-Use the `executePlugin` of `plugin` to handle errors of nodes uniformly:
+Use the `executePlugin` of `plugin` to handle errors at nodes uniformly:
 
 ```javascript
 import { Stream } from "fluth";
@@ -35,13 +35,13 @@ promise$.plugin.execute.push((promise) =>
 
 ## Stream Branching
 
-Stream branching refers to triggering the execution of another stream's nodes within one stream.
+Stream branching refers to triggering the execution of another stream node within one stream
 
-### Triggering Stream Flow
+### Trigger Stream
 
 ![image](/branching-stream.drawio.png)
 
-Triggering [Stream](/en/api/stream#stream) nodes allows pushing data:
+Triggering a [Stream](/en/api/stream#stream) node can push data
 
 ```typescript
 import { Stream } from "fluth";
@@ -56,10 +56,11 @@ const subjection2$ = promise2$.then((data) => {
 });
 ```
 
-### Triggering Subjection Flow
+### Trigger Subjection
 
 ![image](/branching-subjection.drawio.png)
-Triggering [Subjection](/en/api/stream#subjection) node cannot push data:
+
+Triggering a [Subjection](/en/api/stream#subjection) node cannot push data
 
 ```typescript
 import { Stream } from "fluth";
@@ -76,4 +77,4 @@ const subjection2$ = promise2$.then((data) => {
 
 ## Stream Merging
 
-If you need to merge data from multiple streams, you should look at operators like [combine](/en/api/operator/combine), [merge](/en/api/operator/merge), [concat](/en/api/operator/concat), etc., to perform stream merging.
+If you need to merge data from multiple streams, you can use operators like [combine](/en/api/operator/combine), [merge](/en/api/operator/merge), [concat](/en/api/operator/concat), etc. for stream merging.
