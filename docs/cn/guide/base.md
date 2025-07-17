@@ -66,7 +66,7 @@ console.log(oldValue.b === newValue.b) // true
 
 ## 条件订阅
 
-只有节点满足条件才会进行推流，[change](/cn/api/operator#change)、[filter](/cn/api/operator/filter)指令可以进行条件订阅，只有满足条件节点才会进行推流，两者的区别在于：
+只有节点满足条件才会进行推流，[change](/cn/api/operator/change)、[filter](/cn/api/operator/filter)指令可以进行条件订阅，只有满足条件节点才会进行推流，两者的区别在于：
 
 - `change`方法传入的是一个`getter`函数，分别传入上一次数据和当前数据并对返回值进行对比，如果有变化才会进行推流。
 - `filter`方法传入的是一个`condition`函数，传入的是当前数据，如果返回`true`才会进行推流。

@@ -13,7 +13,7 @@ import Observable from '../../components/observable.vue'
 
 - 类型
   ```typescript
-  value: T | undefined;
+  value: T | undefined
   ```
 - 详情
 
@@ -24,11 +24,11 @@ import Observable from '../../components/observable.vue'
 - 类型
   ```typescript
   enum PromiseStatus {
-    PENDING = "pending",
-    RESOLVED = "resolved",
-    REJECTED = "rejected",
+    PENDING = 'pending',
+    RESOLVED = 'resolved',
+    REJECTED = 'rejected',
   }
-  status: PromiseStatus | null;
+  status: PromiseStatus | null
   ```
 - 详情
 
@@ -55,10 +55,10 @@ import Observable from '../../components/observable.vue'
 - 示例
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $("1");
-  const observable$ = promise$.then((value) => Number(value)); // 自动推导 observable.value 的类型为 number
+  const promise$ = $('1')
+  const observable$ = promise$.then((value) => Number(value)) // 自动推导 observable.value 的类型为 number
   ```
 
 ## thenOnce
@@ -82,12 +82,12 @@ import Observable from '../../components/observable.vue'
 - 示例
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $("1");
-  const observable$ = promise$.thenOnce((value) => console.log(value));
-  promise$.next("2"); // 输出 2
-  promise$.next("3"); // 不会输出 3
+  const promise$ = $('1')
+  const observable$ = promise$.thenOnce((value) => console.log(value))
+  promise$.next('2') // 输出 2
+  promise$.next('3') // 不会输出 3
   ```
 
 ## thenImmediate
@@ -114,10 +114,10 @@ import Observable from '../../components/observable.vue'
 - 示例
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $("1");
-  const observable$ = promise$.thenImmediate((value) => console.log(value)); // 输出 1
+  const promise$ = $('1')
+  const observable$ = promise$.thenImmediate((value) => console.log(value)) // 输出 1
   ```
 
 ## $then
@@ -133,16 +133,16 @@ import Observable from '../../components/observable.vue'
 - 示例
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $<{ a: number; b: { c: number } }>();
+  const promise$ = $<{ a: number; b: { c: number } }>()
   const observable$ = promise$.$then((value) => {
-    value.a = value.a + 1;
-  });
+    value.a = value.a + 1
+  })
 
-  promise$.next({ a: 1, b: { c: 1 } });
+  promise$.next({ a: 1, b: { c: 1 } })
   // observable$.value === { a: 2, b: { c: 1 } }
-  promise$.value.b === observable$.value.b; // true
+  promise$.value.b === observable$.value.b // true
   ```
 
 ## $thenOnce
@@ -178,13 +178,13 @@ import Observable from '../../components/observable.vue'
 - 示例
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $();
+  const promise$ = $()
   observable$ = promise$.catch((error) => {
-    console.log(error);
-  });
-  promise$.next(Promise.reject("error")); // 输出 error
+    console.log(error)
+  })
+  promise$.next(Promise.reject('error')) // 输出 error
   ```
 
 ## finally
@@ -203,12 +203,34 @@ import Observable from '../../components/observable.vue'
 
 - 示例
   ```typescript
-  import { $ } from "fluth";
-  const promise$ = $();
+  import { $ } from 'fluth'
+  const promise$ = $()
   observable$ = promise$.finally(() => {
-    console.log("finally");
-  });
-  promise$.next(1); // 输出 finally
+    console.log('finally')
+  })
+  promise$.next(1) // 输出 finally
+  ```
+
+## pipe
+
+- 类型
+
+  ```typescript
+  pipe(operator: Operator): Observable
+  ```
+
+- 详情
+
+  对订阅节点进行`pipe`，`pipe`方法可以链式调用多个操作符，返回一个[ Observable ](#observable)实例
+
+- 示例
+
+  ```typescript
+  import { $, delay } from 'fluth'
+  const promise$ = $()
+  promise$.pipe(delay(1000)).then((value) => {
+    console.log(value)
+  })
   ```
 
 ## use
@@ -254,14 +276,14 @@ import Observable from '../../components/observable.vue'
 - 示例
 
   ```typescript
-  import { $, delay } from "fluth";
+  import { $, delay } from 'fluth'
 
-  const promise$ = $("1").use(delay);
+  const promise$ = $('1').use(delay)
   promise$.delay(1000).then((value) => {
-    console.log(value);
-  });
+    console.log(value)
+  })
 
-  promise$.next("2"); // 1s后输出 2
+  promise$.next('2') // 1s后输出 2
   ```
 
 ## remove
@@ -284,11 +306,11 @@ import Observable from '../../components/observable.vue'
 
 - 示例
   ```typescript
-  import { $, console } from "fluth";
-  const promise$ = $("1").use(console);
-  promise$.next("2"); // 输出 2
-  promise$.remove(console);
-  promise$.next("3"); // 不输出 3
+  import { $, console } from 'fluth'
+  const promise$ = $('1').use(console)
+  promise$.next('2') // 输出 2
+  promise$.remove(console)
+  promise$.next('3') // 不输出 3
   ```
 
 ## execute
@@ -309,15 +331,15 @@ import Observable from '../../components/observable.vue'
 - 示例
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $(1);
-  const observable$ = promise$.then((value) => value + 1);
-  observable$.then((value) => console.log(value + 1));
+  const promise$ = $(1)
+  const observable$ = promise$.then((value) => value + 1)
+  observable$.then((value) => console.log(value + 1))
 
-  observable$.execute(); // 不输出
-  promise$.next(1); //  输出 3
-  observable$.execute(); // 输出 3
+  observable$.execute() // 不输出
+  promise$.next(1) //  输出 3
+  observable$.execute() // 输出 3
   ```
 
 ## unsubscribe
@@ -338,17 +360,17 @@ import Observable from '../../components/observable.vue'
 - 示例
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $(1);
-  const observable$ = promise$.then((value) => value + 1);
-  observable$.then((value) => console.log(value + 1));
+  const promise$ = $(1)
+  const observable$ = promise$.then((value) => value + 1)
+  observable$.then((value) => console.log(value + 1))
 
-  promise$.next(2); // 输出 2
+  promise$.next(2) // 输出 2
 
-  observable$.unsubscribe();
+  observable$.unsubscribe()
 
-  promise$.next(3); // 不输出
+  promise$.next(3) // 不输出
   ```
 
 ## afterUnsubscribe
@@ -366,16 +388,16 @@ import Observable from '../../components/observable.vue'
 - 示例
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $(1);
+  const promise$ = $(1)
 
-  const observable$ = promise$.then((value) => value + 1);
+  const observable$ = promise$.then((value) => value + 1)
   observable$.afterUnsubscribe(() => {
-    console.log("unsubscribe");
-  });
+    console.log('unsubscribe')
+  })
 
-  observable$.unsubscribe(); // 输出 unsubscribe
+  observable$.unsubscribe() // 输出 unsubscribe
   ```
 
 ## offUnsubscribe
@@ -405,14 +427,14 @@ import Observable from '../../components/observable.vue'
 - 示例
 
   ```typescript
-  import { $ } from "fluth";
-  const promise$ = $(1);
-  const observable$ = promise$.then((value) => console.log(value));
+  import { $ } from 'fluth'
+  const promise$ = $(1)
+  const observable$ = promise$.then((value) => console.log(value))
 
-  observable$.afterComplete(() => console.log("complete"));
-  observable$.afterUnsubscribe(() => console.log("unsubscribe"));
+  observable$.afterComplete(() => console.log('complete'))
+  observable$.afterUnsubscribe(() => console.log('unsubscribe'))
 
-  promise$.next(2, true); // 输出 2 complete unsubscribe
+  promise$.next(2, true) // 输出 2 complete unsubscribe
   ```
 
 ## offComplete

@@ -1,6 +1,8 @@
 <template>
   <div style="background-color: #292d3e; margin: 30px 0; padding: 20px; border-radius: 8px">
-    <div style="display: flex; justify-content: space-between; font-family: var(--vp-font-family-mono)">
+    <div
+      style="display: flex; justify-content: space-between; font-family: var(--vp-font-family-mono)"
+    >
       <div>
         <span class="line"
           ><span style="color: #f97583">const</span><span style="color: #79b8ff"> observable$</span
@@ -25,10 +27,24 @@
           height: auto;
         "
       >
-        <span style="position: absolute; left: 30px; top: 60px; background: #292d3e; color: #47c1a8; z-index: 1"
+        <span
+          style="
+            position: absolute;
+            left: 30px;
+            top: 60px;
+            background: #292d3e;
+            color: #47c1a8;
+            z-index: 1;
+          "
           >Observable</span
         >
-        <a :href="item.address" class="item" style="display: block" v-for="item in subjectionApi" :key="item.name">
+        <a
+          :href="item.address"
+          class="item"
+          style="display: block"
+          v-for="item in subjectionApi"
+          :key="item.name"
+        >
           {{ item.name }}
         </a>
       </ul>
@@ -38,77 +54,81 @@
 
 <script setup lang="tsx">
 defineOptions({
-  name: "stream",
-});
+  name: 'stream',
+})
 
 const subjectionApi = [
-  { name: "value", address: "#value" },
-  { name: "status", address: "#status" },
+  { name: 'value', address: '#value' },
+  { name: 'status', address: '#status' },
   {
-    name: "then",
-    address: "#then",
+    name: 'then',
+    address: '#then',
   },
   {
-    name: "thenOnce",
-    address: "#thenonce",
+    name: 'thenOnce',
+    address: '#thenonce',
   },
   {
-    name: "thenImmediate",
-    address: "#thenimmediate",
+    name: 'thenImmediate',
+    address: '#thenimmediate',
   },
   {
-    name: "$then",
-    address: "#then-1",
+    name: '$then',
+    address: '#then-1',
   },
   {
-    name: "$thenOnce",
-    address: "#thenonce-1",
+    name: '$thenOnce',
+    address: '#thenonce-1',
   },
   {
-    name: "$thenImmediate",
-    address: "#thenimmediate-1",
+    name: '$thenImmediate',
+    address: '#thenimmediate-1',
   },
   {
-    name: "catch",
-    address: "#catch",
+    name: 'catch',
+    address: '#catch',
   },
   {
-    name: "finally",
-    address: "#finally",
+    name: 'finally',
+    address: '#finally',
   },
   {
-    name: "use",
-    address: "#use",
+    name: 'pipe',
+    address: '#pipe',
   },
   {
-    name: "remove",
-    address: "#remove",
+    name: 'use',
+    address: '#use',
   },
   {
-    name: "execute",
-    address: "#execute",
+    name: 'remove',
+    address: '#remove',
   },
   {
-    name: "unsubscribe",
-    address: "#unsubscribe",
+    name: 'execute',
+    address: '#execute',
   },
   {
-    name: "afterUnsubscribe",
-    address: "#afterunsubscribe",
+    name: 'unsubscribe',
+    address: '#unsubscribe',
   },
   {
-    name: "offUnsubscribe",
-    address: "#offunsubscribe",
+    name: 'afterUnsubscribe',
+    address: '#afterunsubscribe',
   },
   {
-    name: "afterComplete",
-    address: "#aftercomplete",
+    name: 'offUnsubscribe',
+    address: '#offunsubscribe',
   },
   {
-    name: "offComplete",
-    address: "#offcomplete",
+    name: 'afterComplete',
+    address: '#aftercomplete',
   },
-];
+  {
+    name: 'offComplete',
+    address: '#offcomplete',
+  },
+]
 </script>
 
 <style lang="scss" scoped>
@@ -120,7 +140,7 @@ const subjectionApi = [
 }
 .api {
   &::before {
-    content: " ";
+    content: ' ';
     position: absolute;
     left: 8px;
     top: -5px;
@@ -131,7 +151,7 @@ const subjectionApi = [
     border-radius: 4px;
   }
   &::after {
-    content: " ";
+    content: ' ';
     position: absolute;
     left: 70px;
     top: 5px;
