@@ -1,6 +1,6 @@
 # concat
 
-Combines input [streams](/en/api/stream#stream) or [observables](/en/api/observable) in sequence, returning a new stream.
+Concatenates the input [stream](/en/api/stream#stream) or [observable](/en/api/observable) in order and returns a new stream.
 
 ![image](/concat.drawio.svg)
 
@@ -16,36 +16,13 @@ type concat: <T extends (Stream | Observable)[]>(...args$: T) => Stream<StreamTu
 
 ## Details
 
-- Data from the next input stream will only be pushed to the new stream after the current input stream has [finished](/en/guide/base#completion).
-- Only one input stream's data will be emitted at a time, other streams' data will be ignored until it's their turn.
-- The new stream will also unsubscribe when the current input stream unsubscribes.
-- The new stream will [finish](/en/guide/base#completion) when all input streams have finished.
-- Only accepts `Stream` or `Observable` as input, other types will throw an error.
-- If no input parameters are provided, it will complete immediately.
+- Only after the current input stream [completes](/en/guide/base#complete), the next input stream's data will be emitted to the new stream
+- When all input streams unsubscribe, the new stream also unsubscribes
+- At any time, only one input stream's data will be emitted; data from other streams will be ignored until their turn
+- After all input streams [complete](/en/guide/base#complete), the new stream also completes
+- If no input parameters are provided, an empty stream is created but will not emit any data
 
-## Example
-
-```typescript
-import { $, concat } from 'fluth'
-
-const stream1$ = $(1)
-const stream2$ = $('hello')
-
-const concat$ = concat(stream1$, stream2$)
-concat$.then((value) => console.log(value))
-console.log(concat$.value)
-// prints: undefined
-
-stream1$.next(2)
-// prints: 2
-stream2$.next('world')
-stream1$.next(3, true)
-// prints: 3
-stream2$.next('word')
-// prints: word
-```
-
-## Sequential emission example
+## Examples
 
 ```typescript
 import { $, concat } from 'fluth'
@@ -55,29 +32,29 @@ const stream2$ = $()
 const stream3$ = $()
 
 const concat$ = concat(stream1$, stream2$, stream3$)
-concat$.then((value) => console.log('output:', value))
+concat$.then((value) => console.log('Output:', value))
 
-// First stream emits data
+// The first stream emits data
 stream1$.next('a')
-// prints: output: a
+// Output: a
 
 stream1$.next('b')
-// prints: output: b
+// Output: b
 
-// Second stream emits data, but won't be output (first stream not completed)
+// The second stream emits data, but will not be output (the first stream is not finished)
 stream2$.next('c') // This data will be ignored
 
-// First stream completes
+// The first stream completes
 stream1$.next('final1', true)
-// prints: output: final1
+// Output: final1
 
-// Now second stream can emit data
+// Now the second stream can emit data
 stream2$.next('d', true)
-// prints: output: d
+// Output: d
 
-// Third stream starts emitting data
+// The third stream starts emitting data
 stream3$.next('e', true)
-// prints: output: e
+// Output: e
 ```
 
 ## Error handling example

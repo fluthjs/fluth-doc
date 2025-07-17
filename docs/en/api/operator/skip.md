@@ -1,44 +1,40 @@
 # skip
 
-Skip operator that skips a specified number of data pushes and starts receiving data from the N+1th push.
+Skip operator, skips a specified number of data emissions and starts receiving data from the N+1th emission.
 
-- Type
+## Type Definition
 
-  ```typescript
-  type skip = <T>(skipTime: number) => (observable$: Observable<T>) => Observable<T>;
-  ```
+```typescript
+type skip = <T>(skipTime: number) => (observable$: Observable<T>) => Observable<T>
+```
 
-- Details
+## Parameters
 
-  - Receives a skip count parameter
-  - Returns a function that takes an Observable and returns a new Observable
-  - The new Observable will skip the first N data pushes and start receiving data from the N+1th push
-  - Uses a counter to implement the skip functionality
-  - After the skip count is reached, all subsequent data will be pushed normally
+- `skipTime` (`number`): Number of data emissions to skip
 
-- Example
+## Details
 
-  ```typescript
-  import { $, skip } from "fluth";
+- If `skipTime` is 0, all data will be emitted, none will be skipped
+- If `skipTime` is greater than the actual number of emissions, all data will be skipped and none will be emitted downstream
+- After the skip count is reached, all subsequent data will be emitted normally
 
-  const stream$ = $(1);
+## Example
 
-  // Use skip operator to skip the first 2 pushes
-  const skipped$ = stream$.pipe(skip(2));
+```typescript
+import { $, skip } from 'fluth'
 
-  skipped$.then((value) => {
-    console.log("Value after skip:", value);
-  });
+const stream$ = $()
 
-  // Push data
-  stream$.next(2); // Skip, no output
-  stream$.next(3); // Skip, no output
-  stream$.next(4); // Print: Value after skip: 4
-  stream$.next(5); // Print: Value after skip: 5
-  ```
+// Use skip operator, skip the first 2 emissions
+const skipped$ = stream$.pipe(skip(2))
 
-- Relationship with other APIs
+skipped$.then((value) => {
+  console.log('Value received after skip:', value)
+})
 
-  - Difference from `skip` plugin: `skip` is an operator, the plugin version is a chain plugin
-  - Operator version uses `pipe`, plugin version uses `use`
-  - Commonly used to ignore initial data or skip a specific number of pushes
+// Emit data
+stream$.next(2) // Skipped, no output
+stream$.next(3) // Skipped, no output
+stream$.next(4) // Output: Value received after skip: 4
+stream$.next(5) // Output: Value received after skip: 5
+```

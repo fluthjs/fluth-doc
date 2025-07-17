@@ -73,6 +73,10 @@ export default {
                     { text: 'buffer', link: '/cn/api/operator/buffer' },
                   ],
                 },
+                {
+                  text: '工具操作符',
+                  items: [{ text: 'delay', link: '/cn/api/operator/delay' }],
+                },
               ],
             },
             {

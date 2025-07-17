@@ -1,45 +1,64 @@
 # filter
 
-Filter operator that filters data based on a condition function, only pushing data that satisfies the condition.
+Filter operator, filters data based on a condition function and only emits data that meets the condition.
 
-- Type
+## Type Definition
 
-  ```typescript
-  type filter = <T>(condition: (value: T) => boolean) => (observable$: Observable<T>) => Observable<T>;
-  ```
+```typescript
+type filter = <T>(condition: (value: T) => boolean) => (observable$: Observable<T>) => Observable<T>
+```
 
-- Details
+## Parameters
 
-  - Receives a condition function parameter that takes a data value and returns a boolean
-  - Returns a function that takes an Observable and returns a new Observable
-  - The new Observable will only push data that satisfies the condition
-  - Pushes data when the condition function returns `true`, skips when it returns `false`
-  - Uses the third parameter (condition function) of Observable's `then` method to implement filtering
+- `condition` (`(value: T) => boolean`): Condition function, receives each emitted data, returns `true` to emit the data downstream, returns `false` to filter it out.
 
-- Example
+## Details
 
-  ```typescript
-  import { $, filter } from "fluth";
+- Accepts a condition function parameter, which receives the data value and returns a boolean
+- Only emits data that meets the condition, and the emitted value is the complete original data
 
-  const stream$ = $(1);
+## Examples
 
-  // Use filter operator to only receive data greater than 2
-  const filtered$ = stream$.pipe(filter((value) => value > 2));
+```typescript
+import { $, filter } from 'fluth'
 
-  filtered$.then((value) => {
-    console.log("Filtered value:", value);
-  });
+const stream$ = $()
 
-  // Push data
-  stream$.next(1); // Doesn't satisfy condition, skip, no output
-  stream$.next(2); // Doesn't satisfy condition, skip, no output
-  stream$.next(3); // Satisfies condition, print: Filtered value: 3
-  stream$.next(4); // Satisfies condition, print: Filtered value: 4
-  stream$.next(1); // Doesn't satisfy condition, skip, no output
-  ```
+// Only allow numbers greater than 2 to pass
+const filtered$ = stream$.pipe(filter((value) => value > 2))
 
-- Relationship with other APIs
+filtered$.then((value) => {
+  console.log('Filtered value:', value)
+})
 
-  - Difference from Observable's `filter` method: The operator version can be used independently, the method version is for chaining
-  - Operator version uses `pipe`
-  - Commonly used for data preprocessing and conditional filtering
+stream$.next(1) // No output
+stream$.next(2) // No output
+stream$.next(3) // Output: Filtered value: 3
+stream$.next(4) // Output: Filtered value: 4
+```
+
+```typescript
+import { $, filter } from 'fluth'
+
+const stream$ = $()
+const string$ = stream$.pipe(filter((value) => typeof value === 'string'))
+
+string$.then((value) => console.log('String:', value))
+
+stream$.next(1) // No output
+stream$.next('hello') // Output: String: hello
+```
+
+```typescript
+import { $, filter } from 'fluth'
+
+const stream$ = $()
+const hasId$ = stream$.pipe(
+  filter((value) => typeof value === 'object' && value !== null && 'id' in value)
+)
+
+hasId$.then((value) => console.log('Has id:', value))
+
+stream$.next({ name: 'test' }) // No output
+stream$.next({ id: 1, name: 'test' }) // Output: Has id: { id: 1, name: 'test' }
+```

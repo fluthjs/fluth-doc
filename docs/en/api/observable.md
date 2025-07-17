@@ -13,7 +13,7 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
 
 - Type
   ```typescript
-  value: T | undefined;
+  value: T | undefined
   ```
 - Details
 
@@ -40,10 +40,10 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
 - Example
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $("1");
-  const observable$ = promise$.then((value) => Number(value)); // automatically infers observable.value type as number
+  const promise$ = $('1')
+  const observable$ = promise$.then((value) => Number(value)) // automatically infers observable.value type as number
   ```
 
 ## thenOnce
@@ -67,12 +67,12 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
 - Example
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $("1");
-  const observable$ = promise$.thenOnce((value) => console.log(value));
-  promise$.next("2"); // prints 2
-  promise$.next("3"); // won't print 3
+  const promise$ = $('1')
+  const observable$ = promise$.thenOnce((value) => console.log(value))
+  promise$.next('2') // prints 2
+  promise$.next('3') // won't print 3
   ```
 
 ## thenImmediate
@@ -99,10 +99,10 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
 - Example
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $("1");
-  const observable$ = promise$.thenImmediate((value) => console.log(value)); // prints 1
+  const promise$ = $('1')
+  const observable$ = promise$.thenImmediate((value) => console.log(value)) // prints 1
   ```
 
 ## $then
@@ -118,16 +118,16 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
 - Example
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $<{ a: number; b: { c: number } }>();
+  const promise$ = $<{ a: number; b: { c: number } }>()
   const observable$ = promise$.$then((value) => {
-    value.a = value.a + 1;
-  });
+    value.a = value.a + 1
+  })
 
-  promise$.next({ a: 1, b: { c: 1 } });
+  promise$.next({ a: 1, b: { c: 1 } })
   // observable$.value === { a: 2, b: { c: 1 } }
-  promise$.value.b === observable$.value.b; // true
+  promise$.value.b === observable$.value.b // true
   ```
 
 ## $thenOnce
@@ -163,13 +163,13 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
 - Example
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $();
+  const promise$ = $()
   observable$ = promise$.catch((error) => {
-    console.log(error);
-  });
-  promise$.next(Promise.reject("error")); // prints error
+    console.log(error)
+  })
+  promise$.next(Promise.reject('error')) // prints error
   ```
 
 ## finally
@@ -188,12 +188,12 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
 
 - Example
   ```typescript
-  import { $ } from "fluth";
-  const promise$ = $();
+  import { $ } from 'fluth'
+  const promise$ = $()
   observable$ = promise$.finally(() => {
-    console.log("finally");
-  });
-  promise$.next(1); // prints finally
+    console.log('finally')
+  })
+  promise$.next(1) // prints finally
   ```
 
 ## get
@@ -210,23 +210,23 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
 - Example
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $({ a: 1, b: { c: 2 } });
+  const promise$ = $({ a: 1, b: { c: 2 } })
   // get executes immediately
-  const observable$ = promise$.get((value) => value.b);
+  const observable$ = promise$.get((value) => value.b)
 
-  observable$.value; // { c: 2 }
+  observable$.value // { c: 2 }
 
-  observable$.then((value) => console.log(value));
-
-  promise$.set((value) => {
-    value.a = 3;
-  }); // doesn't print
+  observable$.then((value) => console.log(value))
 
   promise$.set((value) => {
-    value.b.c = 3;
-  }); // prints { c: 3 }
+    value.a = 3
+  }) // doesn't print
+
+  promise$.set((value) => {
+    value.b.c = 3
+  }) // prints { c: 3 }
   ```
 
 ## change
@@ -244,18 +244,18 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
 - Example
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $({ a: 1, b: { c: 2 } });
-  const observable$ = promise$.change((value) => value.b).then((value) => console.log(value));
-
-  promise$.set((value) => {
-    value.a = 3;
-  }); // doesn't print
+  const promise$ = $({ a: 1, b: { c: 2 } })
+  const observable$ = promise$.change((value) => value.b).then((value) => console.log(value))
 
   promise$.set((value) => {
-    value.b.c = 3;
-  }); // prints {a: 3, b: {c: 3}}
+    value.a = 3
+  }) // doesn't print
+
+  promise$.set((value) => {
+    value.b.c = 3
+  }) // prints {a: 3, b: {c: 3}}
   ```
 
 ## execute
@@ -276,15 +276,15 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
 - Example
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $(1);
-  const observable$ = promise$.then((value) => value + 1);
-  observable$.then((value) => console.log(value + 1));
+  const promise$ = $(1)
+  const observable$ = promise$.then((value) => value + 1)
+  observable$.then((value) => console.log(value + 1))
 
-  observable$.execute(); // doesn't print
-  promise$.next(1); //  prints 3
-  observable$.execute(); // prints 3
+  observable$.execute() // doesn't print
+  promise$.next(1) //  prints 3
+  observable$.execute() // prints 3
   ```
 
 ## unsubscribe
@@ -305,17 +305,17 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
 - Example
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $(1);
-  const observable$ = promise$.then((value) => value + 1);
-  observable$.then((value) => console.log(value + 1));
+  const promise$ = $(1)
+  const observable$ = promise$.then((value) => value + 1)
+  observable$.then((value) => console.log(value + 1))
 
-  promise$.next(2); // prints 2
+  promise$.next(2) // prints 2
 
-  observable$.unsubscribe();
+  observable$.unsubscribe()
 
-  promise$.next(3); // doesn't print
+  promise$.next(3) // doesn't print
   ```
 
 ## setUnsubscribeCallback
@@ -333,16 +333,16 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
 - Example
 
   ```typescript
-  import { $ } from "fluth";
+  import { $ } from 'fluth'
 
-  const promise$ = $(1);
+  const promise$ = $(1)
 
-  const observable$ = promise$.then((value) => value + 1);
+  const observable$ = promise$.then((value) => value + 1)
   observable$.setUnsubscribeCallback(() => {
-    console.log("unsubscribe");
-  });
+    console.log('unsubscribe')
+  })
 
-  observable$.unsubscribe(); // prints unsubscribe
+  observable$.unsubscribe() // prints unsubscribe
   ```
 
 ## complete
@@ -360,12 +360,12 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
 - Example
 
   ```typescript
-  import { $ } from "fluth";
-  const promise$ = $(1);
-  const observable$ = promise$.then((value) => console.log(value));
+  import { $ } from 'fluth'
+  const promise$ = $(1)
+  const observable$ = promise$.then((value) => console.log(value))
 
-  observable$.complete(() => console.log("complete"));
-  observable$.setUnsubscribeCallback(() => console.log("unsubscribe"));
+  observable$.complete(() => console.log('complete'))
+  observable$.setUnsubscribeCallback(() => console.log('unsubscribe'))
 
-  promise$.next(2, true); // prints 2 complete unsubscribe
+  promise$.next(2, true) // prints 2 complete unsubscribe
   ```

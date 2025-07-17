@@ -1,38 +1,40 @@
-# TypeScript Support
+# TypeScript Type Support
 
-## Automatic Type Inference for Initial Values
+## Automatic Inference of Initial Value Types
 
-When using `$` to create streams, `fluth` automatically infers the type of initial values.
+When using `$` to create a stream, `fluth` will automatically infer the type of the initial value.
 
 ```typescript
-import { $ } from "fluth";
-const promise$ = $({ a: "1", b: 2 });
-promise$.value; // {a: string, b: number}
+import { $ } from 'fluth'
+const promise$ = $({ a: '1', b: 2 })
+promise$.value // {a: string, b: number}
 
-const promise$ = $<{ a: string; b: number }>();
-promise$.value; // {a: string, b: number} | undefined
+const promise$ = $<{ a: string; b: number }>()
+promise$.value // {a: string, b: number} | undefined
 ```
 
-## Automatic Type Inference for Subscription Nodes
+## Automatic Inference of Subscription Node Types
 
-When using `then` to subscribe to streams, `fluth` automatically infers the type of subscription nodes.
+When using `then` to subscribe to a stream, `fluth` will automatically infer the type of the subscription node.
 
 ```typescript
-import { $ } from "fluth";
-const promise$ = $({ a: "1", b: 2 });
-const observable$ = promise$.then((data) => ({ c: state.a, d: state.b }));
-observable$.value; // {c: string, d: number}
+import { $ } from 'fluth'
+const promise$ = $({ a: '1', b: 2 })
+// Automatically infers the type of the data parameter in then as {a: string, b: number}
+const observable$ = promise$.then((data) => ({ c: state.a, d: state.b }))
+// Automatically infers the type of data as {c: string, d: number}
+observable$.value
 ```
 
-## Automatic Type Inference for Plugins
+## Automatic Inference of Operator Types
 
-When using plugins, `fluth` automatically infers plugin types.
+When using operators, `fluth` will automatically infer the type of the operator.
 
 ```typescript
-import { $, throttle } from "fluth";
-
-const promise$ = $().use(throttle);
-
-// Can automatically infer whether throttle method exists
-const observable$ = promise$.throttle(1000).then().throttle(1000);
+import { $, get } from 'fluth'
+const promise$ = $({ a: '1', b: 2 })
+// Automatically infers the type of the data parameter in pipe as {a: string, b: number}
+const observable$ = promise$.pipe(get((state) => state.a))
+// Automatically infers the type of data as string
+observable$.value
 ```

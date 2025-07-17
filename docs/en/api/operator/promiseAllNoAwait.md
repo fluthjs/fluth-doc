@@ -1,6 +1,8 @@
 # promiseAllNoAwait
 
-Combines input [streams](/en/api/stream#stream) or [Observables](/en/api/observable), similar to Promise.all behavior, but does not wait for pending promises during status reset, which can improve performance
+Combines the input [stream](/en/api/stream#stream) or [Observable](/en/api/observable) similar to `Promise.all`, but does not wait for `pending` Promises during reset.
+
+![image](/promiseAllNoAwait.drawio.svg)
 
 ## Type
 
@@ -10,17 +12,16 @@ type promiseAllNoAwait: <T extends (Stream | Observable)[]>(...args$: T) => Stre
 
 ## Details
 
-- The new stream will only emit its first data after all input streams have emitted their first data
-- The new stream will only emit new data when and only when all input streams push new data
-- After all input streams [finish](/en/guide/base#completion), the new stream will also finish
-- After all input streams unsubscribe, the new stream will also unsubscribe
-- If any input stream is rejected, the output stream will emit a rejected Promise with the respective values
-- **Key difference from `promiseAll`**: Does not wait for pending promises during status reset, which can improve performance
-- Internal Promise status is reset after each emission, but does not wait for promises still in pending state
+- The new stream only emits its first value after all input streams have emitted their first value
+- Only when all input streams emit new data, the new stream emits new data
+- When all input streams [complete](/en/guide/base#complete), the new stream also completes
+- When all input streams unsubscribe, the new stream also unsubscribes
+- If any input stream is rejected, the output stream will emit a rejected Promise containing the corresponding value
+- **Main difference from `promiseAll`**: does not wait for `pending` Promises
 
-## Example
+## Examples
 
-### Basic Usage
+### Basic usage
 
 ```typescript
 import { $, promiseAllNoAwait } from 'fluth'
@@ -33,21 +34,21 @@ const promiseAll$ = promiseAllNoAwait(stream1$, stream2$, stream3$)
 
 promiseAll$.then((value) => console.log(value))
 console.log(promiseAll$.value)
-// prints: undefined
+// Output: undefined
 
 stream1$.next(2)
 stream2$.next('world')
 stream3$.next(false)
-// prints: [2, "world", false]
+// Output: [2, "world", false]
 
 stream1$.next(3)
 stream1$.next(4)
 stream3$.next(true)
 stream2$.next('new')
-// prints: [4, "new", true]
+// Output: [4, "new", true]
 ```
 
-### Performance Comparison with promiseAll
+### Comparison with promiseAll
 
 ```typescript
 import { $, promiseAll, promiseAllNoAwait } from 'fluth'
@@ -57,27 +58,27 @@ const stream2$ = $()
 
 // Standard version
 const awaitResult$ = promiseAll(stream1$, stream2$)
-awaitResult$.then((values) => console.log('await version:', values))
+awaitResult$.then((values) => console.log('Await version:', values))
 
 // No-await version
 const noAwaitResult$ = promiseAllNoAwait(stream1$, stream2$)
-noAwaitResult$.then((values) => console.log('no-await version:', values))
+noAwaitResult$.then((values) => console.log('No-await version:', values))
 
-// Set streams to pending state
-stream1$.next(new Promise((resolve) => setTimeout(() => resolve('delayed1'), 100)))
-stream2$.next(new Promise((resolve) => setTimeout(() => resolve('delayed2'), 50)))
+// Set stream to pending state
+stream1$.next(new Promise((resolve) => setTimeout(() => resolve('delay1'), 100)))
+stream2$.next(new Promise((resolve) => setTimeout(() => resolve('delay2'), 50)))
 
-// After 60ms, stream2's Promise has resolved, but stream1 is still pending
+// After 60ms, stream2's Promise is resolved, but stream1 is still pending
 setTimeout(() => {
   // Send new immediate values
   stream1$.next('immediate1')
   stream2$.next('immediate2')
 
-  // promiseAllNoAwait will immediately process new values, not waiting for previous pending Promise
-  // prints: no-await version: ['immediate1', 'immediate2']
+  // promiseAllNoAwait will process new values immediately, not waiting for previous pending Promises
+  // Output: No-await version: ['immediate1', 'immediate2']
 
   // promiseAll will wait for all pending Promises to resolve
-  // Won't print until 100ms later
+  // Needs to wait until 100ms to output
 }, 60)
 ```
 

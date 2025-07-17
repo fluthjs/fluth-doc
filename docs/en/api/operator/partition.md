@@ -1,15 +1,21 @@
 # partition
 
-Partitions the input [stream](/en/api/stream#stream) or [Observable](/en/api/observable) based on a predicate function, returning two streams: the first stream contains values that satisfy the condition, and the second stream contains values that do not satisfy the condition.
+Partitions the input [stream](/en/api/stream#stream) or [Observable](/en/api/observable) according to a predicate function, returning two streams: the first for values that satisfy the condition, the second for those that do not.
 
 ![image](/partition.drawio.svg)
 
 ## Type
 
 ```typescript
+export enum PromiseStatus {
+  PENDING = 'pending',
+  RESOLVED = 'resolved',
+  REJECTED = 'rejected',
+}
+
 type partition: <T>(
   stream$: Stream<T> | Observable<T>,
-  predicate: (this: any, value: any, status: 'resolved' | 'rejected', index: number) => boolean,
+  predicate: (this: any, value: any, status: PromiseStatus, index: number) => boolean,
   thisArg?: any,
 ) => [Stream<T>, Stream<T>];
 ```
@@ -17,46 +23,58 @@ type partition: <T>(
 ## Parameters
 
 - `stream$` (Stream | Observable): Input stream or Observable
-- `predicate` (Function): Predicate function that receives `value`, `status`, and `index` parameters
+- `predicate` (Function): Condition function, receives `value`, `status`, and `index` as parameters
   - `value`: Current value
-  - `status`: Promise status ('resolved' or 'rejected')
-  - `index`: Index counter starting from 1
-- `thisArg` (optional): The `this` context for the predicate function
+  - `status`: Promise status
+  - `index`: Index starting from 1
+- `thisArg` (optional): `this` context for the predicate function
 
 ## Return Value
 
-Returns an array containing two Streams: `[stream for satisfied conditions, stream for unsatisfied conditions]`
+Returns an array of two Streams: `[stream of satisfied values, stream of unsatisfied values]`
 
 ## Details
 
-- Divides the input stream based on the predicate function, returning two streams: the first stream contains values that satisfy the condition, and the second stream contains values that do not satisfy the condition.
-- When the input stream unsubscribes, both returned streams will also unsubscribe.
-- When the input stream [finishes](/en/guide/base#completion), the corresponding returned streams will also finish.
-- Only accepts `Stream` or `Observable` as input, other types will throw an error.
-- If the input stream is already completed, both returned streams will complete immediately.
-- When the predicate function throws an error, the value will be assigned to the unsatisfied conditions stream.
-- Index counter starts from 1 and increments after each value is processed.
+- Partitions the input stream according to the predicate function, returning two streams: the first for values that satisfy the condition, the second for those that do not
+- When the input stream unsubscribes, both returned streams also unsubscribe
+- When the input stream [completes](/en/guide/base#complete), the corresponding returned streams also complete
+- If the input stream is already completed, both returned streams complete immediately
+- If the predicate function throws an error, the value is assigned to the unsatisfied stream
+- Index starts from 1 and increments after each value is processed
 
 ## Example
 
 ```typescript
 import { $, partition } from 'fluth'
 
-const stream$ = $(0)
+const stream$ = $()
 
-const [evenStream$, oddStream$] = partition(stream$, (value) => value % 2 === 0)
+const [selectedStream$, unselectedStream$] = partition(stream$, (value, status) => {
+  // Select odd numbers in resolved state, or even numbers in rejected state
+  if (status === 'resolved') {
+    return value % 2 === 1
+  } else {
+    return value % 2 === 0
+  }
+})
 
-evenStream$.then((value) => console.log('even stream', value))
-oddStream$.then((value) => console.log('odd stream', value))
+selectedStream$.then(
+  (value) => console.log('Selected resolved:', value),
+  (value) => console.log('Selected rejected:', value)
+)
+unselectedStream$.then(
+  (value) => console.log('Unselected resolved:', value),
+  (value) => console.log('Unselected rejected:', value)
+)
 
-stream$.next(1)
-// prints: odd stream 1
-stream$.next(2)
-// prints: even stream 2
-stream$.next(3)
-// prints: odd stream 3
-stream$.next(4)
-// prints: even stream 4
+stream$.next('1') // resolved odd -> selected
+// Output: Selected resolved: 1
+stream$.next('2') // resolved even -> unselected
+// Output: Unselected resolved: 2
+stream$.next(Promise.reject('3')) // rejected odd -> unselected
+// Output: Unselected rejected: 3
+stream$.next(Promise.reject('4')) // rejected even -> selected
+// Output: Selected rejected: 4
 ```
 
 ## Status-based Partitioning Example
@@ -76,22 +94,22 @@ const [selectedStream$, unselectedStream$] = partition(stream$, (value, status) 
 })
 
 selectedStream$.then(
-  (value) => console.log('selected success:', value),
-  (value) => console.log('selected error:', value)
+  (value) => console.log('Selected resolved:', value),
+  (value) => console.log('Selected rejected:', value)
 )
 unselectedStream$.then(
-  (value) => console.log('unselected success:', value),
-  (value) => console.log('unselected error:', value)
+  (value) => console.log('Unselected resolved:', value),
+  (value) => console.log('Unselected rejected:', value)
 )
 
 stream$.next('1') // resolved odd -> selected
-// prints: selected success: 1
+// Output: Selected resolved: 1
 stream$.next('2') // resolved even -> unselected
-// prints: unselected success: 2
+// Output: Unselected resolved: 2
 stream$.next(Promise.reject('3')) // rejected odd -> unselected
-// prints: unselected error: 3
+// Output: Unselected rejected: 3
 stream$.next(Promise.reject('4')) // rejected even -> selected
-// prints: selected error: 4
+// Output: Selected rejected: 4
 ```
 
 ## Index-based Partitioning Example

@@ -1,6 +1,6 @@
 # buffer
 
-A buffering operator that collects data from the source stream into a buffer and outputs all buffered data at once when the trigger stream emits a value.
+Buffer operator collects data from the source stream into a buffer. When the trigger stream emits a value, all buffered data is emitted at once as an array.
 
 ## Type Definition
 
@@ -13,26 +13,24 @@ type buffer = <T>(
 
 ## Parameters
 
-- `trigger$` (Stream | Observable): The trigger stream that activates the buffer operator to emit all buffered data
-- `shouldAwait` (boolean, optional): Whether to wait for the stream's `pending` state to end, defaults to `true`
+- `trigger$` (Stream | Observable): The trigger stream. When this stream emits a value, the buffer operator emits all buffered data.
+- `shouldAwait` (boolean, optional): Whether to wait for the source stream's `pending` state to resolve. Defaults to `true`. If the source is `pending` when triggered, it will wait for resolution before emitting.
 
 ## Return Value
 
-Returns a new `Observable` that collects data from the source stream into an array and emits the buffered data array only when the trigger is activated.
+Returns a new `Observable` that collects data from the source stream into an array and only emits the buffered data array when the trigger is activated.
 
 ## Details
 
-Core behaviors of the `buffer` operator:
-
-- **Data collection**: Continuously collects resolved values from the source stream into an internal buffer
-- **Trigger mechanism**: Only emits all data in the buffer when the trigger stream emits a value
-- **Value filtering**: Only collects resolved values, ignoring rejected Promises
-- **Buffer clearing**: Automatically clears the buffer after each emission, preparing to collect the next batch of data
-- **Await mechanism**: When `shouldAwait` is `true`, waits for pending state resolution before emitting
+- Continuously collects resolved values from the source stream into an internal buffer.
+- Only emits all buffered data when the trigger stream emits a value.
+- Only collects resolved values, ignores rejected Promises.
+- After each emission, the buffer is cleared to collect the next batch of data.
+- When `shouldAwait` is `true`, if the source is pending, it waits for resolution before emitting.
 
 ## Usage Scenarios
 
-### Scenario 1: Basic Data Buffering
+### Scenario 1: Basic data buffering
 
 ```typescript
 import { $, buffer } from 'fluth'
@@ -46,23 +44,23 @@ buffered$.then((values) => {
   console.log('Buffered data:', values)
 })
 
-// Push data to source stream, but won't emit immediately
+// Emit data to the source stream, but not emitted immediately
 source$.next(1)
 source$.next(2)
 source$.next(3)
 
-// Only emits buffered data when trigger is activated
+// Only emits buffered data when the trigger is activated
 trigger$.next('trigger') // Output: Buffered data: [1, 2, 3]
 
-// Continue pushing data
+// Continue emitting data
 source$.next(4)
 source$.next(5)
 
-// Trigger output again
+// Next trigger emission
 trigger$.next('trigger') // Output: Buffered data: [4, 5]
 ```
 
-### Scenario 2: Empty Buffer Handling
+### Scenario 2: Handling empty buffer
 
 ```typescript
 import { $, buffer } from 'fluth'
@@ -76,11 +74,11 @@ buffered$.then((values) => {
   console.log('Buffered data:', values)
 })
 
-// Trigger when there's no data
+// Trigger when there is no data
 trigger$.next('trigger') // Output: Buffered data: []
 ```
 
-### Scenario 3: Batch Data Processing
+### Scenario 3: Batch data processing
 
 ```typescript
 import { $, buffer } from 'fluth'
@@ -95,16 +93,16 @@ batchedData$.then((batch) => {
   // Batch process data
 })
 
-// Generate data rapidly
+// Generate data quickly
 for (let i = 1; i <= 100; i++) {
   dataStream$.next(i)
 }
 
-// Process in batch
+// Batch process
 batchTrigger$.next('process') // Output: Processing 100 items: [1, 2, 3, ..., 100]
 ```
 
-### Scenario 4: Waiting for Async Values
+### Scenario 4: Awaiting asynchronous values
 
 ```typescript
 import { $, buffer } from 'fluth'
@@ -119,7 +117,7 @@ buffered$.then((values) => {
   console.log('Buffered data:', values)
 })
 
-// Send immediate values and async values
+// Emit both immediate and async values
 source$.next(1)
 source$.next(2)
 
@@ -128,12 +126,12 @@ const slowPromise = new Promise((resolve) => {
 })
 source$.next(slowPromise)
 
-// Trigger immediately, but will wait for async value resolution
+// Trigger immediately, but will wait for async value to resolve
 trigger$.next('trigger')
-// Output after 1 second: Buffered data: [1, 2, 'async result']
+// After 1 second: Output: Buffered data: [1, 2, 'async result']
 ```
 
-### Scenario 5: Not Waiting for Async Values
+### Scenario 5: Not awaiting asynchronous values
 
 ```typescript
 import { $, buffer } from 'fluth'
@@ -156,114 +154,6 @@ const slowPromise = new Promise((resolve) => {
 })
 source$.next(slowPromise)
 
-// Trigger immediately, won't wait for async value resolution
+// Trigger immediately, does not wait for async value to resolve
 trigger$.next('trigger') // Output: Buffered data: [1, 2, Promise] or [1, 2]
-```
-
-## Important Notes
-
-1. **Rejected value handling**: The buffer operator ignores rejected Promises and won't add them to the buffer
-2. **Trigger timing**: Only emits buffered data when the trigger stream emits
-3. **Buffer clearing**: Automatically clears the buffer after each emission
-4. **Empty buffer**: Emits an empty array if triggered when there's no data
-5. **Completion handling**: When the trigger stream completes, the buffer operator also completes
-
-## Relationship with Other Operators
-
-- Difference from `audit`: `buffer` collects all values into an array, `audit` only emits the latest value
-- Difference from `combine`: `buffer` collects historical values from a single stream, `combine` merges latest values from multiple streams
-- Difference from `throttle`: `buffer` is based on external triggers, `throttle` is based on time intervals
-
-## Complete Example
-
-```typescript
-import { $, buffer } from 'fluth'
-
-// Create log collection system
-const logStream$ = $()
-const flushTrigger$ = $()
-
-// Create log buffer
-const logBuffer$ = logStream$.pipe(buffer(flushTrigger$))
-
-logBuffer$.then((logs) => {
-  console.log(`Batch writing ${logs.length} logs:`)
-  logs.forEach((log, index) => {
-    console.log(`${index + 1}. ${log}`)
-  })
-  // Batch write to file or database
-})
-
-// Generate logs
-logStream$.next('User login')
-logStream$.next('Visit homepage')
-logStream$.next('Click button')
-logStream$.next('Submit form')
-
-// Periodically flush log buffer
-flushTrigger$.next('flush')
-// Output:
-// Batch writing 4 logs:
-// 1. User login
-// 2. Visit homepage
-// 3. Click button
-// 4. Submit form
-
-// Continue generating logs
-logStream$.next('User logout')
-
-// Flush again
-flushTrigger$.next('flush')
-// Output:
-// Batch writing 1 logs:
-// 1. User logout
-```
-
-## Error Handling Example
-
-```typescript
-import { $, buffer } from 'fluth'
-
-const source$ = $()
-const trigger$ = $()
-
-const buffered$ = source$.pipe(buffer(trigger$))
-
-buffered$.then((values) => {
-  console.log('Buffered data:', values)
-})
-
-// Mix successful and failed values
-source$.next('success1')
-source$.next(Promise.reject('error1')) // Will be ignored
-source$.next('success2')
-source$.next(Promise.reject('error2')) // Will be ignored
-source$.next('success3')
-
-// When triggered, only includes successful values
-trigger$.next('trigger') // Output: Buffered data: ['success1', 'success2', 'success3']
-```
-
-## High Performance Scenario
-
-```typescript
-import { $, buffer } from 'fluth'
-
-const dataStream$ = $()
-const trigger$ = $()
-
-const buffered$ = dataStream$.pipe(buffer(trigger$))
-
-buffered$.then((values) => {
-  console.log(`Processing ${values.length} items`)
-})
-
-// High frequency data generation
-const largeCount = 10000
-for (let i = 0; i < largeCount; i++) {
-  dataStream$.next(i)
-}
-
-// Process all data at once
-trigger$.next('process') // Output: Processing 10000 items
 ```

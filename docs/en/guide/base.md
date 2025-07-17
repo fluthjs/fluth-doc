@@ -2,9 +2,9 @@
 
 ## Stream
 
-In `fluth`, there are two types of streams: [`Stream`](/en/api/stream) and [`Observable`](/en/api/observable). A stream is a data source that can be subscribed to. The [subscription node](#subscription-node) after subscribing to a `Stream` is an `Observable`.
+In `fluth`, there are two types of streams: [`Stream`](/en/api/stream) and [`Observable`](/en/api/observable). A stream is a subscribable data source. After subscribing to a `Stream`, the resulting [subscription node](#subscription-node) is an `Observable` stream.
 
-The main difference between `Stream` and `Observable` is that `Stream` can actively push data, while `Observable` can only passively push data or repeat the last push.
+The main difference between `Stream` and `Observable` is that a `Stream` can actively push data, while an `Observable` can only passively receive pushed data or repeat the last push.
 
 ```typescript
 import { $ } from 'fluth'
@@ -18,11 +18,11 @@ const observable1$ = observable$.then(xxx)
 promise$.next(xxx) // Push data
 ```
 
-## Data Push
+## Push
 
-Data push is the process of pushing new data sources to subscription nodes. Data push is divided into active push and passive push. Active push means nodes can actively push data, while passive push means nodes can only passively receive data, process it, and then push the processed data to subscription nodes.
+Pushing means sending new data sources to subscription nodes. There are active and passive pushes: active push means a node can actively send data, while passive push means a node can only passively receive processed data and then push it to its subscription nodes.
 
-- [`Stream`](/en/api/stream) can use the `next` method for active data push, and all subscription nodes will receive the pushed data
+- [`Stream`](/en/api/stream) can use the `next` method for active push; all subscription nodes will receive the pushed data.
 
 ```typescript
 import { Stream } from 'fluth'
@@ -31,10 +31,10 @@ const promise$ = new Stream()
 
 promise$.then((data) => console.log(data))
 
-promise$.next('hello') // prints hello
+promise$.next('hello') // Output: hello
 ```
 
-- You can also use the `set` method to push data. The difference from the `next` method is that the `set` method pushes `immutable` data based on the previous data.
+- You can also use the `set` method to push data, which differs from `next` in that `set` pushes an `immutable` data object based on the previous data.
 
 ```typescript
 import { $ } from 'fluth'
@@ -48,43 +48,55 @@ console.log(oldValue === newValue) // false
 console.log(oldValue.b === newValue.b) // true
 ```
 
-## Execution
+## Execute
 
-Call the [execute](/en/api/observable#execute) method of the subscription node's [observable](/en/api/observable) to re-execute the last subscribed data flow and push it to all its child subscription nodes.
+Calling the [execute](/en/api/observable#execute) method of a [observable](/en/api/observable) subscription node re-executes the last data flow and pushes it to all its child subscription nodes.
 
 ## Subscription Node
 
-`fluth` uses a `promise`-like form for data flow pushing. You can add a subscription node to a stream through methods like [then](/en/api/observable#then), [$then](/en/api/observable#then-1), [thenOnce](/en/api/observable#thenonce), [$thenOnce](/en/api/observable#thenonce-1), [thenImmediate](/en/api/observable#thenimmediate), [$thenImmediate](/en/api/observable#thenimmediate-1), [get](/en/api/observable#get), [change](/en/api/observable#change), etc. These methods return an `Observable` instance of the subscription node, maintaining consistency with `promise` usage.
+`fluth` uses a `promise`-like approach to push data flow. By calling methods like [then](/en/api/observable#then), [$then](/en/api/observable#then-1), [thenOnce](/en/api/observable#thenonce), [$thenOnce](/en/api/observable#thenonce-1), [thenImmediate](/en/api/observable#thenimmediate), [$thenImmediate](/en/api/observable#thenimmediate-1), you add a subscription node and return an `Observable` instance, making the overall usage consistent with `promise`.
 
 ## Chained Subscription
 
-Call methods like [$then](/en/api/observable#then-1) on the subscription node's [observable](/en/api/observable) for chained subscription, similar to `promise`'s chained `then` methods.
+Calling the [then](/en/api/observable#then) method of a [observable](/en/api/observable) allows for chained subscriptions, similar to the `then` chaining in `promise`.
 
 ## Partial Subscription
 
-Call methods like [get](/en/api/observable#get) on the subscription node's [observable](/en/api/observable) for partial subscription, only subscribing to changes in the data obtained by `get`.
+Use the [get](/en/api/operator/get) operator for partial subscription, subscribing only to changes in the part of the data returned by `get`.
 
 ## Conditional Subscription
 
-Only when nodes meet conditions will data be pushed. You can use the [change](/en/api/observable#change) method of the subscription node's [observable](/en/api/observable) or the [filter](/en/api/operator/filter) operator for conditional subscription. Only when conditions are met will data be pushed. The difference between the two is:
+Only nodes that meet the condition will push data. The [change](/en/api/operator/change) and [filter](/en/api/operator/filter) operators allow for conditional subscription. The difference between the two is:
 
-- The `change` method takes a `getter` function, passing in the previous data and current data respectively and comparing the return values. Data will only be pushed if there are changes.
-- The `filter` method takes a `condition` function, passing in the current data. Data will only be pushed if it returns `true`.
+- `change` takes a `getter` function, passing in the previous and current data, and only pushes if the value changes.
+- `filter` takes a `condition` function, passing in the current data, and only pushes if it returns `true`.
 
 ## Unsubscribe
 
-Call the [unsubscribe](/en/api/observable#unsubscribe) method of the subscription node's [observable](/en/api/observable) to cancel the subscription.
+Call the [unsubscribe](/en/api/observable#unsubscribe) method of a subscription node to unsubscribe.
 
-## Completion
+- Unsubscribing a node will trigger unsubscription for all its child nodes.
+- Unsubscribing a node will first trigger the node's [`afterComplete`](/en/api/observable#aftercomplete) callback, then trigger the node's [`afterUnsubscribe`](/en/api/observable#afterunsubscribe) callback.
 
-Only [`Stream`](/en/api/stream) can be completed. Completion means the stream will no longer push new data.
+## Complete
+
+Only [`Stream`](/en/api/stream) can be completed. After a stream is completed:
+
+- The stream will no longer push data
+- The stream will not accept new subscription nodes
+
+There are two ways to complete a stream:
 
 ```typescript
 import { Stream } from 'fluth'
 
 const promise$ = new Stream()
 
-promise$.next(1, true) // true indicates completion, last stream push
+// Complete method 1: pass true to next to indicate completion, last push
+promise$.next(1, true)
+
+// Complete method 2: call complete method to end the stream
+promise$.complete() // End the stream
 ```
 
-After executing this final data push, each subscription node will trigger the [`afterComplete`](/en/api/observable#aftercomplete) callback and automatically unsubscribe all subscribers, triggering the [`afterUnsubscribe`](/en/api/observable#afterunsubscribe) of all child nodes.
+After a stream node is completed, each subscription node will trigger [`afterComplete`](/en/api/observable#aftercomplete) after the last data push, then automatically unsubscribe all its subscribers, and trigger [`afterUnsubscribe`](/en/api/observable#afterunsubscribe) for all child nodes.

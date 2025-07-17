@@ -51,6 +51,7 @@ export default {
                     { text: 'merge', link: '/en/api/operator/merge' },
                     { text: 'partition', link: '/en/api/operator/partition' },
                     { text: 'promiseAll', link: '/en/api/operator/promiseAll' },
+                    { text: 'promiseAllNoAwait', link: '/en/api/operator/promiseAllNoAwait' },
                     { text: 'promiseRace', link: '/en/api/operator/promiseRace' },
                   ],
                 },
@@ -72,6 +73,10 @@ export default {
                     { text: 'buffer', link: '/en/api/operator/buffer' },
                   ],
                 },
+                {
+                  text: 'Utility Operators',
+                  items: [{ text: 'delay', link: '/en/api/operator/delay' }],
+                },
               ],
             },
             {
@@ -84,14 +89,24 @@ export default {
                   items: [
                     { text: 'delayExec', link: '/en/api/plugin/delayExec' },
                     { text: 'consoleNode', link: '/en/api/plugin/consoleNode' },
-                    { text: 'consoleAll', link: '/en/api/plugin/consoleAll' },
                     { text: 'debugNode', link: '/en/api/plugin/debugNode' },
+                  ],
+                },
+                {
+                  text: 'executeAll plugin',
+                  link: '/en/api/plugin/executeAllPlugin',
+                  items: [
+                    { text: 'consoleAll', link: '/en/api/plugin/consoleAll' },
                     { text: 'debugAll', link: '/en/api/plugin/debugAll' },
                   ],
                 },
                 {
                   text: 'then plugin',
                   link: '/en/api/plugin/thenPlugin',
+                },
+                {
+                  text: 'thenAll plugin',
+                  link: '/en/api/plugin/thenAllPlugin',
                 },
               ],
             },
