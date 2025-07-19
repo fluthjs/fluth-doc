@@ -13,7 +13,7 @@ type thenPluginFn<T> = (unsubscribe: () => void, observable: Observable<T>) => v
 - `unsubscribe`: 取消订阅函数，调用后会停止当前节点的数据处理
 - `observable`: 新创建的子节点 Observable 实例
 
-## 核心行为
+## 详情
 
 - **节点创建时触发**: 在调用 `then`方法创建子节点时执行
 - **生命周期管理**: 可以控制节点的生命周期，实现自动取消订阅
@@ -126,17 +126,3 @@ stream$.then((data) => {
 stream$.next('data1') // 正常处理
 // 当 window.appState.shouldStopProcessing = true 时自动停止
 ```
-
-## 注意事项
-
-1. **执行时机**: then 插件在子节点创建时立即执行，不是在数据处理时执行
-2. **unsubscribe 调用**: 调用 `unsubscribe()` 会停止当前节点及其所有子节点的处理
-3. **资源清理**: 使用 `observable.afterUnsubscribe()` 来注册清理回调
-4. **异步操作**: 插件内的异步操作需要妥善管理，避免内存泄漏
-5. **错误处理**: 插件内的错误会被安全处理，不会中断整个流程
-
-## 与其他插件的关系
-
-- **vs execute 插件**: thenPlugin 在节点创建时执行，execute 在数据处理时执行
-- **vs thenAll 插件**: thenPlugin 是单节点的，thenAll 是全局的
-- **适用场景**: thenPlugin 适合生命周期管理、资源清理、条件控制等需要在节点创建时介入的场景

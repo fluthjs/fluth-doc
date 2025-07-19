@@ -1,8 +1,8 @@
 # consoleAll
 
-调试插件，在流链的所有节点上输出执行结果，用于调试和监控数据流，只能在`Stream`节点上使用。
+Debugging plugin that outputs execution results on all nodes of the stream chain, used for debugging and monitoring data flow, can only be used on `Stream` nodes.
 
-## 类型定义
+## Type Definition
 
 ```typescript
 consoleAll: (resolvePrefix?: string, rejectPrefix?: string) => {
@@ -22,24 +22,24 @@ consoleAll: (resolvePrefix?: string, rejectPrefix?: string) => {
 }
 ```
 
-## 参数说明
+## Parameters
 
-- `resolvePrefix` (可选): 成功时的控制台前缀，默认为 `'resolve'`
-- `rejectPrefix` (可选): 失败时的控制台前缀，默认为 `'reject'`
+- `resolvePrefix` (optional): Console prefix for success, default is `'resolve'`
+- `rejectPrefix` (optional): Console prefix for failure, default is `'reject'`
 
-## 详情
+## Details
 
-- 在流链的所有节点上执行，而不仅仅是单个节点
-- 只在以下情况输出：
-  - 根节点（`root=true`）
-  - 有成功处理函数（`onfulfilled`）的节点
-  - 有错误处理函数（`onrejected`）且状态为 `REJECTED` 的节点
-- 对于 `Promise` 类型的结果，会等待 `Promise` 解析后再输出
-- 返回原始的 `result`，不会修改数据流
+- Executes on all nodes of the stream chain, not just a single node
+- Only outputs in the following cases:
+  - Root node (`root=true`)
+  - Nodes with success handler (`onfulfilled`)
+  - Nodes with error handler (`onrejected`) and status is `REJECTED`
+- For `Promise` type results, waits for Promise resolution before outputting
+- Returns the original `result` without modifying the data flow
 
-## 示例
+## Examples
 
-### 场景 1：基础调试输出
+### Scenario 1: Basic debugging output
 
 ```typescript
 import { $ } from 'fluth'
@@ -47,14 +47,14 @@ import { $ } from 'fluth'
 const stream$ = $().use(consoleAll())
 
 stream$.next(1)
-// 输出: resolve 1
+// Output: resolve 1
 
 const promise = Promise.resolve(2)
 stream$.next(promise)
-// 输出: resolve 2
+// Output: resolve 2
 ```
 
-### 场景 2：流链调试输出
+### Scenario 2: Stream chain debugging output
 
 ```typescript
 import { $ } from 'fluth'
@@ -64,33 +64,33 @@ const promise$ = $().use(consoleAll())
 promise$.then((value) => value + 1).then((value) => value + 1)
 
 promise$.next(1)
-// 输出：
+// Output:
 // resolve 1
 // resolve 2
 // resolve 3
 ```
 
-### 场景 3：自定义前缀调试输出
+### Scenario 3: Custom prefix debugging output
 
 ```typescript
 import { $ } from 'fluth'
 
-// 自定义前缀
-const promise$ = $().use(consoleAll('成功', '失败'))
+// Custom prefix
+const promise$ = $().use(consoleAll('success', 'failure'))
 
 promise$.then((value) => value + 1)
 
 promise$.next(1)
-// 输出：
-// 成功 1
-// 成功 2
+// Output:
+// success 1
+// success 2
 
-const rejectedPromise = Promise.reject(new Error('错误'))
+const rejectedPromise = Promise.reject(new Error('error'))
 promise$.next(rejectedPromise)
-// 输出：失败 Error: 错误
+// Output: failure Error: error
 ```
 
-### 场景 4：与操作符结合调试输出
+### Scenario 4: Combined with operators debugging output
 
 ```typescript
 import { $, debounce } from 'fluth'
@@ -105,16 +105,16 @@ promise$.next(2)
 promise$.next(3)
 promise$.next(4)
 promise$.next(5)
-// 输出：
+// Output:
 // resolve 1
 // resolve 2
 // resolve 3
 // resolve 4
 // resolve 5
-// 等待 100ms 后输出：resolve 6
+// After 100ms: resolve 6
 ```
 
-### 场景 5：移除插件
+### Scenario 5: Remove plugin
 
 ```typescript
 import { $, consoleAll } from 'fluth'
@@ -124,9 +124,9 @@ const stream$ = $().use(plugin)
 
 stream$.then((value) => value + 1)
 stream$.next(1)
-// 输出: resolve 1, resolve 2
+// Output: resolve 1, resolve 2
 
 stream$.remove(plugin)
 stream$.next(2)
-// 不再输出
+// No output
 ```

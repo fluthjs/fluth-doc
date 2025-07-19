@@ -1,6 +1,6 @@
 # thenPlugin
 
-Plugin triggered when a child node is created, mainly used for node lifecycle management, automatic unsubscription, resource cleanup, etc.
+Plugin triggered when creating child nodes, mainly used for node lifecycle management, automatic unsubscription, and resource cleanup.
 
 ## Type Definition
 
@@ -13,7 +13,7 @@ type thenPluginFn<T> = (unsubscribe: () => void, observable: Observable<T>) => v
 - `unsubscribe`: Unsubscribe function, calling it will stop data processing for the current node
 - `observable`: The newly created child node Observable instance
 
-## Core Behavior
+## Details
 
 - **Triggered on node creation**: Executes when a child node is created via the `then` method
 - **Lifecycle management**: Can control the lifecycle of a node, enabling automatic unsubscription
@@ -126,17 +126,3 @@ stream$.then((data) => {
 stream$.next('data1') // Normal processing
 // When window.appState.shouldStopProcessing = true, will automatically stop
 ```
-
-## Notes
-
-1. **Execution timing**: then plugins execute immediately when a child node is created, not during data processing
-2. **unsubscribe call**: Calling `unsubscribe()` stops processing for the current node and all its child nodes
-3. **Resource cleanup**: Use `observable.afterUnsubscribe()` to register cleanup callbacks
-4. **Asynchronous operations**: Manage async operations in plugins carefully to avoid memory leaks
-5. **Error handling**: Errors in plugins are safely handled and will not interrupt the entire process
-
-## Relationship with Other Plugins
-
-- **vs execute plugin**: thenPlugin executes when nodes are created, execute during data processing
-- **vs thenAll plugin**: thenPlugin is per node, thenAll is global
-- **Applicable scenarios**: thenPlugin is suitable for lifecycle management, resource cleanup, conditional control, etc., that need to intervene during node creation

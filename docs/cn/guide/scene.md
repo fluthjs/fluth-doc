@@ -6,7 +6,7 @@
 - 更加声明式的编程范式，能大量减少代码量
 - 更加易于代码阅读，上下游关系一目了然
 
-![image](/structure.drawio.png)
+![image](/structure.drawio.svg)
 
 ## 构建响应式的逻辑
 

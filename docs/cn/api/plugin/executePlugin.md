@@ -30,7 +30,7 @@ type executePlugin<T> = (params: {
 
 返回处理后的结果，可以是同步值或 Promise，会替换原始结果。
 
-## 核心行为
+## 详情
 
 - **数据处理时触发**: 在节点执行数据处理时调用，可以修改或监控数据
 - **单节点级别**: 每个节点独立使用，不影响其他节点
@@ -39,8 +39,7 @@ type executePlugin<T> = (params: {
 
 ## 执行机制
 
-1. **触发时机**: 在 `#runExecutePlugin` 方法中，节点处理数据时执行
-2. **执行顺序**: 如果是根节点，先执行 `executeAll` 插件，再执行当前节点的 `execute` 插件
+2. **执行顺序**: 先执行 `executeAll` 插件，再执行当前节点的 `execute` 插件
 3. **错误处理**: 插件中的错误会被安全处理，不会中断整个流程
 
 ## 使用场景
@@ -164,15 +163,3 @@ const asyncProcessor$ = stream$
 stream$.next('hello')
 // 输出详细的性能日志
 ```
-
-## 注意事项
-
-1. **错误处理**: 插件中的错误会被安全处理，使用 `safeCallback` 包装
-2. **性能考虑**: 避免在插件中执行复杂的同步计算
-3. **状态管理**: 可以使用 `set` 函数来安全地修改对象状态
-
-## 与其他插件的关系
-
-- **vs executeAll 插件**: executePlugin 是单节点的，executeAll 是全局的
-- **vs then 插件**: executePlugin 在数据处理时执行，then 插件在节点创建时执行
-- **适用场景**: executePlugin 适合数据处理、验证、转换等需要在数据流动时介入的场景

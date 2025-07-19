@@ -1,6 +1,6 @@
 # executePlugin
 
-Plugin triggered when processing data at a node, used to modify, monitor, or record the data at a node. Every node can use an execute plugin to intervene in the data processing process.
+Plugin triggered when processing data at a node, used to modify, monitor, or record the data flowing through a node. Every node can use an execute plugin to intervene in the data processing process.
 
 ## Type Definition
 
@@ -18,9 +18,9 @@ type executePlugin<T> = (params: {
 
 ## Parameters
 
-- `result`: The processing result of the current node, can be a synchronous value or a Promise
+- `result`: The processing result of the current node, can be a synchronous value or Promise
 - `set`: Immutable state update function, used to safely modify object state
-- `root`: Boolean, indicates whether the current node is the root node
+- `root`: Boolean value indicating whether the current node is the root node
 - `status`: The status of the current node (`pending`, `resolved`, `rejected`)
 - `onfulfilled`: Success handler function of the current node (optional)
 - `onrejected`: Error handler function of the current node (optional)
@@ -28,19 +28,18 @@ type executePlugin<T> = (params: {
 
 ## Return Value
 
-Returns the processed result, can be a synchronous value or a Promise, and will replace the original result.
+Returns the processed result, can be a synchronous value or Promise, will replace the original result.
 
-## Core Behavior
+## Details
 
-- **Triggered during data processing**: Called when the node processes data, can modify or monitor the data
+- **Triggered during data processing**: Called when the node processes data, can modify or monitor data
 - **Per-node level**: Used independently on each node, does not affect other nodes
 - **Result replacement**: Non-`undefined` return values will replace the original processing result
 - **Chained processing**: Multiple execute plugins are executed in order, each receiving the result of the previous plugin
 
 ## Execution Mechanism
 
-1. **Trigger timing**: Executed in the `#runExecutePlugin` method when the node processes data
-2. **Execution order**: If it is the root node, executes `executeAll` plugins first, then the current node's `execute` plugins
+2. **Execution order**: Executes `executeAll` plugins first, then the current node's `execute` plugins
 3. **Error handling**: Errors in plugins are safely handled and will not interrupt the entire process
 
 ## Usage Scenarios
@@ -166,15 +165,3 @@ const asyncProcessor$ = stream$
 stream$.next('hello')
 // Output detailed performance logs
 ```
-
-## Notes
-
-1. **Error handling**: Errors in plugins are safely handled with `safeCallback`
-2. **Performance consideration**: Avoid complex synchronous calculations in plugins
-3. **State management**: Use the `set` function to safely modify object state
-
-## Relationship with Other Plugins
-
-- **vs executeAll plugin**: executePlugin is per node, executeAll is global
-- **vs then plugin**: executePlugin executes during data processing, then plugin executes when nodes are created
-- **Applicable scenarios**: executePlugin is suitable for data processing, validation, transformation, etc., that need to intervene during data flow

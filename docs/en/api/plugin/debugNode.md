@@ -3,7 +3,7 @@
 Debugging plugin that triggers a debugger breakpoint at the current node based on conditions, used for precise debugging control.
 
 :::warning Note
-Browsers may filter out `debugger` statements in `node_modules`, causing breakpoints to not work. You may need to manually add `node_modules` to the ignore list in your browser's developer tools settings to enable debugging.
+Browsers may filter out `debugger` statements in `node_modules`, causing breakpoints to not work. You may need to manually enable `node_modules` debugging in your browser's developer tools settings -> ignore list.
 :::
 
 ## Type Definition
@@ -19,20 +19,16 @@ debugNode: (condition?: (value: any) => boolean, conditionError?: (value: any) =
 - `condition` (optional): Condition function for success; triggers the debugger if returns `true`, otherwise does not trigger. Default is `undefined` (always triggers)
 - `conditionError` (optional): Condition function for failure; triggers the debugger if returns `true`, otherwise does not trigger. Default is `undefined` (always triggers)
 
-## Return Value
+## Details
 
-Returns an execute plugin that only triggers a debugger breakpoint at the current node based on the conditions.
+- Only executes at the current node, does not propagate to child nodes
+- Supports custom condition functions to control when the debugger is triggered
+- Can set different conditions for success and failure scenarios
+- For `Promise` type results, waits for Promise resolution before checking the condition
+- Returns the original `result` without modifying the data flow
+- Triggers the debugger when the condition function returns `true`, otherwise does not trigger
 
-## Core Behavior
-
-- **execute plugin**: Only executes at the current node, does not propagate to child nodes
-- **Conditional control**: Supports custom condition functions to control when the debugger is triggered
-- **Separate handling for success/failure**: Can set different conditions for success and failure
-- **Promise handling**: For Promise results, waits for resolution before checking the condition
-- **Original data**: Returns the original `result` without modifying the data flow
-- **Condition logic**: Triggers the debugger if the condition function returns `true`, otherwise does not trigger
-
-## Usage Scenarios
+## Examples
 
 ### Scenario 1: Basic usage (always triggers)
 
@@ -154,18 +150,3 @@ stream$.remove(plugin)
 stream$.next(2)
 // No longer triggers debugger, callCount = 2
 ```
-
-## Notes
-
-1. **Return value**: The plugin always returns the original `result` and does not modify the data flow
-2. **Promise handling**: For Promise results, waits for resolution before checking the condition
-3. **Condition function**: The condition function receives the resolved value; triggers the debugger if returns `true`, otherwise does not trigger
-4. **Error condition**: The error condition function receives the error object; triggers the debugger if returns `true`, otherwise does not trigger
-5. **Remove plugin**: Can be removed via the `remove` method to stop debugging
-6. **Development environment**: The debugger is mainly for development; remove in production
-
-## Relationship with Other Plugins
-
-- **vs debugAll**: `debugNode` only triggers debugger at a single node; `debugAll` triggers at all nodes
-- **vs consoleNode**: Similar function, but `debugNode` triggers debugger breakpoints, `consoleNode` outputs to the console
-- **Applicable scenarios**: `debugNode` is suitable for precise control of debugging points, only triggering at specific nodes or under certain conditions

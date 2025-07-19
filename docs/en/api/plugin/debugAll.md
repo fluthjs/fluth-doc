@@ -1,8 +1,8 @@
 # debugAll
 
-Debugging plugin that triggers debugger breakpoints on all nodes of the stream chain, used for deep debugging and flow tracing.
+Debugging plugin that triggers debugger breakpoints on all nodes of the stream chain, used for deep debugging and flow tracing, can only be used on `Stream` nodes.
 :::warning Note
-Browsers may filter out `debugger` statements in `node_modules`, causing breakpoints to not work. You may need to manually add `node_modules` to the ignore list in your browser's developer tools settings to enable debugging.
+Browsers may filter out `debugger` statements in `node_modules`, causing breakpoints to not work. You may need to manually enable `node_modules` debugging in your browser's developer tools settings -> ignore list.
 :::
 
 ## Type Definition
@@ -31,7 +31,7 @@ Returns an ExecuteAllPlugin that triggers debugger breakpoints on all nodes of t
 
 - **executeAll plugin**: Executes on all nodes of the stream chain, not just a single node
 - **Debugger trigger**: Triggers a `debugger` statement on nodes that meet the conditions
-- **Promise handling**: For Promise results, waits for resolution before triggering the debugger
+- **Promise handling**: For Promise results, waits for Promise resolution before triggering the debugger
 - **Original data**: Returns the original `result` without modifying the data flow
 
 ## Usage Scenarios
@@ -128,8 +128,8 @@ stream$.next({ id: 1, name: 'test' })
 
 ## Notes
 
-1. **Return value**: The plugin always returns the original `result` and does not modify the data flow
-2. **Promise handling**: For Promise results, waits for resolution before triggering the debugger
+1. **Return value**: The plugin returns the original `result` without modifying the data flow
+2. **Promise handling**: For Promise results, waits for Promise resolution before triggering the debugger
 3. **Error handling**: For rejected Promises, triggers the debugger during error handling
 4. **Intelligent filtering**: Skips debugger trigger when `root=false` and there is no `onfulfilled` or `onrejected`
 5. **Remove plugin**: Can be removed via the `remove` method to stop debugging

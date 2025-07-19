@@ -1,6 +1,6 @@
 # thenAllPlugin
 
-Global then plugin, executed whenever a child node is created in the stream chain, used for global monitoring and handling of node creation.
+Global then plugin that executes whenever a child node is created in the stream chain, used for global monitoring and handling of node creation, can only be used on `Stream` nodes.
 
 ## Type Definition
 
@@ -13,11 +13,7 @@ thenAllPlugin: (unsubscribe: () => void, observable: Observable<T>) => void
 - `unsubscribe`: Unsubscribe function, can be used to unsubscribe the current observer node
 - `observable`: The newly created observer node instance
 
-## Return Value
-
-No return value (`void`)
-
-## Core Behavior
+## Details
 
 - **Global execution**: Executes whenever a child node is created via `then`, `catch`, or `finally` in the stream chain
 - **Node creation timing**: Executes immediately after a new observer node is created
@@ -49,10 +45,3 @@ From the source code, the execution logic of thenAll plugins is as follows:
 3. **Execution timing**: Executes immediately after each new node is created, not during data flow
 4. **Unsubscribe**: Use the provided `unsubscribe` function to unsubscribe a specific node
 5. **Performance consideration**: Avoid complex calculations in plugins, as they execute on every node creation
-
-## Relationship with Other Plugins
-
-- **vs then plugin**: thenAll executes on all node creations, then plugin only on specific nodes
-- **vs executeAll**: thenAll executes when nodes are created, executeAll executes when data flows
-- **vs execute**: thenAll is global, execute is per node
-- **Applicable scenarios**: thenAll is suitable for global monitoring, debugging, performance analysis, etc., that need to intervene during node creation

@@ -1,6 +1,6 @@
 # thenAllPlugin
 
-全局 then 插件，在流链中每个节点创建子节点时都会执行，用于全局监控和处理节点的创建过程。
+全局 then 插件，在流链中每个节点创建子节点时都会执行，用于全局监控和处理节点的创建过程，只能在`Stream`节点上使用。
 
 ## 类型定义
 
@@ -13,11 +13,7 @@ thenAllPlugin: (unsubscribe: () => void, observable: Observable<T>) => void
 - `unsubscribe`: 取消订阅函数，可以用来取消当前观察者节点
 - `observable`: 新创建的观察者节点实例
 
-## 返回值
-
-无返回值（`void`）
-
-## 核心行为
+## 详情
 
 - **全局执行**: 在流链中每个节点调用 `then`、`catch`、`finally` 等方法创建子节点时都会执行
 - **节点创建时机**: 在新的观察者节点创建后立即执行
@@ -49,10 +45,3 @@ thenAllPlugin: (unsubscribe: () => void, observable: Observable<T>) => void
 3. **执行时机**: 在每个新节点创建后立即执行，不是在数据流动时执行
 4. **取消订阅**: 可以使用提供的 `unsubscribe` 函数来取消特定节点的订阅
 5. **性能考虑**: 由于会在每个节点创建时执行，应避免复杂的计算操作
-
-## 与其他插件的关系
-
-- **vs then 插件**: thenAll 在所有节点创建时执行，then 插件只在特定节点使用
-- **vs executeAll**: thenAll 在节点创建时执行，executeAll 在数据流动时执行
-- **vs execute**: thenAll 是全局的，execute 是单节点的
-- **适用场景**: thenAll 适合全局监控、调试、性能分析等需要在节点创建时介入的场景

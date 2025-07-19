@@ -15,18 +15,14 @@ consoleNode: (resolvePrefix?: string, rejectPrefix?: string) => {
 - `resolvePrefix` (optional): Console prefix for success, default is `'resolve'`
 - `rejectPrefix` (optional): Console prefix for failure, default is `'reject'`
 
-## Return Value
+## Details
 
-Returns an execute plugin that only outputs at the current node and returns the original `result` value.
+- Only executes at the current node, does not propagate to child nodes
+- Outputs the result immediately, regardless of whether there is a handler
+- For `Promise` type results, waits for Promise resolution before outputting
+- Returns the original `result` without modifying the data flow
 
-## Core Behavior
-
-- **execute plugin**: Only executes at the current node, does not propagate to child nodes
-- **Immediate output**: Outputs the result immediately, regardless of whether there is a handler
-- **Promise handling**: For Promise results, waits for resolution before outputting
-- **Returns original value**: Returns the original `result` without modifying the data flow
-
-## Usage Scenarios
+## Examples
 
 ### Scenario 1: Basic debugging output
 
@@ -122,50 +118,4 @@ stream$.next(1)
 stream$.remove(plugin)
 stream$.next(2)
 // No output
-```
-
-## Notes
-
-1. **Return value**: The plugin always returns the original `result` and does not modify the data flow
-2. **Promise handling**: For Promise results, waits for resolution before outputting
-3. **Error handling**: For rejected Promises, uses `rejectPrefix` to output error information
-4. **Remove plugin**: Can be removed via the `remove` method to stop output
-5. **Immediate output**: Each call outputs immediately, not affected by debounce, etc.
-
-## Relationship with Other Plugins
-
-- **vs consoleAll**: `consoleNode` is an execute plugin, only executes at a single node; `consoleAll` is an executeAll plugin, executes on all nodes
-- **vs debugNode**: Similar function, but `consoleNode` outputs to the console, `debugNode` triggers debugger breakpoints
-- **Applicable scenarios**: `consoleNode` is suitable for debugging data output at a specific node, not for full-chain monitoring
-
-## Practical Example: Data Flow Debugging
-
-```typescript
-import { $, debounce } from 'fluth'
-
-const dataStream$ = $<number>()
-
-// Add debugging at different stages of the processing chain
-const processed$ = dataStream$
-  .use(consoleNode('Raw data'))
-  .then((value) => value * 2)
-  .use(consoleNode('Multiplied result'))
-  .pipe(debounce(100))
-  .use(consoleNode('Debounced result'))
-  .then((value) => value + 10)
-  .use(consoleNode('Final result'))
-
-dataStream$.next(5)
-dataStream$.next(10)
-dataStream$.next(15)
-
-// Output:
-// Raw data 5
-// Multiplied result 10
-// Raw data 10
-// Multiplied result 20
-// Raw data 15
-// Multiplied result 30
-// Debounced result 30
-// Final result 40
 ```

@@ -1,6 +1,6 @@
 # delayExec
 
-Delay execution plugin, delays passing the processing result to child nodes at the current node for a specified time.
+Delay execution plugin that delays pushing the processing result to child nodes at the current node for a specified time.
 
 ## Type Definition
 
@@ -14,18 +14,14 @@ delayExec: (delayTime: number) => {
 
 - `delayTime` (required): Delay time in milliseconds
 
-## Return Value
+## Details
 
-Returns an ExecutePlugin that delays passing the execution result of the current node for the specified time.
+- Only executes at the current node, does not propagate to child nodes
+- Wraps the result in a `Promise` and resolves after the specified time
+- For `Promise` type results, waits for Promise resolution before starting the delay timer
+- Precisely controls the timing of the data flow
 
-## Core Behavior
-
-- **execute plugin**: Only executes at the current node, does not propagate to child nodes
-- **Delayed execution**: Wraps the result in a Promise and resolves after the specified time
-- **Promise handling**: For Promise results, waits for resolution before starting the delay timer
-- **Time control**: Precisely controls the timing of the data flow
-
-## Usage Scenarios
+## Examples
 
 ### Scenario 1: Basic delay
 
@@ -91,48 +87,3 @@ processingStream$.next({ id: 1, content: 'test data' })
 // After 300ms: Validation done: { id: 1, content: 'test data', preprocessed: true, validated: true }
 // After 150ms: Storage done: { id: 1, content: 'test data', preprocessed: true, validated: true, stored: true }
 ```
-
-### Scenario 4: API request rate limiting
-
-```typescript
-import { $ } from 'fluth'
-
-const apiStream$ = $<string>()
-
-// Limit API request frequency to avoid rate limiting
-const rateLimitedAPI$ = apiStream$
-  .use(delayExec(1000)) // Each request is spaced by 1 second
-  .then(async (url) => {
-    console.log('Requesting:', url)
-    const response = await fetch(url)
-    return response.json()
-  })
-
-rateLimitedAPI$.then((data) => {
-  console.log('Request completed:', data)
-})
-
-// Quickly send multiple requests
-apiStream$.next('https://api.example.com/users')
-apiStream$.next('https://api.example.com/posts')
-apiStream$.next('https://api.example.com/comments')
-
-// Output:
-// After 1s: Requesting: https://api.example.com/users
-// After 1s: Requesting: https://api.example.com/posts
-// After 1s: Requesting: https://api.example.com/comments
-```
-
-## Notes
-
-1. **Return value**: The plugin always returns a Promise, even if the input is a synchronous value
-2. **Promise handling**: For Promise results, waits for resolution before starting the delay timer
-3. **Time accuracy**: Delay is based on `setTimeout`, actual delay may vary slightly
-4. **Memory management**: Long delays may consume memory, clean up in time
-5. **Error handling**: If the input Promise is rejected, the delay plugin will propagate the error directly
-
-## Relationship with Other Plugins
-
-- **vs debounce/throttle**: `delayExec` is a fixed delay, `debounce/throttle` are based on event frequency
-- **Execution order**: Can be combined with other plugins and executed in chain order
-- **Applicable scenarios**: `delayExec` is suitable for scenarios requiring precise time interval control
