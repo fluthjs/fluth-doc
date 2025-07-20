@@ -2,6 +2,10 @@
 
 延迟操作符，将输入流的数据延迟指定时间后推送给订阅节点。
 
+<div style="display: flex; justify-content: center">
+  <img src="/delay.drawio.svg" alt="image" >
+</div>
+
 ## 类型
 
 ```typescript
@@ -10,10 +14,7 @@ type delay = <T>(delayTime: number) => (observable$: Observable<T>) => Observabl
 
 ## 详情
 
-- 接收一个延迟时间参数（毫秒）
-- 返回一个函数，该函数接收一个 Observable 并返回一个新的 Observable
-- 新 Observable 会将数据延迟指定时间后推送给订阅节点
-- 使用 Promise 和 setTimeout 实现延迟功能
+- 接收一个延迟时间参数（毫秒），将数据延迟指定时间后推送给订阅节点
 
 ## 示例
 

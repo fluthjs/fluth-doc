@@ -2,6 +2,10 @@
 
 缓冲操作符，将源流的数据收集到缓冲区中，当触发器流发出值时一次性输出所有缓冲的数据。
 
+<div style="display: flex; justify-content: center">
+  <img src="/buffer.drawio.svg" alt="image" >
+</div>
+
 ## 类型定义
 
 ```typescript
@@ -16,15 +20,10 @@ type buffer = <T>(
 - `trigger$` (Stream | Observable): 触发器流，当该流发出值时，buffer 操作符会发出所有缓冲的数据
 - `shouldAwait` (boolean, 可选): 是否等待流的 `pending` 状态结束，默认为 `true`，当`trigger$`触发时，如果源流处于 `pending` 状态，会等待解析完成后再发出
 
-## 返回值
-
-返回一个新的 `Observable`，该 `Observable` 会将源流的数据收集到数组中，只在触发器激活时发出缓冲的数据数组。
-
 ## 详情
 
-- 持续收集源流发出的已解析值到内部缓冲区
-- 只有当触发器流发出值时，才会发出缓冲区中的所有数据
-- 只收集已解析的值，忽略被拒绝的 Promise
+- 持续收集源流发出的已解析值到内部缓冲区，忽略被拒绝的值
+- 只有当触发器流处于`resolve`状态并推流时，才会推流缓冲区中的所有数据
 - 每次发出数据后会清空缓冲区，准备收集下一批数据
 - 当 `shouldAwait` 为 `true` 时，如果源流处于 pending 状态，会等待解析完成后再发出
 

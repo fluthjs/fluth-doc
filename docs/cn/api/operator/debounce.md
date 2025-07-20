@@ -2,6 +2,10 @@
 
 防抖操作符，延迟推送数据，直到指定时间内没有新的数据推送时才执行。
 
+<div style="display: flex; justify-content: center">
+  <img src="/debounce.drawio.svg" alt="image" >
+</div>
+
 ## 类型定义
 
 ```typescript
