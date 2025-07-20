@@ -2,6 +2,10 @@
 
 Skip operator, skips a specified number of data emissions and starts receiving data from the N+1th emission.
 
+<div style="display: flex; justify-content: center">
+  <img src="/skip.drawio.svg" alt="image" >
+</div>
+
 ## Type Definition
 
 ```typescript

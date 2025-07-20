@@ -2,37 +2,41 @@
 
 防抖操作符，延迟推送数据，直到指定时间内没有新的数据推送时才执行。
 
-- 类型
+## 类型定义
 
-  ```typescript
-  type debounce = (debounceTime: number) => (observable$: Observable) => Observable
-  ```
+```typescript
+type debounce = (debounceTime: number) => (observable$: Observable) => Observable
+```
 
-- 详情
+## 参数说明
 
-  - 接收一个防抖时间参数（毫秒）
-  - 第一次推送不会立即执行，会等待防抖时间
+- `debounceTime` (`number`): 防抖时间间隔，单位为毫秒
 
-- 示例
+## 详情
 
-  ```typescript
-  import { $, debounce } from 'fluth'
+- 所有推送都不会立即执行，包括第一次推送
+- 只有在防抖时间内没有新的推送时，才会发出最后一次的值
 
-  const stream$ = $(1)
+## 示例
 
-  // 使用 debounce 操作符，防抖时间 500ms
-  const debounced$ = stream$.pipe(debounce(500))
+```typescript
+import { $, debounce } from 'fluth'
 
-  debounced$.then((value) => {
-    console.log('防抖后的值:', value)
-  })
+const stream$ = $()
 
-  // 快速连续推送数据
-  stream$.next(2)
-  stream$.next(3)
-  stream$.next(4)
-  stream$.next(5)
+// 使用 debounce 操作符，防抖时间 100ms
+const debounced$ = stream$.pipe(debounce(100))
 
-  // 输出：等待 500ms 后只输出最后一次推送的值
-  // 防抖后的值: 5
-  ```
+debounced$.then((value) => {
+  console.log('防抖后的值:', value)
+})
+
+// 快速连续推送数据
+stream$.next(1)
+setTimeout(() => stream$.next(2), 30)
+setTimeout(() => stream$.next(3), 60)
+setTimeout(() => stream$.next(4), 90)
+
+// 只有最后一次推送会在防抖时间后发出
+// 190ms后输出: 防抖后的值: 4
+```

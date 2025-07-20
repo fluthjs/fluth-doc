@@ -2,6 +2,10 @@
 
 跳过操作符，跳过指定次数的数据推送，从第 N+1 次开始接收数据。
 
+<div style="display: flex; justify-content: center">
+  <img src="/skip.drawio.svg" alt="image" >
+</div>
+
 ## 类型定义
 
 ```typescript

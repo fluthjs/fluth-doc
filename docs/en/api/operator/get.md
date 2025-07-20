@@ -1,6 +1,10 @@
 # get
 
-Property extraction operator. Uses a getter function to extract a specific value from the source stream, and only emits a new value when the extracted value changes.
+Property extraction operator, uses a `getter` function to extract specific values from the source stream, only emitting new values when the extracted value changes.
+
+<div style="display: flex; justify-content: center">
+  <img src="/get.drawio.svg" alt="image" >
+</div>
 
 ## Type Definition
 

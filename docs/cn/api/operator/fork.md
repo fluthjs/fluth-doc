@@ -1,6 +1,8 @@
 # fork
 
-从输入的 [Stream](/cn/api/stream#stream) 或 [Observable](/cn/api/observable) 中分流一条新的流，新的流会订阅输入的流并发出相同的值。
+从输入的 [Stream](/cn/api/stream#stream) 或 [Observable](/cn/api/observable) 中分流一条新的 [Stream](/cn/api/stream#stream) 流，新的流会订阅输入的流并发出相同的值。
+
+![image](/fork.drawio.svg)
 
 ## 类型
 
@@ -17,8 +19,8 @@ type fork: <T>(arg$: Stream<T> | Observable<T>, autoUnsubscribe?: boolean) => St
 
 ## 详情
 
-- 分流操作创建一个新的流来订阅输入流
-- 新的流会发出与输入流完全相同的值（包括成功值和错误值）
+- 分流操作创建一个新的流来订阅输入流，新的流会发出与输入流完全相同的值（包括成功值和错误值）
+- 新的流也可以推送自己的值，但是不会影响输入流
 - 当 `autoUnsubscribe` 为 `true` 时，输入流[取消订阅](/cn/guide/base#取消订阅)后，新的流也会异步取消订阅
 - 当 `autoUnsubscribe` 为 `true` 时，输入流[结束](/cn/guide/base#结束)后，新的流也会结束
 

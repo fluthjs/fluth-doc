@@ -125,19 +125,3 @@ const storage$ = transformation$.then((data) => {
 stream$.next({ id: 1, name: 'test' })
 // 调试器会在每个步骤暂停，允许检查数据流转
 ```
-
-## 注意事项
-
-1. **返回值**: 插件会返回原始的 `result`，不会修改数据流
-2. **Promise 处理**: 对于 Promise 类型的结果，会等待 Promise 解析后再触发调试器
-3. **错误处理**: 对于被拒绝的 Promise，会在错误处理时触发调试器
-4. **智能过滤**: 当 `root=false` 且没有 `onfulfilled` 或 `onrejected` 时，会跳过调试器触发
-5. **移除插件**: 可以通过 `remove` 方法移除插件，停止调试功能
-6. **开发环境**: 调试器功能主要在开发环境中使用，生产环境建议移除
-7. **浏览器支持**: 需要在支持 `debugger` 语句的环境中使用（浏览器开发者工具）
-
-## 与其他插件的关系
-
-- **vs debugNode**: `debugAll` 会在流链的所有节点上触发调试器，而 `debugNode` 只在单个节点上触发
-- **vs consoleAll**: 功能相似，但 `debugAll` 触发调试器断点，`consoleAll` 输出到控制台
-- **适用场景**: `debugAll` 适合深度调试复杂的流链，逐步跟踪数据流转过程

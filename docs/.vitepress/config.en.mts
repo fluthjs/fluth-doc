@@ -62,6 +62,7 @@ export default {
                     { text: 'change', link: '/en/api/operator/change' },
                     { text: 'filter', link: '/en/api/operator/filter' },
                     { text: 'skip', link: '/en/api/operator/skip' },
+                    { text: 'skipFilter', link: '/en/api/operator/skipFilter' },
                     { text: 'throttle', link: '/en/api/operator/throttle' },
                     { text: 'debounce', link: '/en/api/operator/debounce' },
                   ],

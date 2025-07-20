@@ -2,6 +2,10 @@
 
 变更检测操作符，只有当 `differ` 函数的结果与上一次不同时才会触发后续操作。
 
+<div style="display: flex; justify-content: center">
+  <img src="/change.drawio.svg" alt="image" >
+</div>
+
 ## 类型定义
 
 ```typescript

@@ -1,6 +1,10 @@
 # filter
 
-Filter operator, filters data based on a condition function and only emits data that meets the condition.
+Filter operator, filters data based on a condition function, only emitting data that satisfies the condition.
+
+<div style="display: flex; justify-content: center">
+  <img src="/filter.drawio.svg" alt="image" >
+</div>
 
 ## Type Definition
 

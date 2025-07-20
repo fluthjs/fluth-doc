@@ -1,6 +1,10 @@
 # change
 
-Change detection operator. Only triggers subsequent operations when the result of the `differ` function is different from the previous one.
+Change detection operator, only triggers subsequent operations when the result of the `differ` function differs from the previous one.
+
+<div style="display: flex; justify-content: center">
+  <img src="/change.drawio.svg" alt="image" >
+</div>
 
 ## Type Definition
 

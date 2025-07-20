@@ -1,44 +1,94 @@
 # skipFilter
 
-Skip-filter operator, determines whether to skip data emission based on a filter function.
+Skip filter operator, determines whether to skip data emissions based on a filter function.
 
-- Type
+## Type Definition
 
-  ```typescript
-  type skipFilter = (filter: (time: number) => boolean) => (observable$: Observable) => Observable
-  ```
+```typescript
+type skipFilter = (filter: (time: number) => boolean) => (observable$: Observable) => Observable
+```
 
-- Details
+## Parameters
 
-  - Accepts a filter function parameter, which receives the current emission count and returns a boolean
-  - Returns a function that takes an Observable and returns a new Observable
-  - The new Observable will determine whether to emit data based on the return value of the filter function
-  - If the filter function returns `true`, the data is emitted; if it returns `false`, the data is skipped
-  - Uses a counter to track the number of emissions
+- `filter` (`(time: number) => boolean`): Filter function that receives the current emission count and returns a boolean
+  - Parameter: `time` - Emission count starting from 1
+  - Return: `true` to emit data, `false` to skip
 
-- Example
+## Details
 
-  ```typescript
-  import { $, skipFilter } from 'fluth'
+- Takes a filter function parameter that receives the current emission count and returns a boolean
+- Emits data when filter function returns `true`, skips when `false`
+- Uses internal counter to track emission count, starting from 1
+- Works with all data types, including successful and failed states of `Promise`
 
-  const stream$ = $(1)
+## Examples
 
-  // Use skipFilter operator, only receive even-numbered emissions
-  const filtered$ = stream$.pipe(skipFilter((time) => time % 2 === 0))
+### Scenario 1: Skip odd-numbered emissions
 
-  filtered$.then((value) => {
-    console.log('Value received after filter:', value)
-  })
+```typescript
+import { $, skipFilter } from 'fluth'
 
-  // Emit data
-  stream$.next(2) // 1st time, skipped, no output
-  stream$.next(3) // 2nd time, Output: Value received after filter: 3
-  stream$.next(4) // 3rd time, skipped, no output
-  stream$.next(5) // 4th time, Output: Value received after filter: 5
-  ```
+const stream$ = $()
 
-- Relationship with other APIs
+// Use skipFilter operator, only accept even-numbered emissions
+const filtered$ = stream$.pipe(skipFilter((time) => time % 2 === 0))
 
-  - Difference from `skipFilter` plugin: `skipFilter` is an operator, the plugin version is a chain plugin
-  - Operator version uses `pipe`, plugin version uses `use`
-  - More flexible than `skip`, can determine whether to skip based on complex conditions
+filtered$.then((value) => {
+  console.log('Filtered value:', value)
+})
+
+// Emit data
+stream$.next('first') // 1st time, skipped, no output
+stream$.next('second') // 2nd time, output: Filtered value: second
+stream$.next('third') // 3rd time, skipped, no output
+stream$.next('fourth') // 4th time, output: Filtered value: fourth
+```
+
+### Scenario 2: Skip first N emissions
+
+```typescript
+import { $, skipFilter } from 'fluth'
+
+const stream$ = $()
+
+// Skip first 3 emissions
+const filtered$ = stream$.pipe(skipFilter((time) => time > 3))
+
+filtered$.then((value) => {
+  console.log('After skipping first 3:', value)
+})
+
+stream$.next('first') // 1st time, skipped
+stream$.next('second') // 2nd time, skipped
+stream$.next('third') // 3rd time, skipped
+stream$.next('fourth') // 4th time, output: After skipping first 3: fourth
+stream$.next('fifth') // 5th time, output: After skipping first 3: fifth
+```
+
+### Scenario 3: Emit every Nth time
+
+```typescript
+import { $, skipFilter } from 'fluth'
+
+const stream$ = $()
+
+// Emit every 3rd time (3rd, 6th, 9th...)
+const filtered$ = stream$.pipe(skipFilter((time) => time % 3 === 0))
+
+filtered$.then((value) => {
+  console.log('Every 3rd emission:', value)
+})
+
+for (let i = 1; i <= 10; i++) {
+  stream$.next(`value${i}`)
+}
+// Output:
+// Every 3rd emission: value3
+// Every 3rd emission: value6
+// Every 3rd emission: value9
+```
+
+## Relationship with Other APIs
+
+- **vs `skip` operator**: `skip` skips a fixed number of initial emissions, while `skipFilter` can skip based on complex conditions
+- **vs `filter` operator**: `filter` filters based on data values, while `skipFilter` filters based on emission count

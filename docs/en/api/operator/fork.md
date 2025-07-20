@@ -1,8 +1,10 @@
 # fork
 
-Creates a new stream by forking from the input [Stream](/en/api/stream#stream) or [Observable](/en/api/observable). The new stream subscribes to the input stream and emits the same values.
+Creates a new [Stream](/en/api/stream#stream) from the input [Stream](/en/api/stream#stream) or [Observable](/en/api/observable), which subscribes to the input stream and emits the same values.
 
-## Type
+![image](/fork.drawio.svg)
+
+## Type Definition
 
 ```typescript
 type fork: <T>(arg$: Stream<T> | Observable<T>, autoUnsubscribe?: boolean) => Stream<T>;

@@ -2,6 +2,10 @@
 
 过滤操作符，根据条件函数过滤数据，只推送满足条件的数据。
 
+<div style="display: flex; justify-content: center">
+  <img src="/filter.drawio.svg" alt="image" >
+</div>
+
 ## 类型定义
 
 ```typescript

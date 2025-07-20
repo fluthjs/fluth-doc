@@ -1,6 +1,10 @@
 # get
 
-属性提取操作符，使用 getter 函数从源流中提取特定的值，只有当提取的值发生变化时才会发出新值。
+属性提取操作符，使用 `getter` 函数从源流中提取特定的值，只有当提取的值发生变化时才会发出新值。
+
+<div style="display: flex; justify-content: center">
+  <img src="/get.drawio.svg" alt="image" >
+</div>
 
 ## 类型定义
 
@@ -24,7 +28,6 @@ type get = <T, F>(
 
 ## 使用场景
 
-
 ```typescript
 import { $, get } from 'fluth'
 
@@ -47,9 +50,6 @@ source$.set((value) => {
   value.b.c = 3
 }) // 输出: b changed: { c: 3 }
 ```
-
-
-
 
 ```typescript
 import { $, get } from 'fluth'
