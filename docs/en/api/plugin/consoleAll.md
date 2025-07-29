@@ -5,7 +5,7 @@ Debugging plugin that outputs execution results on all nodes of the stream chain
 ## Type Definition
 
 ```typescript
-consoleAll: (resolvePrefix?: string, rejectPrefix?: string) => {
+consoleAll: (resolvePrefix?: string, rejectPrefix?: string, ignoreUndefined?: boolean) => {
   executeAll: ({
     result,
     status,
@@ -26,6 +26,7 @@ consoleAll: (resolvePrefix?: string, rejectPrefix?: string) => {
 
 - `resolvePrefix` (optional): Console prefix for success, default is `'resolve'`
 - `rejectPrefix` (optional): Console prefix for failure, default is `'reject'`
+- `ignoreUndefined` (optional): Whether to ignore `undefined` values output, default is `true`
 
 ## Details
 
@@ -35,6 +36,7 @@ consoleAll: (resolvePrefix?: string, rejectPrefix?: string) => {
   - Nodes with success handler (`onfulfilled`)
   - Nodes with error handler (`onrejected`) and status is `REJECTED`
 - For `Promise` type results, waits for Promise resolution before outputting
+- By default ignores `undefined` values output (`ignoreUndefined=true`), can be controlled by the third parameter
 - Returns the original `result` without modifying the data flow
 
 ## Examples
@@ -43,6 +45,7 @@ consoleAll: (resolvePrefix?: string, rejectPrefix?: string) => {
 
 ```typescript
 import { $ } from 'fluth'
+import { consoleAll } from 'fluth'
 
 const stream$ = $().use(consoleAll())
 
@@ -58,6 +61,7 @@ stream$.next(promise)
 
 ```typescript
 import { $ } from 'fluth'
+import { consoleAll } from 'fluth'
 
 const promise$ = $().use(consoleAll())
 
@@ -74,6 +78,7 @@ promise$.next(1)
 
 ```typescript
 import { $ } from 'fluth'
+import { consoleAll } from 'fluth'
 
 // Custom prefix
 const promise$ = $().use(consoleAll('success', 'failure'))
@@ -93,7 +98,8 @@ promise$.next(rejectedPromise)
 ### Scenario 4: Combined with operators debugging output
 
 ```typescript
-import { $, debounce } from 'fluth'
+import { $ } from 'fluth'
+import { consoleAll, debounce } from 'fluth'
 
 const promise$ = $()
   .use(consoleAll())
@@ -114,10 +120,53 @@ promise$.next(5)
 // After 100ms: resolve 6
 ```
 
-### Scenario 5: Remove plugin
+### Scenario 5: `undefined` value handling
 
 ```typescript
-import { $, consoleAll } from 'fluth'
+import { $ } from 'fluth'
+import { consoleAll } from 'fluth'
+
+// Default ignores undefined values
+const stream1$ = $().use(consoleAll())
+stream1$.next(undefined) // No output
+stream1$.next(null) // Output: resolve null
+stream1$.next(0) // Output: resolve 0
+stream1$.next('') // Output: resolve ""
+stream1$.next(false) // Output: resolve false
+
+// Don't ignore undefined values
+const stream2$ = $().use(consoleAll('resolve', 'reject', false))
+stream2$.next(undefined) // Output: resolve undefined
+```
+
+### Scenario 6: Edge case handling
+
+```typescript
+import { $ } from 'fluth'
+import { consoleAll } from 'fluth'
+
+const stream$ = $().use(consoleAll())
+
+// Test various edge values
+stream$.next(null) // Output: resolve null
+stream$.next(0) // Output: resolve 0
+stream$.next('') // Output: resolve ""
+stream$.next(false) // Output: resolve false
+stream$.next(undefined) // No output (ignored by default)
+
+// Promise edge cases
+const resolveUndefined = Promise.resolve(undefined)
+stream$.next(resolveUndefined) // No output (undefined ignored)
+
+const rejectUndefined = Promise.reject(undefined)
+stream$.next(rejectUndefined) // No output (undefined ignored)
+```
+
+### Scenario 7: Remove plugin
+
+```typescript
+import { $ } from 'fluth'
+import { consoleAll } from 'fluth'
 
 const plugin = consoleAll()
 const stream$ = $().use(plugin)
