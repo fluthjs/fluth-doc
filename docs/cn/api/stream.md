@@ -58,8 +58,8 @@ import Stream from '../../components/stream.vue'
   // 获取新数据
   const newValue = promise$.value
 
-  console.log(oldValue === newValue) // 输出 false
-  console.log(oldValue.b === newValue.b) // 输出 true
+  oldValue === newValue // ❌
+  oldValue.b === newValue.b // ✅
   ```
 
 ## complete
