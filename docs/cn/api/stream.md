@@ -23,12 +23,12 @@ import Stream from '../../components/stream.vue'
 
 - 示例
   ```typescript
-  import { $ } from "fluth";
-  const promise$ = $("1");
+  import { $ } from 'fluth'
+  const promise$ = $('1')
   promise$.then((value) => {
-    console.log(value);
-  });
-  promise$.next("2"); // 输出 2
+    console.log(value)
+  })
+  promise$.next('2') // 输出 2
   ```
 
 ## set
@@ -44,19 +44,22 @@ import Stream from '../../components/stream.vue'
 - 示例
 
   ```typescript
-  import { $ } from "fluth";
-  const promise$ = $({ a: 1, b: { c: 2 } });
-  const oldValue = promise$.value;
-  promise$.then((value) => {
-    console.log(value);
-  });
-  promise$.set((value) => {
-    value.a = 2;
-  }); // 输出 { a: 1, b: { c: 3 } }
+  import { $ } from 'fluth'
+  const promise$ = $({ a: 1, b: { c: 2 } })
 
-  const newValue = promise$.value;
-  console.log(oldValue === newValue); // 输出 false
-  console.log(oldValue.b === newValue.b); // 输出 true
+  // 保留旧数据
+  const oldValue = promise$.value
+
+  // 设置新数据
+  promise$.set((value) => {
+    value.a = 2
+  })
+
+  // 获取新数据
+  const newValue = promise$.value
+
+  console.log(oldValue === newValue) // 输出 false
+  console.log(oldValue.b === newValue.b) // 输出 true
   ```
 
 ## complete
@@ -74,12 +77,12 @@ import Stream from '../../components/stream.vue'
 - 示例
 
   ```typescript
-  import { $, console } from "fluth";
-  const promise$ = $();
+  import { $, console } from 'fluth'
+  const promise$ = $()
   promise$.afterComplete(() => {
-    console.log("complete");
-  });
-  promise$.complete(); // 输出 complete
+    console.log('complete')
+  })
+  promise$.complete() // 输出 complete
   ```
 
 ## pause
@@ -97,16 +100,16 @@ import Stream from '../../components/stream.vue'
 - 示例
 
   ```typescript
-  import { $, console } from "fluth";
+  import { $, console } from 'fluth'
 
-  const promise$ = $("1");
+  const promise$ = $('1')
   promise$.then((value) => {
-    console.log(value);
-  });
+    console.log(value)
+  })
 
-  promise$.next("2"); // 输出 2
-  promise$.pause();
-  promise$.next("3"); // 不输出 3
+  promise$.next('2') // 输出 2
+  promise$.pause()
+  promise$.next('3') // 不输出 3
   ```
 
 ## restart
@@ -124,15 +127,15 @@ import Stream from '../../components/stream.vue'
 - 示例
 
   ```typescript
-  import { $, console } from "fluth";
+  import { $, console } from 'fluth'
 
-  const promise$ = $("1");
+  const promise$ = $('1')
   promise$.then((value) => {
-    console.log(value);
-  });
+    console.log(value)
+  })
 
-  promise$.pause();
-  promise$.next("2"); // 不输出 2
-  promise$.restart();
-  promise$.next("3"); // 输出 3
+  promise$.pause()
+  promise$.next('2') // 不输出 2
+  promise$.restart()
+  promise$.next('3') // 输出 3
   ```

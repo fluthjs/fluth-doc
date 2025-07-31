@@ -9,18 +9,18 @@
 `fluth`加强了`promise`，让`promise`可以不断的发布！
 
 ```javascript
-import { $ } from "fluth";
+import { $ } from 'fluth'
 
-const promise$ = $();
+const promise$ = $()
 
 promise$.then(
-  (r) => console.log("resolve", r),
-  (e) => console.log("reject", e)
-);
+  (r) => console.log('resolve', r),
+  (e) => console.log('reject', e)
+)
 
-promise$.next(1);
-promise$.next(Promise.reject(2));
-promise$.next(3);
+promise$.next(1)
+promise$.next(Promise.reject(2))
+promise$.next(3)
 
 // Logs:
 // resolve 1
@@ -31,6 +31,7 @@ promise$.next(3);
 - 相比其他流式编程库，`fluth`更加简单易用，上手成本低，
 - 相比`promise`，`fluth`可以不断发布并且支持取消定订阅
 - 相比`promise`，`fluth`同步执行`then`方法，及时更新数据
+- 相比`promise`，`fluth`完全支持 `PromiseLike`
 
 ## 对比 rxjs
 
@@ -42,10 +43,10 @@ promise$.next(3);
 
 ```javascript
 // rxjs:
-stream$.pipe(operator1, operator2, operator3);
-stream$.subscribe(observer1);
-stream$.subscribe(observer2);
-stream$.subscribe(observer3);
+stream$.pipe(operator1, operator2, operator3)
+stream$.subscribe(observer1)
+stream$.subscribe(observer2)
+stream$.subscribe(observer3)
 ```
 
 <!-- prettier-ignore-start -->
