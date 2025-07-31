@@ -1,21 +1,24 @@
 # debugAll
 
-调试插件，在流链的所有节点上触发调试器断点，用于深度调试和流程跟踪，只能在`Stream`节点上使用。
+调试插件，在流链的所有节点上触发调试器断点，用于深度调试和流程跟踪，只能在 `Stream` 节点上使用。
+
 :::warning 注意
-浏览器可能会过滤`node_modules`中的`debugger`语句，导致调试器断点不生效。需要手动在浏览器开发者工具->setting->ignore list 中添加开启`node_modules`的调试
+浏览器可能会过滤 `node_modules` 中的 `debugger` 语句，导致调试器断点不生效。需要手动在浏览器开发者工具->setting->ignore list 中添加开启 `node_modules` 的调试
 :::
 
 ## 类型定义
 
 ```typescript
-debugAll: () => {
+debugAll: (condition?: (value: any) => boolean, conditionError?: (value: any) => boolean) => {
   executeAll: ({
     result,
+    status,
     onfulfilled,
     onrejected,
     root,
   }: {
     result: Promise<any> | any
+    status: PromiseStatus | null
     onfulfilled?: OnFulfilled
     onrejected?: OnRejected
     root: boolean
@@ -23,105 +26,89 @@ debugAll: () => {
 }
 ```
 
-## 返回值
+## 参数说明
 
-返回一个 ExecuteAllPlugin 插件，会在流链的所有节点上触发调试器断点。
+- `condition` (可选): 控制成功值调试的条件函数，返回 `true` 时触发调试器
+- `conditionError` (可选): 控制错误值调试的条件函数，返回 `true` 时触发调试器
 
-## 核心行为
+## 详情
 
-- **executeAll 插件**: 在流链的所有节点上执行，而不仅仅是单个节点
-- **调试器触发**: 在满足条件的节点上触发 `debugger` 语句
-- **Promise 处理**: 对于 Promise 类型的结果，会等待 Promise 解析后再触发调试器
-- **原始数据**: 返回原始的 `result`，不会修改数据流
+- 在流链的所有节点上执行，而不仅仅是单个节点
+- 只在以下情况触发调试器：
+  - 根节点（`root=true`）
+  - 有成功处理函数（`onfulfilled`）的节点
+  - 有错误处理函数（`onrejected`）且状态为 `REJECTED` 的节点
+- 对于 `Promise` 类型的结果，会等待 `Promise` 解析后再触发调试器
+- 支持通过 `condition` 和 `conditionError` 函数精确控制调试时机
+- 返回原始的 `result`，不会修改数据流
 
-## 使用场景
+## 示例
 
-### 场景 1：基础使用
+### 场景 1：基础调试
 
 ```typescript
 import { $ } from 'fluth'
+import { debugAll } from 'fluth'
+
+const stream$ = $().use(debugAll())
+
+stream$.then((value) => value + 1)
+
+stream$.next(1)
+// 在浏览器开发者工具中会在每个节点触发调试器断点
+
+const promise = Promise.resolve(2)
+stream$.next(promise)
+// 等待 Promise 解析后触发调试器
+```
+
+### 场景 2：流链调试
+
+```typescript
+import { $ } from 'fluth'
+import { debugAll } from 'fluth'
 
 const promise$ = $().use(debugAll())
 
 promise$.then((value) => value + 1).then((value) => value + 1)
 
 promise$.next(1)
-// 在浏览器开发者工具中会在每个节点触发调试器断点
+// 会在每个节点触发调试器断点，方便逐步跟踪数据流转：
+// 1. 根节点：1
+// 2. 第一个 then 节点：2
+// 3. 第二个 then 节点：3
 ```
 
-### 场景 2：复杂流链调试
+### 场景 3：条件调试
 
 ```typescript
 import { $ } from 'fluth'
+import { debugAll } from 'fluth'
 
-// 测试 executeAll 在流链中的传播
-const rootStream = $()
-rootStream.use(debugAll())
+// 只对字符串类型触发调试器
+const conditionFn = (value) => typeof value === 'string'
+const stream$ = $().use(debugAll(conditionFn))
 
-const step1 = rootStream.then((value) => {
-  console.log('step1 处理:', value)
-  return value * 2
-})
+stream$.then((value) => value.toString())
 
-const step2 = step1.then((value) => {
-  console.log('step2 处理:', value)
-  return value + 10
-})
-
-step2.then((value) => {
-  console.log('最终结果:', value)
-})
-
-rootStream.next(5)
-// 会在每个节点触发调试器断点：
-// 1. rootStream 节点
-// 2. step1 节点
-// 3. step2 节点
-// 4. 最终订阅节点
+stream$.next('hello') // 触发调试器
+stream$.next(42) // 不触发调试器（但仍会处理数据）
 ```
 
-### 场景 3：Promise 错误调试
+### 场景 4：移除插件
 
 ```typescript
 import { $ } from 'fluth'
+import { debugAll } from 'fluth'
 
-const promise$ = $().use(debugAll())
+const plugin = debugAll()
+const stream$ = $().use(plugin)
 
-promise$.then((value) => value + 1)
+stream$.then((value) => value + 1)
+stream$.next(1)
+// 触发调试器
 
-const rejectedPromise = Promise.reject(new Error('test error'))
-promise$.next(rejectedPromise)
-// 会在错误处理时触发调试器断点
-```
-
-### 场景 4：流程跟踪
-
-```typescript
-import { $ } from 'fluth'
-
-const stream$ = $().use(debugAll())
-
-// 创建多个处理步骤
-const validation$ = stream$.then((data) => {
-  if (!data || typeof data !== 'object') {
-    throw new Error('Invalid data')
-  }
-  return { ...data, validated: true }
-})
-
-const transformation$ = validation$.then((data) => {
-  return {
-    ...data,
-    processed: true,
-    timestamp: Date.now(),
-  }
-})
-
-const storage$ = transformation$.then((data) => {
-  console.log('Storing data:', data)
-  return { ...data, stored: true }
-})
-
-stream$.next({ id: 1, name: 'test' })
-// 调试器会在每个步骤暂停，允许检查数据流转
+stream$.remove(plugin)
+stream$.next(2)
+// 不再触发调试器
 ```
