@@ -269,7 +269,7 @@ const observable$ = stream$.then((data) => console.log(data))
 observable$.unsubscribe()
 ```
 
-### 如何处理错误？
+#### 如何处理错误？
 
 ```typescript
 const stream$ = $()

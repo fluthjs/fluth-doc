@@ -231,7 +231,7 @@ searchInput$.next('fluth')
 // Only outputs the last one: Search: fluth
 ```
 
-### Object State Management
+#### Object State Management
 
 ```typescript
 import { $ } from 'fluth'
