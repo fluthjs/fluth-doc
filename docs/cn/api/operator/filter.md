@@ -14,7 +14,7 @@ type filter = <T>(condition: (value: T) => boolean) => (observable$: Observable<
 
 ## 参数说明
 
-- `condition` (`(value: T) => boolean`): 条件函数，接收每次推送的数据，返回 `true` 时数据会被推送到下游，返回 `false` 时数据会被过滤掉。
+- condition: 条件函数，接收每次推送的数据，返回 `true` 时数据会被推送到下游，返回 `false` 时数据会被过滤掉。
 
 ## 详情
 

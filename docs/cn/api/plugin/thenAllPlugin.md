@@ -36,7 +36,7 @@ thenAllPlugin: (unsubscribe: () => void, observable: Observable<T>) => void
 ```
 
 - 合并根节点的 `thenAll` 插件和当前节点的 `then` 插件
-- 依次执行每个插件，传入取消订阅函数和新创建的观察者节点
+- 依次执行每个插件，传入[取消订阅](/cn/guide/base.html#取消订阅)函数和新创建的观察者节点
 
 ## 注意事项
 

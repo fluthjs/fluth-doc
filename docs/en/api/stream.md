@@ -4,7 +4,7 @@ import Stream from '../../components/stream.vue'
 
 # Stream
 
-`Stream` inherits from [`Observable`](/en/api/observable). In addition to the properties and methods of `Observable`, the following methods are newly added:
+Stream inherits [Observable](/en/api/observable). In addition to the properties and methods of Observable, the following methods are newly added:
 
 <Stream />
 
@@ -39,7 +39,7 @@ import Stream from '../../components/stream.vue'
   ```
 - Details
 
-  Actively emit data in the current stream. The difference from `next` is that `set` receives a `setter` (can be sync or async) and emits a new `immutable` data; the second parameter indicates whether the current stream is finished. When set to `true`, subsequent `set` and `next` will no longer execute.
+  Actively emit data in the current stream. The difference from `next` is that `set` receives a `setter` (can be sync or async) and emits a new immutable data; the second parameter indicates whether the current stream is finished. When set to `true`, subsequent `set` and `next` will no longer execute.
 
 - Example
 
@@ -52,11 +52,11 @@ import Stream from '../../components/stream.vue'
   })
   promise$.set((value) => {
     value.a = 2
-  }) // Output { a: 1, b: { c: 3 } }
+  })
 
   const newValue = promise$.value
-  console.log(oldValue === newValue) // Output false
-  console.log(oldValue.b === newValue.b) // Output true
+  console.log(oldValue === newValue) // false
+  console.log(oldValue.b === newValue.b) // true
   ```
 
 ## complete

@@ -17,16 +17,16 @@ type audit = <T>(
 
 ## 参数说明
 
-- `trigger$` (Stream | Observable): 触发器流，当该流发出值时，audit 操作符会发出源流的最新已解析值
-- `shouldAwait` (boolean, 可选): 是否等待流的 `pending` 状态结束，默认为 `true`，当`trigger$`触发时，如果源流处于 `pending` 状态，会等待解析完成后再发出
+- trigger$: 触发器流，当该流发出值时，audit 操作符会发出源流的最新已解析值
+- shouldAwait: 是否等待流的 `pending` 状态结束，默认为 `true`，当 trigger$ 触发时，如果源流处于 `pending` 状态，会等待解析完成后再发出
 
 ## 详情
 
-- 只有当触发器流处于`resolve`状态并推流时，才会发出源流的当前值
+- 只有当触发器流处于 resolve 状态并推流时，才会发出源流的当前值
 - 只发出源流已解析的值，忽略被拒绝的值
 - 如果源流快速发出多个值，只发出最新的已解析值
-- 当 `shouldAwait` 为 `true` 时，如果源流处于 `pending` 状态，会等待解析完成后再发出
-- 当 `trigger$` 流结束的时候，`audit` 操作符生产出的流也会结束
+- 当 shouldAwait 为 `true` 时，如果源流处于 `pending` 状态，会等待解析完成后再发出
+- 当 trigger$ 流结束的时候，audit 操作符生产出的流也会结束
 
 ## 使用场景
 

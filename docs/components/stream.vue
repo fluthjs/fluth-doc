@@ -1,6 +1,8 @@
 <template>
   <div style="background-color: #292d3e; margin: 30px 0; padding: 20px; border-radius: 8px">
-    <div style="display: flex; justify-content: space-between; font-family: var(--vp-font-family-mono)">
+    <div
+      style="display: flex; justify-content: space-between; font-family: var(--vp-font-family-mono)"
+    >
       <div>
         <span class="line"
           ><span style="color: #f97583">const</span><span style="color: #79b8ff"> promise$</span
@@ -12,12 +14,31 @@
     <div style="color: #e1e4e8; display: flex; align-items: flex-start; position: relative">
       <ul
         class="api"
-        style="margin-left: 230px; padding-left: 10px; border-left: 1px solid #e1e4e8; border-radius: 4px"
+        style="
+          margin-left: 230px;
+          padding-left: 10px;
+          border-left: 1px solid #e1e4e8;
+          border-radius: 4px;
+        "
       >
-        <span style="position: absolute; left: 0px; top: 30px; background: #292d3e; color: #47c1a8; z-index: 1"
+        <span
+          style="
+            position: absolute;
+            left: 0px;
+            top: 30px;
+            background: #292d3e;
+            color: #47c1a8;
+            z-index: 1;
+          "
           >Stream <span style="color: #4a92cc">extends</span> Observable</span
         >
-        <a :href="item.address" class="item" style="display: block" v-for="item in streamApi" :key="item.name">
+        <a
+          :href="item.address"
+          class="item"
+          style="display: block"
+          v-for="item in streamApi"
+          :key="item.name"
+        >
           {{ item.name }}
         </a>
       </ul>
@@ -27,35 +48,35 @@
 
 <script setup lang="tsx">
 defineOptions({
-  name: "stream",
-});
+  name: 'stream',
+})
 
 const streamApi = [
   {
-    name: "next",
-    address: "#next",
+    name: 'next',
+    address: '#next',
   },
   {
-    name: "set",
-    address: "#set",
+    name: 'set',
+    address: '#set',
   },
   {
-    name: "complete",
-    address: "#complete",
+    name: 'complete',
+    address: '#complete',
   },
   {
-    name: "pause",
-    address: "#pause",
+    name: 'pause',
+    address: '#pause',
   },
   {
-    name: "restart",
-    address: "#restart",
+    name: 'restart',
+    address: '#restart',
   },
   {
-    name: "...observable",
-    address: "./observable",
+    name: '...observable',
+    address: './observable',
   },
-];
+]
 </script>
 
 <style lang="scss" scoped>
@@ -67,7 +88,7 @@ const streamApi = [
 }
 .api {
   &::before {
-    content: " ";
+    content: ' ';
     position: absolute;
     left: 3px;
     top: -5px;
@@ -78,7 +99,7 @@ const streamApi = [
     border-radius: 4px;
   }
   &::after {
-    content: " ";
+    content: ' ';
     position: absolute;
     left: 70px;
     top: 5px;

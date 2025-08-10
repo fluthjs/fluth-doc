@@ -14,12 +14,12 @@ type skip = <T>(skipTime: number) => (observable$: Observable<T>) => Observable<
 
 ## 参数说明
 
-- `skipTime` (`number`): 需要跳过的数据推送次数
+- skipTime: 需要跳过的数据推送次数
 
 ## 详情
 
-- 如果 `skipTime` 为 0，则所有数据都会被推送，不会跳过。
-- 如果 `skipTime` 大于实际推送次数，则所有数据都被跳过，不会有数据推送到下游。
+- 如果 skipTime 为 0，则所有数据都会被推送，不会跳过。
+- 如果 skipTime 大于实际推送次数，则所有数据都被跳过，不会有数据推送到下游。
 - 跳过次数达到后，后续所有数据都会正常推送。
 
 ## 示例

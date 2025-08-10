@@ -1,6 +1,6 @@
 # change
 
-变更检测操作符，只有当 `differ` 函数的结果与上一次不同时才会触发后续操作。
+变更检测操作符，只有当 differ 函数的结果与上一次不同时才会触发后续操作。
 
 <div style="display: flex; justify-content: center">
   <img src="/change.drawio.svg" alt="image" >
@@ -16,16 +16,16 @@ change: <T>(differ: (value: T | undefined) => any) =>
 
 ## 参数说明
 
-- `differ` (函数): 从源数据中提取用于比较的值的函数
-  - 参数: `value: T | undefined` - 当前推流的数据
-  - 返回值: `any` - 用于比较的值
+- differ: 从源数据中提取用于比较的值的函数
+  - 参数: value: T | undefined - 当前推流的数据
+  - 返回值: any - 用于比较的值
 
 ## 详情
 
 - 第一次推流时总是会触发（因为没有上一次的值进行比较）
-- 只有当 `differ` 结果不同时才会推送数据
-- 推送的是原始的完整数据，而不是 `differ` 的那部分数据
-- 使用严格相等比较 (`===`) 来检测 `differ` 函数结果的变化
+- 只有当 differ 结果不同时才会推送数据
+- 推送的是原始的完整数据，而不是 differ 的那部分数据
+- 使用严格相等比较 (`===`) 来检测 differ 函数结果的变化
 
 ## 示例
 

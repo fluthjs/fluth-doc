@@ -2,6 +2,10 @@
 
 Delay operator, delays the emission of data from the input stream by the specified time before pushing it to the subscriber node.
 
+<div style="display: flex; justify-content: center">
+  <img src="/delay.drawio.svg" alt="image" >
+</div>
+
 ## Type Definition
 
 ```typescript

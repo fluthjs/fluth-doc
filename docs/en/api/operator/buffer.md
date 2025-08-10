@@ -2,6 +2,10 @@
 
 Buffer operator collects data from the source stream into a buffer. When the trigger stream emits a value, all buffered data is emitted at once as an array.
 
+<div style="display: flex; justify-content: center">
+  <img src="/buffer.drawio.svg" alt="image" >
+</div>
+
 ## Type Definition
 
 ```typescript
@@ -13,20 +17,15 @@ type buffer = <T>(
 
 ## Parameters
 
-- `trigger$` (Stream | Observable): The trigger stream. When this stream emits a value, the buffer operator emits all buffered data.
-- `shouldAwait` (boolean, optional): Whether to wait for the source stream's `pending` state to resolve. Defaults to `true`. If the source is `pending` when triggered, it will wait for resolution before emitting.
-
-## Return Value
-
-Returns a new `Observable` that collects data from the source stream into an array and only emits the buffered data array when the trigger is activated.
+- trigger$ (Stream | Observable): The trigger stream. When this stream emits a value, the operator emits all buffered data.
+- shouldAwait (boolean, optional): Whether to wait for the source stream's `pending` state to finish. Defaults to `true`. When trigger$ fires while the source is `pending`, it waits for resolution before emitting.
 
 ## Details
 
-- Continuously collects resolved values from the source stream into an internal buffer.
-- Only emits all buffered data when the trigger stream emits a value.
-- Only collects resolved values, ignores rejected Promises.
+- Continuously collects resolved values from the source stream into an internal buffer; rejected values are ignored.
+- Only emits all buffered data when the trigger stream is in `resolve` status and emits a value.
 - After each emission, the buffer is cleared to collect the next batch of data.
-- When `shouldAwait` is `true`, if the source is pending, it waits for resolution before emitting.
+- When `shouldAwait` is `true`, if the source is `pending`, it waits for resolution before emitting.
 
 ## Usage Scenarios
 

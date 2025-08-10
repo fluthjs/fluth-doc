@@ -16,9 +16,9 @@ change: <T>(differ: (value: T | undefined) => any) =>
 
 ## Parameters
 
-- `differ` (function): Function to extract the value for comparison from the source data
-  - Parameter: `value: T | undefined` - The current data in the stream
-  - Return value: `any` - The value used for comparison
+- differ: Function to extract the value for comparison from the source data
+  - Parameter: value: T | undefined - The current data in the stream
+  - Return value: any - The value used for comparison
 
 ## Details
 

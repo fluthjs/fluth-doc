@@ -1,5 +1,5 @@
 export default {
-  label: 'English',
+  label: 'English(AI)',
   lang: 'en',
   title: 'fluth',
   description: 'A Promise-based asynchronous flow control library',
@@ -70,6 +70,8 @@ export default {
                 {
                   text: 'Transformation Operators',
                   items: [
+                    { text: 'map', link: '/en/api/operator/map' },
+                    { text: 'set', link: '/en/api/operator/set' },
                     { text: 'audit', link: '/en/api/operator/audit' },
                     { text: 'buffer', link: '/en/api/operator/buffer' },
                   ],
@@ -88,9 +90,9 @@ export default {
                   text: 'execute plugin',
                   link: '/en/api/plugin/executePlugin',
                   items: [
-                    { text: 'delayExec', link: '/en/api/plugin/delayExec' },
                     { text: 'consoleNode', link: '/en/api/plugin/consoleNode' },
                     { text: 'debugNode', link: '/en/api/plugin/debugNode' },
+                    { text: 'delayExec', link: '/en/api/plugin/delayExec' },
                   ],
                 },
                 {

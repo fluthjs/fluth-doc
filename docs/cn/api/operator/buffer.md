@@ -17,15 +17,15 @@ type buffer = <T>(
 
 ## 参数说明
 
-- `trigger$` (Stream | Observable): 触发器流，当该流发出值时，buffer 操作符会发出所有缓冲的数据
-- `shouldAwait` (boolean, 可选): 是否等待流的 `pending` 状态结束，默认为 `true`，当`trigger$`触发时，如果源流处于 `pending` 状态，会等待解析完成后再发出
+- trigger$: 触发器流，当该流发出值时，buffer 操作符会发出所有缓冲的数据
+- shouldAwait: 是否等待流的 `pending` 状态结束，默认为 `true`，当 trigger$ 触发时，如果源流处于 `pending` 状态，会等待解析完成后再发出
 
 ## 详情
 
 - 持续收集源流发出的已解析值到内部缓冲区，忽略被拒绝的值
-- 只有当触发器流处于`resolve`状态并推流时，才会推流缓冲区中的所有数据
+- 只有当触发器流处于 `resolve` 状态并推流时，才会推流缓冲区中的所有数据
 - 每次发出数据后会清空缓冲区，准备收集下一批数据
-- 当 `shouldAwait` 为 `true` 时，如果源流处于 pending 状态，会等待解析完成后再发出
+- 当 shouldAwait 为 `true` 时，如果源流处于 pending 状态，会等待解析完成后再发出
 
 ## 使用场景
 

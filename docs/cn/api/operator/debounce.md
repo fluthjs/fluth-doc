@@ -14,7 +14,7 @@ type debounce = (debounceTime: number) => (observable$: Observable) => Observabl
 
 ## 参数说明
 
-- `debounceTime` (`number`): 防抖时间间隔，单位为毫秒
+- debounceTime: 防抖时间间隔，单位为毫秒
 
 ## 详情
 

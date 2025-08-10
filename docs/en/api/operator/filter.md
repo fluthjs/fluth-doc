@@ -14,7 +14,7 @@ type filter = <T>(condition: (value: T) => boolean) => (observable$: Observable<
 
 ## Parameters
 
-- `condition` (`(value: T) => boolean`): Condition function, receives each emitted data, returns `true` to emit the data downstream, returns `false` to filter it out.
+- condition: Condition function, receives each emitted data; returns `true` to emit the data downstream, returns `false` to filter it out.
 
 ## Details
 

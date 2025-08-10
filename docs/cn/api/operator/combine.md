@@ -12,14 +12,14 @@ type combine: <T extends (Stream | Observable)[]>(...args$: T) => Stream<StreamT
 
 ## 参数
 
-- `...args$`: 多个 [Stream](/cn/api/stream#stream) 或 [Observable](/cn/api/observable) 实例
+- args$: 多个 [Stream](/cn/api/stream#stream) 或 [Observable](/cn/api/observable) 实例
 
 ## 详情
 
 - 所有输入的流都发出第一个数据后，新的流才会发出第一个数据
 - 任一输入流发出新数据时，新的流会发出包含所有流最新值的数组
 - 如果任一输入流发出错误值，新的流会发出包含错误值的拒绝状态数组
-- 所有输入的流取消订阅后，新的流也会取消订阅
+- 所有输入的流[取消订阅](/cn/guide/base.html#取消订阅)后，新的流也会取消订阅
 - 所有输入的流[ 结束 ](/cn/guide/base#结束)后，新的流也会结束
 - 如果一开始所有输入流都是结束状态，那么输出流将[结束](/cn/guide/base#结束)
 

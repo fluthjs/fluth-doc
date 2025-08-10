@@ -73,18 +73,6 @@ const subjectionApi = [
     address: '#thenimmediate',
   },
   {
-    name: '$then',
-    address: '#then-1',
-  },
-  {
-    name: '$thenOnce',
-    address: '#thenonce-1',
-  },
-  {
-    name: '$thenImmediate',
-    address: '#thenimmediate-1',
-  },
-  {
     name: 'catch',
     address: '#catch',
   },
@@ -127,6 +115,14 @@ const subjectionApi = [
   {
     name: 'offComplete',
     address: '#offcomplete',
+  },
+  {
+    name: 'afterSetValue',
+    address: '#aftersetvalue',
+  },
+  {
+    name: 'offAfterSetValue',
+    address: '#offaftersetvalue',
   },
 ]
 </script>

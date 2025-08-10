@@ -14,7 +14,7 @@ type throttle = (throttleTime: number) => (observable$: Observable) => Observabl
 
 ## Parameters
 
-- `throttleTime` (`number`): Throttle time interval in milliseconds
+- throttleTime: Throttle time interval in milliseconds
 
 ## Details
 

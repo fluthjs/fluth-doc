@@ -71,6 +71,8 @@ export default {
                 {
                   text: '转换操作符',
                   items: [
+                    { text: 'map', link: '/cn/api/operator/map' },
+                    { text: 'set', link: '/cn/api/operator/set' },
                     { text: 'audit', link: '/cn/api/operator/audit' },
                     { text: 'buffer', link: '/cn/api/operator/buffer' },
                   ],
@@ -89,9 +91,9 @@ export default {
                   text: 'execute插件',
                   link: '/cn/api/plugin/executePlugin',
                   items: [
-                    { text: 'delayExec', link: '/cn/api/plugin/delayExec' },
                     { text: 'consoleNode', link: '/cn/api/plugin/consoleNode' },
                     { text: 'debugNode', link: '/cn/api/plugin/debugNode' },
+                    { text: 'delayExec', link: '/cn/api/plugin/delayExec' },
                   ],
                 },
                 {

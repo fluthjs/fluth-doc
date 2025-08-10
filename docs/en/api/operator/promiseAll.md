@@ -13,12 +13,12 @@ type promiseAllNoAwait: <T extends (Stream | Observable)[]>(...args$: T) => Stre
 
 ## Details
 
-- The new stream only emits its first value after all input streams have emitted their first value
-- Only when all input streams emit new data, the new stream emits new data
-- When all input streams unsubscribe, the new stream also unsubscribes
-- When all input streams [complete](/en/guide/base#complete), the new stream also completes
-- If any input stream is rejected, the output stream will emit a rejected Promise containing the corresponding value
-- When an input stream is in `pending` state, it waits for the `pending` stream to resolve before emitting new data
+- The new stream only emits its first value after all input streams have emitted their first value.
+- Only when all input streams emit new data will the new stream emit new data.
+- When all input streams [unsubscribe](/en/guide/base.html#unsubscribe), the new stream also unsubscribes.
+- When all input streams [complete](/en/guide/base#complete), the new stream also completes.
+- If any input stream is rejected, the output stream will emit a rejected Promise containing the corresponding value.
+- When an input stream is in `pending` state, it waits for the `pending` stream to resolve before emitting new data.
 
 ## Examples
 

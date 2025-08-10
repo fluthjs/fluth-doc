@@ -12,14 +12,14 @@ type concat: <T extends (Stream | Observable)[]>(...args$: T) => Stream<StreamTu
 
 ## 参数
 
-- `...args$`: 多个 [Stream](/cn/api/stream#stream) 或 [Observable](/cn/api/observable) 实例
+- args$: 多个 [Stream](/cn/api/stream#stream) 或 [Observable](/cn/api/observable) 实例
 
 ## 详情
 
-- 当前输入的流[ 结束 ](/cn/guide/base#结束)后，下一个输入的流推送的数据才会推送到新的流
-- 当所有输入的流取消订阅后，新的流也会取消订阅
+- 当前输入的流[结束](/cn/guide/base#结束)后，下一个输入的流推送的数据才会推送到新的流
+- 当所有输入的流[取消订阅](/cn/guide/base.html#取消订阅)后，新的流也会取消订阅
 - 同一时间只有一个输入流的数据会被发出，其他流的数据会被忽略直到轮到它们
-- 所有输入的流[ 结束 ](/cn/guide/base#结束)后，新的流也会结束
+- 所有输入的流[结束](/cn/guide/base#结束)后，新的流也会结束
 - 如果没有输入参数，将创建一个空流但不会发出任何数据
 
 ## 示例

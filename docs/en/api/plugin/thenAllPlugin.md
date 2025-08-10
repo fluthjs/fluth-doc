@@ -36,7 +36,7 @@ From the source code, the execution logic of thenAll plugins is as follows:
 ```
 
 - Merges the `thenAll` plugins of the root node and the `then` plugins of the current node
-- Executes each plugin in order, passing in the unsubscribe function and the newly created observer node
+- Executes each plugin in order, passing in the [unsubscribe](/en/guide/base.html#unsubscribe) function and the newly created observer node
 
 ## Notes
 

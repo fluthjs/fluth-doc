@@ -14,12 +14,12 @@ type skip = <T>(skipTime: number) => (observable$: Observable<T>) => Observable<
 
 ## Parameters
 
-- `skipTime` (`number`): Number of data emissions to skip
+- skipTime: Number of data emissions to skip
 
 ## Details
 
-- If `skipTime` is 0, all data will be emitted, none will be skipped
-- If `skipTime` is greater than the actual number of emissions, all data will be skipped and none will be emitted downstream
+- If skipTime is 0, all data will be emitted, none will be skipped
+- If skipTime is greater than the actual number of emissions, all data will be skipped and none will be emitted downstream
 - After the skip count is reached, all subsequent data will be emitted normally
 
 ## Example

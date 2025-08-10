@@ -1,4 +1,4 @@
-# Application Scenarios
+# Scenarios
 
 `fluth` is suitable for reactive programming scenarios. Compared to reactive data, organizing code with streams offers the following advantages:
 
@@ -8,17 +8,17 @@
 
 ![image](/structure.drawio.svg)
 
-## Building Reactive Logic
+## Build Reactive Logic
 
-For developers using `vue` or `react`, using reactive data to trigger view updates greatly improves development efficiency. However, in the logic layer, the reactive nature of data is often underutilized.
+For vue or react developers, reactive updates in the view improve efficiency significantly, but the reactive value in the logic layer is often underutilized.
 
-In business logic, reactive data is usually monitored with `watch` (or `useEffect`) to listen for changes, and then logic updates are triggered by data changes. But this approach has the following problems:
+In business logic, we often use watch (or useEffect) to listen to changes and then update logic accordingly. This approach has these problems:
 
 - Poor semantics
 - Unclear data flow
 - Timing issues are hard to manage
 
-So its application scenarios are limited. But with `fluth`'s stream programming paradigm, you can build the entire logic in a reactive way, thus achieving improved development efficiency!
+So the scenarios are limited. With fluth's stream paradigm, you can build the entire logic reactively and improve productivity!
 
 <!-- **A simple example:**
 

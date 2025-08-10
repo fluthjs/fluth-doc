@@ -7,7 +7,44 @@ import Observable from '../../components/observable.vue'
 
 <Observable />
 
-The `then` and `thenOnce` methods of an `Observable` instance return [Observable](#observable) instances
+Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Observable](#observable) instances
+
+## status
+
+- Type
+  ```typescript
+  enum PromiseStatus {
+    PENDING = 'pending',
+    RESOLVED = 'resolved',
+    REJECTED = 'rejected',
+  }
+  status: PromiseStatus | null
+  ```
+- Details
+
+  The status of the current node. Generally `pending`, `fulfilled`, `rejected`. When the stream has not passed through this node or the node has been [unsubscribed](/en/guide/base.html#unsubscribe), the status is `null`.
+
+## pipe
+
+- Type
+
+  ```typescript
+  pipe(operator: Operator): Observable
+  ```
+
+- Details
+
+  Pipe the subscription node. The pipe method can chain multiple operators and returns an [Observable](#observable) instance
+
+- Example
+
+  ```typescript
+  import { $, delay } from 'fluth'
+  const promise$ = $()
+  promise$.pipe(delay(1000)).then((value) => {
+    console.log(value)
+  })
+  ```
 
 ## value
 
@@ -318,17 +355,17 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
   promise$.next(3) // doesn't print
   ```
 
-## setUnsubscribeCallback
+## afterUnsubscribe
 
 - Type
 
-  ```typescript
-  setUnsubscribeCallback(callback: () => void): void
-  ```
+```typescript
+  afterUnsubscribe(callback: () => void): void
+```
 
 - Details
 
-  Sets the callback function for when the node's subscription is canceled
+  Sets the callback function when the node's subscription is canceled
 
 - Example
 
@@ -338,20 +375,20 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
   const promise$ = $(1)
 
   const observable$ = promise$.then((value) => value + 1)
-  observable$.setUnsubscribeCallback(() => {
+  observable$.afterUnsubscribe(() => {
     console.log('unsubscribe')
   })
 
   observable$.unsubscribe() // prints unsubscribe
   ```
 
-## complete
+## afterComplete
 
 - Type
 
-  ```typescript
-    complete(callback: (value: T, status: PromiseStatus) => void): void;
-  ```
+```typescript
+  afterComplete(callback: (value: T, status: PromiseStatus) => void): void
+```
 
 - Details
 
@@ -364,8 +401,8 @@ The `then` and `thenOnce` methods of an `Observable` instance return [Observable
   const promise$ = $(1)
   const observable$ = promise$.then((value) => console.log(value))
 
-  observable$.complete(() => console.log('complete'))
-  observable$.setUnsubscribeCallback(() => console.log('unsubscribe'))
+  observable$.afterComplete(() => console.log('complete'))
+  observable$.afterUnsubscribe(() => console.log('unsubscribe'))
 
   promise$.next(2, true) // prints 2 complete unsubscribe
   ```

@@ -12,7 +12,7 @@ type finish = <T extends (Stream | Observable)[]>(...args$: T) => Stream<StreamT
 
 ## 参数说明
 
-- `...args$`: 多个 Stream 或 Observable 实例
+- args$: 多个 Stream 或 Observable 实例
 
 ## 返回值
 

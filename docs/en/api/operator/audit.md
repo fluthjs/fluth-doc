@@ -2,6 +2,10 @@
 
 Audit operator based on a trigger stream. Only emits the latest resolved value from the source stream when the trigger is activated.
 
+<div style="display: flex; justify-content: center">
+  <img src="/audit.drawio.svg" alt="image" >
+</div>
+
 ## Type Definition
 
 ```typescript
@@ -13,20 +17,16 @@ type audit = <T>(
 
 ## Parameters
 
-- `trigger$` (Stream | Observable): The trigger stream. When this stream emits a value, the audit operator emits the latest resolved value from the source stream.
-- `shouldAwait` (boolean, optional): Whether to wait for the source stream's `pending` state to resolve. Defaults to `true`. If the source is `pending` when triggered, it will wait for resolution before emitting.
-
-## Return Value
-
-Returns a new `Observable` that only emits the latest resolved value from the source stream when the trigger is activated.
+- trigger$ (Stream | Observable): The trigger stream. When this stream emits a value, the operator emits the latest resolved value from the source stream.
+- shouldAwait (boolean, optional): Whether to wait for the source stream's `pending` state to finish. Defaults to `true`. When trigger$ fires while the source is `pending`, it waits for resolution before emitting.
 
 ## Details
 
-- Only emits the current value of the source stream when the trigger stream emits a value.
-- Only emits resolved values, ignores rejected `Promise`s.
+- Only emits the current value of the source stream when the trigger stream is in `resolve` status and emits a value.
+- Only emits resolved values; rejected values are ignored.
 - If the source stream emits multiple values quickly, only the latest resolved value is emitted.
-- When `shouldAwait` is `true`, if the source is `pending`, it waits for resolution before emitting.
-- When the `trigger$` stream completes, the stream produced by `audit` also completes.
+- When shouldAwait is `true`, if the source is `pending`, it waits for resolution before emitting.
+- When the trigger$ stream completes, the stream produced by `audit` also completes.
 
 ## Usage Scenarios
 

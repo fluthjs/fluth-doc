@@ -14,7 +14,7 @@ type throttle = (throttleTime: number) => (observable$: Observable) => Observabl
 
 ## 参数说明
 
-- `throttleTime` (`number`): 节流时间间隔，单位为毫秒
+- throttleTime: 节流时间间隔，单位为毫秒
 
 ## 详情
 

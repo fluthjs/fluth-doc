@@ -2,7 +2,7 @@
 
 ## Automatic Inference of Initial Value Types
 
-When using `$` to create a stream, `fluth` will automatically infer the type of the initial value.
+When using [$](/en/api/$) to create a stream, `fluth` will automatically infer the type of the initial value.
 
 ```typescript
 import { $ } from 'fluth'
@@ -15,7 +15,7 @@ promise$.value // {a: string, b: number} | undefined
 
 ## Automatic Inference of Subscription Node Types
 
-When using `then` to subscribe to a stream, `fluth` will automatically infer the type of the subscription node.
+When using [then](/en/api/observable#then) to subscribe to a stream, `fluth` will automatically infer the type of the subscription node.
 
 ```typescript
 import { $ } from 'fluth'
@@ -28,7 +28,7 @@ observable$.value
 
 ## Automatic Inference of Operator Types
 
-When using operators, `fluth` will automatically infer the type of the operator.
+When using operators, `fluth` will automatically infer the operator types.
 
 ```typescript
 import { $, get } from 'fluth'

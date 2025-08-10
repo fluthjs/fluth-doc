@@ -2,6 +2,10 @@
 
 跳过过滤操作符，根据过滤函数决定是否跳过数据推送。
 
+<div style="display: flex; justify-content: center">
+  <img src="/skipFilter.drawio.svg" alt="image" >
+</div>
+
 ## 类型定义
 
 ```typescript
@@ -10,16 +14,16 @@ type skipFilter = (filter: (time: number) => boolean) => (observable$: Observabl
 
 ## 参数说明
 
-- `filter` (`(time: number) => boolean`): 过滤函数，接收当前推送次数并返回布尔值
-  - 参数：`time` - 从 1 开始的推送次数
-  - 返回值：`true` 时推送数据，`false` 时跳过
+- filter: 过滤函数，接收当前推送次数并返回布尔值
+  - 参数：time - 从 1 开始的推送次数
+  - 返回值：true 时推送数据，false 时跳过
 
 ## 详情
 
 - 接收一个过滤函数参数，该函数接收当前推送次数并返回布尔值
 - 过滤函数返回 `true` 时推送数据，返回 `false` 时跳过
 - 使用内部计数器跟踪推送次数，从 1 开始递增
-- 对所有类型的数据都有效，包括 `Promise` 的成功和失败状态
+- 对所有类型的数据都有效，包括 Promise 的成功和失败状态
 
 ## 示例
 

@@ -1,12 +1,10 @@
 # 简介
 
-## 基础
+## 什么是 fluth？
 
-`fluth`是一个类`promise`的流式编程库，擅长响应式编程。
+fluth 是一个类 promise 的流式编程库，擅长响应式编程。假如认为 promise 是发布者而 then 方法是订阅者，promise 的发布行为则只有一次。
 
-假如认为`promise`是发布者而`then`方法是订阅者，`promise`的发布行为则只有一次。
-
-`fluth`加强了`promise`，让`promise`可以不断的发布！
+fluth 加强了 promise，让 promise 可以不断的发布！如果你熟悉 Promise，那么你已经掌握了 fluth 的基础。
 
 ```typescript
 import { $ } from 'fluth'
@@ -43,20 +41,21 @@ promise$.value === 1 ✅
 observable$.value === 2 ✅
 ```
 
-- 相比其他流式编程库，`fluth`更加简单易用，上手成本低，
-- 相比`promise`，`fluth`可以不断发布并且支持取消定订阅
-- 相比`promise`，`fluth`同步执行`then`方法，及时更新数据
-- 相比`promise`，`fluth`保留每个订阅节点的数据供后续使用
-- 相比`promise`，`fluth`完全支持 `PromiseLike`
+- 相比其他流式编程库，fluth 更加简单易用，上手成本低，
+- 相比 promise，fluth 可以不断发布并且支持取消定订阅
+- 相比 promise，fluth 同步执行 then 方法，及时更新数据
+- 相比 promise，fluth 保留每个订阅节点的数据供后续使用
+- 相比 promise，fluth 完全支持 `PromiseLike`
 
 ## 对比 rxjs
 
-[`rxjs`](https://rxjs.dev/)是当前主流的流式编程库，和`fluth`相比而言有几个区别：
+[rxjs](https://rxjs.dev/)是当前主流的流式编程库，和 fluth 相比而言有几个区别：
 
-1. `fluth`上手非常简单，是类`promise`的流式编程库，只要会使用`promise`就可以使用
-2. `fluth`的观察者既可以串联也可以并联，而`rxjs`的`observer`之间是并联的
-3. `fluth`保留了每个订阅节点的数据以及状态供后续消费
-4. `fluth`可以添加插件来扩展流的功能和添加自定义行为
+1. fluth 上手非常简单，是类 promise 的流式编程库，只要会使用 promise 就可以使用
+2. fluth 的流是 hot、multicast 的，而 rxjs 的流还具备 cold、unicast 的特性
+3. fluth 可以流链式订阅，而 rxjs 的订阅后无法再链式订阅
+4. fluth 保留了每个订阅节点的数据以及状态供后续消费
+5. fluth 可以添加插件来扩展流的功能和添加自定义行为
 
 ```javascript
 // rxjs:

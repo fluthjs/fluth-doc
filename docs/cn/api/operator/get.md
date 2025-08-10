@@ -1,6 +1,6 @@
 # get
 
-属性提取操作符，使用 `getter` 函数从源流中提取特定的值，只有当提取的值发生变化时才会发出新值。
+属性提取操作符，使用 getter 函数从源流中提取特定的值，只有当提取的值发生变化时才会发出新值。
 
 <div style="display: flex; justify-content: center">
   <img src="/get.drawio.svg" alt="image" >
@@ -16,14 +16,14 @@ type get = <T, F>(
 
 ## 参数说明
 
-- `getter` (function): 提取函数，接收源流的值并返回需要提取的部分
-  - 参数：`value: T | undefined` - 源流的当前值
-  - 返回值：`F` - 提取的值
+- getter: 提取函数，接收源流的值并返回需要提取的部分
+  - 参数：value: T | undefined - 源流的当前值
+  - 返回值：F - 提取的值
 
 ## 详情
 
-- 创建时会立即执行 `getter` 函数获取初始值
-- 只有当 `getter` 返回的值发生变化时才会发出新值
+- 创建时会立即执行 getter 函数获取初始值
+- 只有当 getter 返回的值发生变化时才会发出新值
 - 使用严格相等（`===`）比较提取的值是否发生变化
 
 ## 使用场景

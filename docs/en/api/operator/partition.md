@@ -22,16 +22,16 @@ type partition: <T>(
 
 ## Parameters
 
-- `stream$` (Stream | Observable): Input stream or Observable
-- `predicate` (Function): Condition function, receives `value`, `status`, and `index` as parameters
-  - `value`: Current value
-  - `status`: Promise status
-  - `index`: Index starting from 1
-- `thisArg` (optional): `this` context for the predicate function
+- stream$ (Stream | Observable): Input stream or Observable
+- predicate (Function): Condition function, receives `value`, `status`, and `index` as parameters
+  - value: Current value
+  - status: Promise status
+  - index: Index starting from 1
+- thisArg (optional): `this` context for the predicate function
 
 ## Return Value
 
-Returns an array of two Streams: `[stream of satisfied values, stream of unsatisfied values]`
+Returns an array of two Streams: [stream of satisfied values, stream of unsatisfied values]
 
 ## Details
 

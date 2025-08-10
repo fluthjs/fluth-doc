@@ -16,7 +16,7 @@ type thenPluginFn<T> = (unsubscribe: () => void, observable: Observable<T>) => v
 ## Details
 
 - **Triggered on node creation**: Executes when a child node is created via the `then` method
-- **Lifecycle management**: Can control the lifecycle of a node, enabling automatic unsubscription
+- **Lifecycle management**: Can control the lifecycle of a node, enabling automatic [unsubscribe](/en/guide/base.html#unsubscribe)
 - **Resource cleanup**: Suitable for cleanup operations, timer management, etc.
 - **Node level**: Every node can use a `then` plugin, not limited to the root node
 

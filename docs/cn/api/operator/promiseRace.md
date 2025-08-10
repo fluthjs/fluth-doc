@@ -14,7 +14,7 @@ type promiseRace: <T extends (Stream | Observable)[]>(...args$: T) => Stream<Str
 
 - 只有第一个发出数据的流会成为"获胜者"，后续只有这个获胜流的数据会被转发到输出流
 - 其他流的数据会被忽略，即使它们继续发出数据
-- 获胜流取消订阅后，输出流也会取消订阅
+- 获胜流[取消订阅](/cn/guide/base.html#取消订阅)后，输出流也会取消订阅
 - 获胜流[ 结束 ](/cn/guide/base#结束)后，输出流也会结束
 - 支持错误处理：如果获胜流发出被拒绝的 `Promise`，输出流也会发出被拒绝的 `Promise`
 

@@ -3,7 +3,14 @@
 ## Installation
 
 ```bash
-pnpm i fluth
+# npm
+npm install fluth
+
+# yarn
+yarn add fluth
+
+# pnpm
+pnpm add fluth
 ```
 
 ## What is fluth?
@@ -210,8 +217,8 @@ import { $, throttle } from 'fluth'
 
 const searchInput$ = $()
 
-// Use the throttle operator, only process the last input within 300ms
-searchInput$.use(throttle(300)).then((keyword) => {
+// Use the throttle operator, control frequency to 300ms
+searchInput$.pipe(throttle(300)).then((keyword) => {
   console.log('Search:', keyword)
   // Execute search logic
 })

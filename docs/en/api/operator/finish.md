@@ -12,7 +12,7 @@ type finish = <T extends (Stream | Observable)[]>(...args$: T) => Stream<StreamT
 
 ## Parameters
 
-- `...args$`: Multiple Stream or Observable instances
+- ...args$: Multiple Stream or Observable instances
 
 ## Return Value
 

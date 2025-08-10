@@ -2,6 +2,10 @@
 
 Skip filter operator, determines whether to skip data emissions based on a filter function.
 
+<div style="display: flex; justify-content: center">
+  <img src="/skipFilter.drawio.svg" alt="image" >
+</div>
+
 ## Type Definition
 
 ```typescript
@@ -10,9 +14,9 @@ type skipFilter = (filter: (time: number) => boolean) => (observable$: Observabl
 
 ## Parameters
 
-- `filter` (`(time: number) => boolean`): Filter function that receives the current emission count and returns a boolean
-  - Parameter: `time` - Emission count starting from 1
-  - Return: `true` to emit data, `false` to skip
+- filter: Filter function that receives the current emission count and returns a boolean
+  - Parameter: time - Emission count starting from 1
+  - Return: true to emit data, false to skip
 
 ## Details
 

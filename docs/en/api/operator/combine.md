@@ -1,6 +1,6 @@
 # combine
 
-Combines the input [stream](/en/api/stream#stream) or [observable](/en/api/observable) into a new stream.
+Combines the input [stream](/en/api/stream#stream) or [observable](/en/api/observable) and returns a new stream.
 
 ![image](/combine.drawio.svg)
 
@@ -12,16 +12,16 @@ type combine: <T extends (Stream | Observable)[]>(...args$: T) => Stream<StreamT
 
 ## Parameters
 
-- `...args$`: Multiple [Stream](/en/api/stream#stream) or [Observable](/en/api/observable) instances
+- ...args$: Multiple [Stream](/en/api/stream#stream) or [Observable](/en/api/observable) instances
 
 ## Details
 
-- The new stream only emits its first value after all input streams have emitted their first value
-- Whenever any input stream emits a new value, the new stream emits an array containing the latest values of all streams
-- If any input stream emits a rejected value, the new stream emits an array in a rejected state containing the error value
-- When all input streams unsubscribe, the new stream also unsubscribes
-- When all input streams [complete](/en/guide/base#complete), the new stream also completes
-- If all input streams are in a completed state at the beginning, the output stream will [complete](/en/guide/base#complete)
+- The new stream only emits its first value after all input streams have emitted their first value.
+- Whenever any input stream emits a new value, the new stream emits an array containing the latest values of all streams.
+- If any input stream emits a rejected value, the new stream emits an array in a rejected state containing the error value.
+- When all input streams [unsubscribe](/en/guide/base.html#unsubscribe), the new stream also unsubscribes.
+- When all input streams [complete](/en/guide/base#complete), the new stream also completes.
+- If all input streams are in a completed state at the beginning, the output stream will [complete](/en/guide/base#complete).
 
 ## Examples
 

@@ -22,12 +22,12 @@ type partition: <T>(
 
 ## 参数
 
-- `stream$` (Stream | Observable): 输入的流或 Observable
-- `predicate` (Function): 条件函数，接收 `value`、`status`、`index` 三个参数
-  - `value`: 当前值
-  - `status`: Promise 状态
-  - `index`: 从 1 开始的索引计数
-- `thisArg` (可选): 条件函数的 `this` 上下文
+- stream$: 输入的流或 Observable
+- predicate: 条件函数，接收 `value`、`status`、`index` 三个参数
+  - value: 当前值
+  - status: Promise 状态
+  - index: 从 1 开始的索引计数
+- thisArg: 条件函数的 `this` 上下文
 
 ## 返回值
 
@@ -36,7 +36,7 @@ type partition: <T>(
 ## 详情
 
 - 将输入的流按照条件函数进行区分，返回两个流：第一个是满足条件的流，第二个是不满足条件的流
-- 输入的流取消订阅后，两个返回的流也会取消订阅
+- 输入的流[取消订阅](/cn/guide/base.html#取消订阅)后，两个返回的流也会取消订阅
 - 输入的流[ 结束 ](/cn/guide/base#结束)后，对应返回的流也会结束
 - 如果输入流已经完成，两个返回的流会立即完成
 - 条件函数抛出错误时，该值会被分配到不满足条件的流中

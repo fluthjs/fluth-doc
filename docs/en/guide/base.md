@@ -50,11 +50,11 @@ console.log(oldValue.b === newValue.b) // true
 
 ## Execute
 
-Calling the [execute](/en/api/observable#execute) method of a [observable](/en/api/observable) subscription node re-executes the last data flow and pushes it to all its child subscription nodes.
+Calling the [execute](/en/api/observable#execute) method of an [observable](/en/api/observable) subscription node re-executes the last data flow and pushes it to all its child subscription nodes.
 
 ## Subscription Node
 
-`fluth` uses a `promise`-like approach to push data flow. By calling methods like [then](/en/api/observable#then), [$then](/en/api/observable#then-1), [thenOnce](/en/api/observable#thenonce), [$thenOnce](/en/api/observable#thenonce-1), [thenImmediate](/en/api/observable#thenimmediate), [$thenImmediate](/en/api/observable#thenimmediate-1), you add a subscription node and return an `Observable` instance, making the overall usage consistent with `promise`.
+fluth uses a promise-like approach to push data flow. By calling methods like [then](/en/api/observable#then), [thenOnce](/en/api/observable#thenonce), [thenImmediate](/en/api/observable#thenimmediate), you add a subscription node and return an [Observable](/en/api/observable) instance. Overall usage is consistent with promise.
 
 ## Chained Subscription
 
@@ -80,10 +80,11 @@ Call the [unsubscribe](/en/api/observable#unsubscribe) method of a subscription 
 
 ## Complete
 
-Only [`Stream`](/en/api/stream) can be completed. After a stream is completed:
+Only [Stream](/en/api/stream) can be completed. After a stream is completed:
 
 - The stream will no longer push data
 - The stream will not accept new subscription nodes
+- Unsubscribe all downstream subscription nodes
 
 There are two ways to complete a stream:
 
@@ -99,4 +100,4 @@ promise$.next(1, true)
 promise$.complete() // End the stream
 ```
 
-After a stream node is completed, each subscription node will trigger [`afterComplete`](/en/api/observable#aftercomplete) after the last data push, then automatically unsubscribe all its subscribers, and trigger [`afterUnsubscribe`](/en/api/observable#afterunsubscribe) for all child nodes.
+After a stream node is completed, each subscription node will trigger [afterComplete](/en/api/observable#aftercomplete) after the last data push, then automatically unsubscribe all its subscribers, and trigger [afterUnsubscribe](/en/api/observable#afterunsubscribe) for all child nodes.
