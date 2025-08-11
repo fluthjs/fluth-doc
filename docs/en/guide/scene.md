@@ -1,6 +1,6 @@
 # Scenarios
 
-`fluth` is suitable for reactive programming scenarios. Compared to reactive data, organizing code with streams offers the following advantages:
+fluth is suitable for reactive programming scenarios. Compared to reactive data, organizing code with streams offers the following advantages:
 
 - Easier to build reactive logic, reducing business complexity
 - More declarative programming style, greatly reducing code volume
@@ -34,7 +34,7 @@ The `handleClick` method can be implemented in the component or in module A:
 
 ### Reactive Programming
 
-With `fluth`'s stream reactive programming, you can build the entire logic reactively, as shown below:
+With fluth's stream reactive programming, you can build the entire logic reactively, as shown below:
 
 ![image](/stream-code.drawio.svg)
 

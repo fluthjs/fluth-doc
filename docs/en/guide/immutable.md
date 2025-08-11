@@ -1,10 +1,10 @@
 # Immutable Data
 
-`fluth` supports immutable data, implemented at the bottom layer using [`limu`](https://tnfe.github.io/limu/).
+fluth supports immutable data, implemented at the bottom layer using [limu](https://tnfe.github.io/limu/).
 
 ## Stream
 
-The `set` method of a `Stream` object can immutably modify the data of a node.
+The set method of a Stream object can immutably modify the data of a node.
 
 ```typescript
 import { $ } from 'fluth'

@@ -2,7 +2,7 @@
 
 ## Plugin Types
 
-`fluth` supports four types of plugins: `then`, `thenAll`, `execute`, and `executeAll`.
+fluth supports four types of plugins: then, thenAll, execute, and executeAll.
 
 ### then Plugin
 
@@ -31,7 +31,7 @@ promise$.next(3) // No output
 
 ### thenAll Plugin
 
-Triggered when any node in the stream creates a subscription, can only be used on `Stream`; using on `Observable` nodes will throw an error.
+Triggered when any node in the stream creates a subscription, can only be used on Stream; using on Observable nodes will throw an error.
 
 ```typescript
 import { $ } from 'fluth'
@@ -75,7 +75,7 @@ promise$.next(2)
 
 ### execute Plugin
 
-Triggered when a node executes, can modify the execution result. If a node has multiple `execute` plugins, they are executed in order, with the result of the previous plugin passed as input to the next, and the final result returned as the node's value.
+Triggered when a node executes, can modify the execution result. If a node has multiple execute plugins, they are executed in order, with the result of the previous plugin passed as input to the next, and the final result returned as the node's value.
 
 ```typescript
 import { $ } from 'fluth'
@@ -99,9 +99,9 @@ promise$.next(1)
 
 ### executeAll Plugin
 
-Triggered when a node executes, can modify the execution result. Can only be used on `Stream`; using on `Observable` nodes will throw an error.
+Triggered when a node executes, can modify the execution result. Can only be used on Stream; using on Observable nodes will throw an error.
 
-If a node has multiple `executeAll` plugins, they are executed in order, with the result of the previous plugin passed as input to the next, and the final result returned as the node's value.
+If a node has multiple executeAll plugins, they are executed in order, with the result of the previous plugin passed as input to the next, and the final result returned as the node's value.
 
 ```typescript
 import { $ } from 'fluth'
@@ -134,6 +134,6 @@ promise$.next(1)
 
 ## Plugin Usage Notes
 
-- `thenAll` and `executeAll` plugins can only be used on `Stream`; using on `Observable` nodes will throw an error
-- `then` and `execute` plugins can be used on any node
-- Plugins can be added via the `use` method and removed via the `remove` method
+- thenAll and executeAll plugins can only be used on Stream; using on Observable nodes will throw an error
+- then and execute plugins can be used on any node
+- Plugins can be added via the use method and removed via the remove method

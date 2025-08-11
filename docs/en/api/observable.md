@@ -22,7 +22,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Ob
   ```
 - Details
 
-  The status of the current node. Generally `pending`, `fulfilled`, `rejected`. When the stream has not passed through this node or the node has been [unsubscribed](/en/guide/base.html#unsubscribe), the status is `null`.
+  The status of the current node. Generally pending, fulfilled, rejected. When the stream has not passed through this node or the node has been [unsubscribed](/en/guide/base.html#unsubscribe), the status is null.
 
 ## pipe
 
@@ -72,7 +72,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Ob
 
 - Details
 
-  `then` subscriber, usage consistent with `promise`, returns an [Observable](#observable) instance of the subscription node
+  then subscriber, usage consistent with promise, returns an [Observable](#observable) instance of the subscription node
 
 - Example
 
@@ -99,7 +99,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Ob
 
 - Details
 
-  The difference between `thenOnce` and `then` is that once the subscription node executes, it automatically unsubscribes.
+  The difference between thenOnce and then is that once the subscription node executes, it automatically unsubscribes.
 
 - Example
 
@@ -128,10 +128,10 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Ob
 
 - Details
 
-  The differences between `thenImmediate` and `then` are:
+  The differences between thenImmediate and then are:
 
-  - If the parent node is a `Stream` instance with an initial value, using `thenImmediate` will immediately trigger the subscription child node's `execute`
-  - If the parent subscription node is an `Observable` and has been `execute`d, using `thenImmediate` will immediately trigger the subscription child node's `execute`
+  - If the parent node is a Stream instance with an initial value, using thenImmediate will immediately trigger the subscription child node's execute
+  - If the parent subscription node is an Observable and has been executed, using thenImmediate will immediately trigger the subscription child node's execute
 
 - Example
 
@@ -150,7 +150,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Ob
   ```
 - Details
 
-  `$then` subscriber, unlike the `then` subscriber, `$then` subscriber can only perform `immutable` operations on data and cannot handle `reject` errors from the previous node. Returns an [Observable](#observable) instance of the subscription node.
+  $then subscriber, unlike the then subscriber, $then subscriber can only perform immutable operations on data and cannot handle reject errors from the previous node. Returns an [Observable](#observable) instance of the subscription node.
 
 - Example
 
@@ -173,7 +173,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Ob
   ```typescript
     $thenOnce(setter: (value: T) => void | Promise<void>): Observable<T extends PromiseLike<infer V>? V : T, E> & E;
   ```
-  The difference between `$thenOnce` and `$then` is that once the subscription node executes, it automatically unsubscribes.
+  The difference between $thenOnce and $then is that once the subscription node executes, it automatically unsubscribes.
 
 ## $thenImmediate
 
@@ -181,7 +181,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Ob
   ```typescript
     $thenImmediate(setter: (value: T) => void | Promise<void>): Observable<T extends PromiseLike<infer V>? V : T, E> & E;
   ```
-  The difference between `$thenImmediate` and `$then` is that if the parent subscription node has been `execute`d, using `$thenImmediate` will immediately trigger the subscription child node's `execute`.
+  The difference between $thenImmediate and $then is that if the parent subscription node has been executed, using $thenImmediate will immediately trigger the subscription child node's execute.
 
 ## catch
 
@@ -195,7 +195,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Ob
 
 - Details
 
-  Performs `catch` on the subscription node, usage consistent with `promise`, returns an [Observable](#observable) instance of the subscription node.
+  Performs catch on the subscription node, usage consistent with promise, returns an [Observable](#observable) instance of the subscription node.
 
 - Example
 
@@ -221,7 +221,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Ob
 
 - Details
 
-  Performs `finally` on the subscription node, usage consistent with `promise`, returns an [Observable](#observable) instance of the subscription node
+  Performs finally on the subscription node, usage consistent with promise, returns an [Observable](#observable) instance of the subscription node
 
 - Example
   ```typescript
@@ -241,8 +241,8 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Ob
     get<F>(getter: (value: T | undefined) => F): Observable<F extends PromiseLike<infer V> ? V : F, E> & E;
   ```
 
-  - `get` subscriber subscribes to the `getter` portion of the current node's data. It executes immediately and obtains the `getter`'s result. Subsequently, it only pushes to subscribed child nodes when this portion's value changes
-  - The `getter`'s result becomes the subscription node's value, returns an [Observable](#observable) instance of the subscription node.
+  - get subscriber subscribes to the getter portion of the current node's data. It executes immediately and obtains the getter's result. Subsequently, it only pushes to subscribed child nodes when this portion's value changes
+  - The getter's result becomes the subscription node's value, returns an [Observable](#observable) instance of the subscription node.
 
 - Example
 
@@ -276,7 +276,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Ob
 
 - Details
 
-  `change` subscriber only triggers the subscription node's `execute` when the `getter` result of the previous stream data is not equal to the `getter` result of the current stream data. Returns an [Observable](#observable) instance of the subscription node.
+  change subscriber only triggers the subscription node's execute when the getter result of the previous stream data is not equal to the getter result of the current stream data. Returns an [Observable](#observable) instance of the subscription node.
 
 - Example
 
@@ -307,7 +307,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Ob
 
   Actively executes the current node, using data from the last time the stream passed through this node. If the node has never been executed before, it won't execute.
   :::warning
-  Executing the current node will also execute nodes after the current node's `then`, equivalent to pushing the stream at the current node with the current node's old data
+  Executing the current node will also execute nodes after the current node's then, equivalent to pushing the stream at the current node with the current node's old data
   :::
 
 - Example
@@ -334,9 +334,9 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return [Ob
 
 - Details
 
-  Cancels the node's subscription. Unlike `promise`'s inability to cancel, `stream`'s subscription can be canceled at any time
+  Cancels the node's subscription. Unlike promise's inability to cancel, stream's subscription can be canceled at any time
   ::: warning Warning
-  Canceling the current node's subscription will also cancel all subscriptions of nodes after the current node's `then`
+  Canceling the current node's subscription will also cancel all subscriptions of nodes after the current node's then
   :::
 
 - Example

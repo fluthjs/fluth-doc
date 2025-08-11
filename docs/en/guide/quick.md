@@ -15,7 +15,7 @@ pnpm add fluth
 
 ## What is fluth?
 
-`fluth` is a Promise-like stream programming library that allows a `Promise` to publish data repeatedly. If you are familiar with `Promise`, you already know the basics of `fluth`!
+fluth is a Promise-like stream programming library that allows a Promise to publish data repeatedly. If you are familiar with Promise, you already know the basics of fluth!
 
 ```typescript
 // Promise can only publish once
@@ -90,10 +90,10 @@ stream$.next('world') // Output: [WORLD]
 
 ## Step 3: Push
 
-You can push data using either the `next` or `set` method. The difference is:
+You can push data using either the next or set method. The difference is:
 
-- The `next` method directly pushes a new value, suitable for simple data types
-- The `set` method automatically creates an immutable object, suitable for complex objects and handles deep copy automatically
+- The next method directly pushes a new value, suitable for simple data types
+- The set method automatically creates an immutable object, suitable for complex objects and handles deep copy automatically
 
 ### Use next to push new data
 
