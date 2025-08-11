@@ -3,8 +3,8 @@
 layout: home
 
 hero:
-  name: "fluth"
-  text: "A Promise-like asynchronous flow control library"
+  name: 'fluth'
+  text: 'A Promise-like Reactive Stream Library'
   tagline: Simple to use, learn in 1 minute!
   image:
     src: /logo.svg
