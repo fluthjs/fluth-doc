@@ -1,12 +1,12 @@
 # Introduction
 
-## Basics
+## What is fluth?
 
-fluth is a promise-like stream programming library, well-suited for reactive programming.
+fluth (/fluːθ/) is a combination of flux + then, representing promise-like stream.
 
-If you think of a promise as a publisher and the then method as a subscriber, a promise only publishes once.
+fluth is a promise-like stream programming library, well-suited for reactive programming. If you think of promise as the publisher and then as the subscriber, a promise only publishes once.
 
-fluth enhances promise, allowing it to publish repeatedly!
+fluth enhances promise, allowing promise to publish continuously! If you are familiar with Promise, you already grasp the basics of fluth.
 
 ```typescript
 import { $ } from 'fluth'
@@ -23,15 +23,30 @@ promise$.next(Promise.reject(2))
 promise$.next(3)
 
 // Logs:
-// resolve 1
-// reject 2
-// resolve 3
+// resolve 2
+// resolve 4
+// reject 3
 ```
 
-- Compared to other stream programming libraries, fluth is simpler and easier to use, with a lower learning curve.
-- Compared to promise, fluth can publish repeatedly and supports unsubscription.
-- Compared to promise, fluth executes then synchronously and updates data in real time.
-- Compared to promise, fluth retains each subscription node's data and status for later use.
+```typescript
+import { $ } from 'fluth'
+
+const promise$ = $(0)
+const observable$ = promise$.thenImmediate(v => v + 1)
+
+promise$.value === 0 ✅
+observable$.value === 1 ✅
+
+promise$.next(1)
+
+promise$.value === 1 ✅
+observable$.value === 2 ✅
+```
+
+- Compared to other stream programming libraries, fluth is simpler and easier to use, with a low learning curve.
+- Compared to promise, fluth can publish continuously and supports unsubscription.
+- Compared to promise, fluth executes then synchronously and updates data in time.
+- Compared to promise, fluth retains each subscription node's data for later use.
 - Compared to promise, fluth fully supports PromiseLike.
 
 ## Comparison with rxjs

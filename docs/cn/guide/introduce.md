@@ -2,6 +2,8 @@
 
 ## 什么是 fluth？
 
+fluth(/fluːθ/) 由 **flu**x + **th**en 两个单词组合而来，代表类似 promise 的流。
+
 fluth 是一个类 promise 的流式编程库，擅长响应式编程。假如认为 promise 是发布者而 then 方法是订阅者，promise 的发布行为则只有一次。
 
 fluth 加强了 promise，让 promise 可以不断的发布！如果你熟悉 Promise，那么你已经掌握了 fluth 的基础。
