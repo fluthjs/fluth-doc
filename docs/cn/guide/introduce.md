@@ -57,7 +57,8 @@ observable$.value === 2 ✅
 2. fluth 的流是 hot、multicast 的，而 rxjs 的流还具备 cold、unicast 的特性
 3. fluth 可以流链式订阅，而 rxjs 的订阅后无法再链式订阅
 4. fluth 保留了每个订阅节点的数据以及状态供后续消费
-5. fluth 可以添加插件来扩展流的功能和添加自定义行为
+5. fluth 订阅节点存在和 promise 类似的 status 状态
+6. fluth 可以添加插件来扩展流的功能和添加自定义行为
 
 ```javascript
 // rxjs:

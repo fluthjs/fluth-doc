@@ -61,6 +61,31 @@ Observable 实例的 then、thenOnce、thenImmediate、pipe 方法返回的还�
   const observable$ = promise$.then((value) => Number(value)) // 自动推导 observable.value 的类型为 number
   ```
 
+## thenSet
+
+- 类型
+  ```typescript
+    $then(setter: (value: T) => void | Promise<void>): Observable<T extends PromiseLike<infer V> ? V : T, E> & E;
+  ```
+- 详情
+
+  thenSet 订阅者，不同于 then 订阅者，thenSet 订阅者只能对数据进行 immutable 操作而且无法处理上一个节点的 reject 错误，返回订阅节点的[ Observable ](#observable)实例。
+
+- 示例
+
+  ```typescript
+  import { $ } from 'fluth'
+
+  const promise$ = $<{ a: number; b: { c: number } }>()
+  const observable$ = promise$.$then((value) => {
+    value.a = value.a + 1
+  })
+
+  promise$.next({ a: 1, b: { c: 1 } })
+  // observable$.value === { a: 2, b: { c: 1 } }
+  promise$.value.b === observable$.value.b // true
+  ```
+
 ## thenOnce
 
 - 类型
@@ -89,6 +114,14 @@ Observable 实例的 then、thenOnce、thenImmediate、pipe 方法返回的还�
   promise$.next('2') // 输出 2
   promise$.next('3') // 不会输出 3
   ```
+
+## thenOnceSet
+
+- 类型
+  ```typescript
+    $thenOnce(setter: (value: T) => void | Promise<void>): Observable<T extends PromiseLike<infer V>? V : T, E> & E;
+  ```
+  thenOnceSet 相比 thenSet 方法差异点在于一旦订阅节点执行后，订阅节点会自动取消订阅。
 
 ## thenImmediate
 
@@ -119,6 +152,14 @@ Observable 实例的 then、thenOnce、thenImmediate、pipe 方法返回的还�
   const promise$ = $('1')
   const observable$ = promise$.thenImmediate((value) => console.log(value)) // 输出 1
   ```
+
+## thenImmediateSet
+
+- 类型
+  ```typescript
+    $thenImmediate(setter: (value: T) => void | Promise<void>): Observable<T extends PromiseLike<infer V>? V : T, E> & E;
+  ```
+  thenImmediateSet 相比 thenSet 方法差异点在于父订阅节点如果 execute 过，则采用 thenImmediateSet 会立即触发订阅子节点的 execute。
 
 ## catch
 

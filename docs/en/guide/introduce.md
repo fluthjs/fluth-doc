@@ -2,7 +2,7 @@
 
 ## What is fluth?
 
-fluth (/fluːθ/) is a combination of flux + then, representing promise-like stream.
+fluth (/fluːθ/) is a combination of **flux** + **th**en, representing promise-like stream.
 
 fluth is a promise-like stream programming library, well-suited for reactive programming. If you think of promise as the publisher and then as the subscriber, a promise only publishes once.
 
@@ -57,7 +57,8 @@ observable$.value === 2 ✅
 2. fluth streams are hot and multicast, while rxjs streams can also be cold and unicast.
 3. fluth supports chaining subscriptions, whereas rxjs subscriptions are not chainable after subscribe.
 4. fluth retains each subscription node's data and status for subsequent consumption.
-5. fluth can add plugins to extend stream functionality and add custom behaviors.
+5. fluth subscription nodes have status similar to promise.
+6. fluth can add plugins to extend stream functionality and add custom behaviors.
 
 ```javascript
 // rxjs:

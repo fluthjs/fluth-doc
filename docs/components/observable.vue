@@ -65,12 +65,24 @@ const subjectionApi = [
     address: '#then',
   },
   {
+    name: 'thenSet',
+    address: '#thentset',
+  },
+  {
     name: 'thenOnce',
     address: '#thenonce',
   },
   {
+    name: 'thenOnceSet',
+    address: '#thenonceset',
+  },
+  {
     name: 'thenImmediate',
     address: '#thenimmediate',
+  },
+  {
+    name: 'thenImmediateSet',
+    address: '#thenimmediateset',
   },
   {
     name: 'catch',
