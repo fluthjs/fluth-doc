@@ -21,6 +21,7 @@ export default {
             { text: 'Basic Concepts', link: '/en/guide/base' },
             { text: 'Quick Start', link: '/en/guide/quick' },
             { text: 'Application Scenarios', link: '/en/guide/scene' },
+            { text: 'Boundary', link: '/en/guide/boundary' },
             { text: 'Using Plugins', link: '/en/guide/plugin' },
             { text: 'Immutable Data', link: '/en/guide/immutable' },
             { text: 'TypeScript Support', link: '/en/guide/type' },
