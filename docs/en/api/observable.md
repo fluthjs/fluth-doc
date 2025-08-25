@@ -7,7 +7,7 @@ import Observable from '../../components/observable.vue'
 
 <Observable />
 
-Observable instances' then, thenOnce, thenImmediate, pipe methods all return Observable instances
+Observable instance's then, thenOnce, thenImmediate, pipe methods return Observable instances
 
 ## value
 
@@ -17,7 +17,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   ```
 - Details
 
-  The data of the current node
+  Current node's data
 
 ## status
 
@@ -32,7 +32,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   ```
 - Details
 
-  The status of the current node. Generally pending, fulfilled, rejected. When the stream has not passed through this node or the node has been [unsubscribed](/en/guide/base.html#unsubscribe), the status is null.
+  Current node's status, generally in pending, fulfilled, rejected states. When the stream hasn't passed through this node or the node has been [unsubscribed](/en/guide/base.html#unsubscribe), the status is null
 
 ## then
 
@@ -50,7 +50,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
 
 - Details
 
-  then subscriber, usage consistent with promise, returns an [Observable](#observable) instance of the subscription node
+  then subscriber, usage consistent with promise, returns the subscribed node's [Observable](#observable) instance
 
 - Example
 
@@ -58,7 +58,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   import { $ } from 'fluth'
 
   const promise$ = $('1')
-  const observable$ = promise$.then((value) => Number(value)) // automatically infers observable.value type as number
+  const observable$ = promise$.then((value) => Number(value)) // Automatically infers observable.value type as number
   ```
 
 ## thenSet
@@ -69,7 +69,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   ```
 - Details
 
-  thenSet subscriber, unlike the then subscriber, thenSet subscriber can only perform immutable operations on data and cannot handle reject errors from the previous node. Returns an [Observable](#observable) instance of the subscription node.
+  thenSet subscriber, unlike then subscriber, thenSet subscriber can only perform immutable operations on data and cannot handle reject errors from previous node, returns the subscribed node's [Observable](#observable) instance.
 
 - Example
 
@@ -102,7 +102,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
 
 - Details
 
-  The difference between thenOnce and then is that once the subscription node executes, it automatically unsubscribes.
+  thenOnce differs from then method in that once the subscribed node executes, it will automatically [unsubscribe](/en/guide/base.html#unsubscribe).
 
 - Example
 
@@ -111,8 +111,8 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
 
   const promise$ = $('1')
   const observable$ = promise$.thenOnce((value) => console.log(value))
-  promise$.next('2') // prints 2
-  promise$.next('3') // won't print 3
+  promise$.next('2') // Output 2
+  promise$.next('3') // Won't output 3
   ```
 
 ## thenOnceSet
@@ -121,7 +121,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   ```typescript
     $thenOnce(setter: (value: T) => void | Promise<void>): Observable<T extends PromiseLike<infer V>? V : T, E> & E;
   ```
-  The difference between thenOnceSet and thenSet is that once the subscription node executes, it automatically unsubscribes.
+  thenOnceSet differs from thenSet method in that once the subscribed node executes, it will automatically unsubscribe.
 
 ## thenImmediate
 
@@ -139,10 +139,10 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
 
 - Details
 
-  The differences between thenImmediate and then are:
+  thenImmediate differs from then method in that:
 
-  - If the parent node is a Stream instance with an initial value, using thenImmediate will immediately trigger the subscription child node's execute
-  - If the parent subscription node is an Observable and has been executed, using thenImmediate will immediately trigger the subscription child node's execute
+  - If parent node is Stream instance and has initial value, using thenImmediate will immediately trigger subscribed child node's execute
+  - If parent subscribed node is Observable and has executed, using thenImmediate will immediately trigger subscribed child node's execute
 
 - Example
 
@@ -150,7 +150,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   import { $ } from 'fluth'
 
   const promise$ = $('1')
-  const observable$ = promise$.thenImmediate((value) => console.log(value)) // prints 1
+  const observable$ = promise$.thenImmediate((value) => console.log(value)) // Output 1
   ```
 
 ## thenImmediateSet
@@ -159,7 +159,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   ```typescript
     $thenImmediate(setter: (value: T) => void | Promise<void>): Observable<T extends PromiseLike<infer V>? V : T, E> & E;
   ```
-  The difference between thenImmediateSet and thenSet is that if the parent subscription node has been executed, using thenImmediateSet will immediately trigger the subscription child node's execute.
+  thenImmediateSet differs from thenSet method in that if parent subscribed node has executed, using thenImmediateSet will immediately trigger subscribed child node's execute.
 
 ## catch
 
@@ -173,7 +173,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
 
 - Details
 
-  Performs catch on the subscription node, usage consistent with promise, returns an [Observable](#observable) instance of the subscription node.
+  Catch for subscribed node, usage consistent with promise, returns the subscribed node's [Observable](#observable) instance.
 
 - Example
 
@@ -184,7 +184,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   observable$ = promise$.catch((error) => {
     console.log(error)
   })
-  promise$.next(Promise.reject('error')) // prints error
+  promise$.next(Promise.reject('error')) // Output error
   ```
 
 ## finally
@@ -199,7 +199,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
 
 - Details
 
-  Performs finally on the subscription node, usage consistent with promise, returns an [Observable](#observable) instance of the subscription node
+  Finally for subscribed node, usage consistent with promise, returns the subscribed node's [Observable](#observable) instance
 
 - Example
   ```typescript
@@ -208,7 +208,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   observable$ = promise$.finally(() => {
     console.log('finally')
   })
-  promise$.next(1) // prints finally
+  promise$.next(1) // Output finally
   ```
 
 ## pipe
@@ -221,7 +221,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
 
 - Details
 
-  Pipe the subscription node. The pipe method can chain multiple operators and returns an [Observable](#observable) instance
+  Pipe for subscribed node, pipe method can chain multiple operators, returns an [Observable](#observable) instance
 
 - Example
 
@@ -237,7 +237,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
 
 - Type
 
-  plugin type
+  `plugin` type
 
   ```typescript
   type thenPlugin = (unsubscribe: () => void) => void
@@ -258,7 +258,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   }
   ```
 
-  use type
+  `use` type
 
   ```typescript
   use<P extends Plugin>(plugin: P): Stream<T, I, E & ChainReturn<P, T, E>> & E & ChainReturn<P, T, E>;
@@ -268,10 +268,10 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
 
   Calling use can use four types of plugins: then plugin, execute plugin, thenAll plugin, executeAll plugin:
 
-  - then plugin executes when the [then](/en/api/observable#then) method is called. They take the current node's unsubscribe function as a parameter and can implement unified unsubscription functionality.
-  - execute plugin executes when the [execute](/en/api/observable#execute) method is called. They take the current node's execution result, set function that can generate immutable data, and the current node's unsubscribe function as parameters. The returned promise will be passed to the next execute plugin, and the final returned promise data will be passed to the next then node.
-  - thenAll plugin triggers when then operations occur on the root stream and all its child nodes, can only be used on the root stream, child nodes cannot use it.
-  - executeAll plugin triggers when execute operations occur on the root stream and all its child nodes, can only be used on the root stream, child nodes cannot use it.
+  - then plugins execute when [then](/en/api/observable#then) method is called. They take the current node's unsubscribe function as parameter, can implement unified [unsubscribe](/en/guide/base.html#unsubscribe) functionality.
+  - execute plugins execute when [execute](/en/api/observable#then) method is called. They take the current node's execution result, set function that can generate immutable data, current node's unsubscribe function as parameters, returned promise will be passed to next execute plugin, finally returned promise data will be passed to next then node.
+  - thenAll plugins trigger on then operations of root stream and all its child nodes, can only be used on root stream, child nodes cannot use.
+  - executeAll plugins trigger on execute operations of root stream and all its child nodes, can only be used on root stream, child nodes cannot use.
 
 - Example
 
@@ -283,7 +283,7 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
     console.log(value)
   })
 
-  promise$.next('2') // outputs 2 after 1s
+  promise$.next('2') // Output 2 after 1s
   ```
 
 ## remove
@@ -302,15 +302,15 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
 
 - Details
 
-  Removes the specified plugin, plugin can be then, execute, thenAll, executeAll plugin
+  Remove specified plugin, plugin can be then, execute, thenAll, executeAll plugin
 
 - Example
   ```typescript
   import { $, console } from 'fluth'
   const promise$ = $('1').use(console)
-  promise$.next('2') // prints 2
+  promise$.next('2') // Output 2
   promise$.remove(console)
-  promise$.next('3') // doesn't print 3
+  promise$.next('3') // Won't output 3
   ```
 
 ## execute
@@ -323,9 +323,9 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
 
 - Details
 
-  Actively executes the current node, using data from the last time the stream passed through this node. If the node has never been executed before, it won't execute.
+  Manually execute current node, data uses the last data that flowed through this node, if node has never executed, it won't execute.
   :::warning
-  Executing the current node will also execute nodes after the current node's then, equivalent to pushing the stream at the current node with the current node's old data
+  Execute current node, nodes after current node's then will also execute, equivalent to pushing old data of current node at current node
   :::
 
 - Example
@@ -337,9 +337,9 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   const observable$ = promise$.then((value) => value + 1)
   observable$.then((value) => console.log(value + 1))
 
-  observable$.execute() // doesn't print
-  promise$.next(1) //  prints 3
-  observable$.execute() // prints 3
+  observable$.execute() // No output
+  promise$.next(1) //  Output 3
+  observable$.execute() // Output 3
   ```
 
 ## unsubscribe
@@ -352,9 +352,9 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
 
 - Details
 
-  Cancels the node's subscription. Unlike promise's inability to cancel, stream's subscription can be canceled at any time
+  Unsubscribe node, unlike promise's inability to cancel, stream's subscription can be cancelled anytime
   ::: warning Warning
-  Canceling the current node's subscription will also cancel all subscriptions of nodes after the current node's then
+  Unsubscribe current node, all nodes after current node's then will also be [unsubscribed](/en/guide/base.html#unsubscribe)
   :::
 
 - Example
@@ -366,24 +366,24 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   const observable$ = promise$.then((value) => value + 1)
   observable$.then((value) => console.log(value + 1))
 
-  promise$.next(2) // prints 2
+  promise$.next(2) // Output 2
 
   observable$.unsubscribe()
 
-  promise$.next(3) // doesn't print
+  promise$.next(3) // No output
   ```
 
 ## afterUnsubscribe
 
 - Type
 
-```typescript
+  ```typescript
   afterUnsubscribe(callback: () => void): void
-```
+  ```
 
 - Details
 
-  Sets the callback function when the node's subscription is canceled
+  Set callback function for node unsubscription
 
 - Example
 
@@ -397,32 +397,32 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
     console.log('unsubscribe')
   })
 
-  observable$.unsubscribe() // prints unsubscribe
+  observable$.unsubscribe() // Output unsubscribe
   ```
 
 ## offUnsubscribe
 
 - Type
 
-```typescript
+  ```typescript
   offUnsubscribe(callback: () => void): void
-```
+  ```
 
 - Details
 
-  Cancels the callback function set through afterUnsubscribe
+  Cancel callback function set through afterUnsubscribe
 
 ## afterComplete
 
 - Type
 
-```typescript
-  afterComplete(callback: (value: T, status: PromiseStatus) => void): void
-```
+  ```typescript
+    afterComplete(callback: (value: T, status: PromiseStatus) => void): void;
+  ```
 
 - Details
 
-  Callback function triggered when the stream ends, will trigger earlier than the automatic unsubscription of subscription nodes
+  Callback function triggered after stream ends, will trigger earlier than subscribed node's automatic [unsubscribe](/en/guide/base.html#unsubscribe)
 
 - Example
 
@@ -434,31 +434,31 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   observable$.afterComplete(() => console.log('complete'))
   observable$.afterUnsubscribe(() => console.log('unsubscribe'))
 
-  promise$.next(2, true) // prints 2 complete unsubscribe
+  promise$.next(2, true) // Output 2 complete unsubscribe
   ```
 
 ## offComplete
 
 - Type
 
-```typescript
+  ```typescript
   offComplete(callback: (value: T, status: PromiseStatus) => void): void
-```
+  ```
 
 - Details
 
-  Cancels the callback function set through afterComplete
+  Cancel callback function set through afterComplete
 
 ## afterSetValue
 
 - Type
 
-```typescript
+  ```typescript
   afterSetValue(callback: (value: T) => void)
-```
+  ```
 
 - Details
-  Callback function triggered when the observable node modifies the node value
+  Callback function triggered after observable node modifies node value
 
 - Example
 
@@ -466,17 +466,17 @@ Observable instances' then, thenOnce, thenImmediate, pipe methods all return Obs
   import { $ } from 'fluth'
   const promise$ = $(1)
   promise$.afterSetValue((value) => console.log(value))
-  promise$.next(2) // prints 2
+  promise$.next(2) // Output 2
   ```
 
 ## offAfterSetValue
 
 - Type
 
-```typescript
+  ```typescript
   offAfterSetValue(callback: (value: T) => void): void
-```
+  ```
 
 - Details
 
-  Cancels the callback function set through afterSetValue
+  Cancel callback function set through afterSetValue

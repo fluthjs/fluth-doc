@@ -4,7 +4,7 @@ import Stream from '../../components/stream.vue'
 
 # Stream
 
-Stream inherits [Observable](/en/api/observable). In addition to the properties and methods of Observable, the following methods are newly added:
+Stream inherits from [Observable](/en/api/observable). In addition to Observable's properties and methods, the following methods are newly added
 
 <Stream />
 
@@ -18,8 +18,8 @@ Stream inherits [Observable](/en/api/observable). In addition to the properties 
 
 - Details
 
-  - Actively emit data in the current stream, payload is the data. When it is Promise.reject(xxx), the subsequent then behaves the same as promise's then;
-  - The second parameter indicates whether the current stream is finished. When set to true, subsequent set and next will no longer execute, and after each node in the stream is executed, the node's afterComplete callback will be triggered, then the node's unsubscribe method will be called automatically.
+  - Current stream pushes data, payload is the data. When it's Promise.reject(xxx) or Promise.reject(xxx), subsequent then behaves consistently with promise's then;
+  - The second parameter indicates whether the current stream ends. When set to true, subsequent set and next will no longer execute, and after the stream executes each node, it will trigger the node's afterComplete callback function, then automatically call the node's unsubscribe method
 
 - Example
   ```typescript
@@ -39,24 +39,27 @@ Stream inherits [Observable](/en/api/observable). In addition to the properties 
   ```
 - Details
 
-  Actively emit data in the current stream. The difference from next is that set receives a setter (can be sync or async) and emits a new immutable data; the second parameter indicates whether the current stream is finished. When set to true, subsequent set and next will no longer execute.
+  Current stream pushes data. The difference from next is that set receives a setter (can be synchronous or asynchronous), pushing a new immutable data; the second parameter indicates whether the current stream ends. When set to true, subsequent set and next will no longer execute
 
 - Example
 
   ```typescript
   import { $ } from 'fluth'
   const promise$ = $({ a: 1, b: { c: 2 } })
+
+  // Keep old data
   const oldValue = promise$.value
-  promise$.then((value) => {
-    console.log(value)
-  })
+
+  // Set new data
   promise$.set((value) => {
     value.a = 2
   })
 
+  // Get new data
   const newValue = promise$.value
-  console.log(oldValue === newValue) // false
-  console.log(oldValue.b === newValue.b) // true
+
+  oldValue === newValue // ❌
+  oldValue.b === newValue.b // ✅
   ```
 
 ## complete
@@ -69,7 +72,7 @@ Stream inherits [Observable](/en/api/observable). In addition to the properties 
 
 - Details
 
-  After calling the complete method, the stream will end. Subsequent next and set will no longer execute, and all nodes' afterComplete callbacks will be triggered, then the node's unsubscribe method will be called automatically.
+  After calling the complete method, the stream will end. Subsequent next and set will no longer execute, and it will trigger all nodes' afterComplete callback functions, then automatically call the nodes' unsubscribe method
 
 - Example
 
@@ -92,7 +95,7 @@ Stream inherits [Observable](/en/api/observable). In addition to the properties 
 
 - Details
 
-  Pause the current stream. After executing the pause method, all subscribed nodes will not execute.
+  Pause the current stream. After executing the pause method, all subscribed nodes will not execute
 
 - Example
 
@@ -106,7 +109,7 @@ Stream inherits [Observable](/en/api/observable). In addition to the properties 
 
   promise$.next('2') // Output 2
   promise$.pause()
-  promise$.next('3') // No output 3
+  promise$.next('3') // Won't output 3
   ```
 
 ## restart
@@ -119,7 +122,7 @@ Stream inherits [Observable](/en/api/observable). In addition to the properties 
 
 - Details
 
-  Restart the current stream. After executing the restart method, all subscribed nodes will start receiving and executing the stream's emissions.
+  Restart the current stream. After executing the restart method, all subscribed nodes start accepting stream pushes and execute
 
 - Example
 
@@ -132,7 +135,7 @@ Stream inherits [Observable](/en/api/observable). In addition to the properties 
   })
 
   promise$.pause()
-  promise$.next('2') // No output 2
+  promise$.next('2') // Won't output 2
   promise$.restart()
   promise$.next('3') // Output 3
   ```

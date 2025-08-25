@@ -14,10 +14,7 @@ type delay = <T>(delayTime: number) => (observable$: Observable<T>) => Observabl
 
 ## Details
 
-- Accepts a delay time parameter (milliseconds)
-- Returns a function that takes an Observable and returns a new Observable
-- The new Observable will emit data to the subscriber node after the specified delay
-- Uses Promise and setTimeout to implement the delay function
+- Accepts a delay time parameter (milliseconds), delays data by the specified time before pushing to subscriber nodes
 
 ## Example
 

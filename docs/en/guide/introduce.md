@@ -2,7 +2,7 @@
 
 ## What is fluth?
 
-fluth (/fluːθ/) is a combination of **flux** + **th**en, representing promise-like stream.
+fluth(/fluːθ/) is a combination of **flu**x + **th**en, representing promise-like stream.
 
 fluth is a promise-like stream programming library, well-suited for reactive programming. If you think of promise as the publisher and then as the subscriber, a promise only publishes once.
 
@@ -23,9 +23,9 @@ promise$.next(Promise.reject(2))
 promise$.next(3)
 
 // Logs:
-// resolve 2
-// resolve 4
-// reject 3
+// resolve 1
+// reject 2
+// resolve 3
 ```
 
 ```typescript
@@ -47,7 +47,7 @@ observable$.value === 2 ✅
 - Compared to promise, fluth can publish continuously and supports unsubscription.
 - Compared to promise, fluth executes then synchronously and updates data in time.
 - Compared to promise, fluth retains each subscription node's data for later use.
-- Compared to promise, fluth fully supports PromiseLike.
+- Compared to promise, fluth fully supports `PromiseLike`.
 
 ## Comparison with rxjs
 
@@ -70,7 +70,7 @@ stream$.subscribe(observer3)
 
 <!-- prettier-ignore-start -->
 ```javascript
-// fluth:
+//fluth:
 stream$.use(plugin1, plugin2, plugin3)
 
 stream$

@@ -1,152 +1,173 @@
 # debugNode
 
-Debugging plugin that triggers a debugger breakpoint at the current node based on conditions, used for precise debugging control.
+debugNode 是一个在流中特定节点输出执行结果的调试插件，用于调试和监控特定节点的数据流，只能在 `Stream` 节点上使用。
 
-:::warning Note
-Browsers may filter out `debugger` statements in `node_modules`, causing breakpoints to not work. You may need to manually enable `node_modules` debugging in your browser's developer tools settings -> ignore list.
-:::
-
-## Type Definition
+## 类型定义
 
 ```typescript
-debugNode: (condition?: (value: any) => boolean, conditionError?: (value: any) => boolean) => {
-  execute: ({ result }: { result: Promise<any> | any }) => any
+debugNode: (resolvePrefix?: string, rejectPrefix?: string, ignoreUndefined?: boolean) => {
+  execute: ({
+    result,
+    status,
+    onfulfilled,
+    onrejected,
+    root,
+  }: {
+    result: Promise<any> | any
+    status: PromiseStatus | null
+    onfulfilled?: OnFulfilled
+    onrejected?: OnRejected
+    root: boolean
+  }) => any
 }
 ```
 
-## Parameters
+## 参数
 
-- `condition` (optional): Condition function for success; triggers the debugger if returns `true`, otherwise does not trigger. Default is `undefined` (always triggers)
-- `conditionError` (optional): Condition function for failure; triggers the debugger if returns `true`, otherwise does not trigger. Default is `undefined` (always triggers)
+- `resolvePrefix` (可选): 成功时的控制台前缀，默认为 `'resolve'`
+- `rejectPrefix` (可选): 失败时的控制台前缀，默认为 `'reject'`
+- `ignoreUndefined` (可选): 是否忽略 `undefined` 值的输出，默认为 `true`
 
-## Details
+## 详细说明
 
-- Only executes at the current node, does not propagate to child nodes
-- Supports custom condition functions to control when the debugger is triggered
-- Can set different conditions for success and failure scenarios
-- For `Promise` type results, waits for Promise resolution before checking the condition
-- Returns the original `result` without modifying the data flow
-- Triggers the debugger when the condition function returns `true`, otherwise does not trigger
+- 只在当前节点执行，不会在整个流链上执行
+- 只在以下情况下输出：
+  - 根节点 (`root=true`)
+  - 有成功处理器的节点 (`onfulfilled`)
+  - 有错误处理器的节点 (`onrejected`) 且状态为 `REJECTED`
+- 对于 `Promise` 类型的结果，会等待 Promise 解析后再输出
+- 默认忽略 `undefined` 值的输出 (`ignoreUndefined=true`)，可通过第三个参数控制
+- 返回原始的 `result`，不修改数据流
 
-## Examples
+## 示例
 
-### Scenario 1: Basic usage (always triggers)
+### 场景 1：基本调试输出
 
 ```typescript
 import { $ } from 'fluth'
+import { debugNode } from 'fluth'
 
-const promise$ = $().use(debugNode())
+const stream$ = $().use(debugNode())
 
-promise$.then((value) => value + 1).then((value) => value + 1)
+stream$.next(1)
+// 输出: resolve 1
+
+const promise = Promise.resolve(2)
+stream$.next(promise)
+// 输出: resolve 2
+```
+
+### 场景 2：流链中特定节点调试
+
+```typescript
+import { $ } from 'fluth'
+import { debugNode } from 'fluth'
+
+const promise$ = $()
+
+promise$
+  .then((value) => value + 1)
+  .use(debugNode()) // 只在这个节点输出
+  .then((value) => value + 1)
 
 promise$.next(1)
-// A debugger breakpoint will be triggered in browser devtools
+// 输出: resolve 2 (只输出中间节点的值)
 ```
 
-### Scenario 2: Conditional debugging (trigger only for specific values)
+### 场景 3：自定义前缀调试输出
 
 ```typescript
 import { $ } from 'fluth'
+import { debugNode } from 'fluth'
 
-// Only trigger debugger when value > 5
-const promise$ = $().use(debugNode((value) => value > 5))
+// 自定义前缀
+const promise$ = $().use(debugNode('success', 'failure'))
 
 promise$.then((value) => value + 1)
 
-promise$.next(3) // Will not trigger debugger (3 <= 5, condition returns false)
-promise$.next(6) // Will trigger debugger (6 > 5, condition returns true)
+promise$.next(1)
+// 输出: success 1
+
+const rejectedPromise = Promise.reject(new Error('error'))
+promise$.next(rejectedPromise)
+// 输出: failure Error: error
 ```
 
-### Scenario 3: Error condition debugging
+### 场景 4：与操作符结合的调试输出
 
 ```typescript
 import { $ } from 'fluth'
+import { debugNode, debounce } from 'fluth'
 
-// Only trigger debugger when error message contains 'critical'
-const promise$ = $().use(debugNode(undefined, (error) => error.message.includes('critical')))
+const promise$ = $()
+  .pipe(debounce(100))
+  .use(debugNode()) // 只在防抖后输出
+  .then((value) => value + 1)
 
-promise$.then((value) => value + 1)
-
-const normalError = Promise.reject(new Error('normal error'))
-promise$.next(normalError) // Will not trigger debugger (does not contain 'critical', condition returns false)
-
-const criticalError = Promise.reject(new Error('critical error'))
-promise$.next(criticalError) // Will trigger debugger (contains 'critical', condition returns true)
+promise$.next(1)
+promise$.next(2)
+promise$.next(3)
+promise$.next(4)
+promise$.next(5)
+// 100ms 后输出: resolve 5
 ```
 
-### Scenario 4: Set both success and failure conditions
+### 场景 5：`undefined` 值处理
 
 ```typescript
 import { $ } from 'fluth'
+import { debugNode } from 'fluth'
 
-// Set different conditions for success and failure
-const promise$ = $().use(
-  debugNode(
-    (value) => value > 10, // For success, trigger only if value > 10
-    (error) => error.message.includes('fatal') // For failure, trigger only if error contains 'fatal'
-  )
-)
+// 默认忽略 undefined 值
+const stream1$ = $().use(debugNode())
+stream1$.next(undefined) // 无输出
+stream1$.next(null) // 输出: resolve null
+stream1$.next(0) // 输出: resolve 0
+stream1$.next('') // 输出: resolve ""
+stream1$.next(false) // 输出: resolve false
 
-promise$.then((value) => value + 1)
-
-promise$.next(5) // Will not trigger debugger (5 <= 10, condition returns false)
-promise$.next(15) // Will trigger debugger (15 > 10, condition returns true)
-
-const fatalError = Promise.reject(new Error('fatal error'))
-promise$.next(fatalError) // Will trigger debugger (contains 'fatal', condition returns true)
-
-const normalError = Promise.reject(new Error('normal error'))
-promise$.next(normalError) // Will not trigger debugger (does not contain 'fatal', condition returns false)
+// 不忽略 undefined 值
+const stream2$ = $().use(debugNode('resolve', 'reject', false))
+stream2$.next(undefined) // 输出: resolve undefined
 ```
 
-### Scenario 5: Complex condition judgment
+### 场景 6：边界情况处理
 
 ```typescript
 import { $ } from 'fluth'
+import { debugNode } from 'fluth'
 
-interface UserData {
-  id: number
-  name: string
-  role: string
-  active: boolean
-}
+const stream$ = $().use(debugNode())
 
-// Only trigger debugger for inactive admin users
-const userStream$ = $<UserData>().use(debugNode((user) => user.role === 'admin' && !user.active))
+// 测试各种边界值
+stream$.next(null) // 输出: resolve null
+stream$.next(0) // 输出: resolve 0
+stream$.next('') // 输出: resolve ""
+stream$.next(false) // 输出: resolve false
+stream$.next(undefined) // 无输出（默认忽略）
 
-userStream$.then((user) => {
-  console.log('Processing user:', user.name)
-  return { ...user, processed: true }
-})
+// Promise 边界情况
+const resolveUndefined = Promise.resolve(undefined)
+stream$.next(resolveUndefined) // 无输出（undefined 被忽略）
 
-userStream$.next({ id: 1, name: 'John', role: 'user', active: true })
-// Will not trigger debugger (not admin, condition returns false)
-
-userStream$.next({ id: 2, name: 'Admin', role: 'admin', active: true })
-// Will not trigger debugger (admin but active, condition returns false)
-
-userStream$.next({ id: 3, name: 'InactiveAdmin', role: 'admin', active: false })
-// Will trigger debugger (admin and inactive, condition returns true)
+const rejectUndefined = Promise.reject(undefined)
+stream$.next(rejectUndefined) // 无输出（undefined 被忽略）
 ```
 
-### Scenario 6: Remove plugin
+### 场景 7：移除插件
 
 ```typescript
 import { $ } from 'fluth'
+import { debugNode } from 'fluth'
 
 const plugin = debugNode()
 const stream$ = $().use(plugin)
 
-let callCount = 0
-stream$.then((value) => {
-  callCount++
-  return value
-})
-
+stream$.then((value) => value + 1)
 stream$.next(1)
-// Triggers debugger, callCount = 1
+// 输出: resolve 1
 
 stream$.remove(plugin)
 stream$.next(2)
-// No longer triggers debugger, callCount = 2
+// 无输出
 ```

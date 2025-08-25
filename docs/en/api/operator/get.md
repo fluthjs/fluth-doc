@@ -9,10 +9,9 @@ Property extraction operator that uses a getter function to extract specific val
 ## Type Definition
 
 ```typescript
-const get =
-  <T, F>(getter: (value: T | undefined) => F) =>
-  (observable$: Observable<T>) =>
-    Observable<F>
+type get = <T, F>(
+  getter: (value: T | undefined) => F
+) => (observable$: Observable<T>) => Observable<F>
 ```
 
 ## Parameters
@@ -24,12 +23,10 @@ const get =
 ## Details
 
 - Executes the getter function immediately upon creation to get the initial value
-- Can listen to changes in nested object properties
-- Avoids unnecessary repeated calculations and triggers
+- Only emits new values when the getter's return value changes
+- Uses strict equality (`===`) to compare whether the extracted value has changed
 
 ## Examples
-
-### Basic Property Extraction
 
 ```typescript
 import { $, get } from 'fluth'
@@ -54,66 +51,31 @@ source$.set((value) => {
 }) // Output: b changed: { c: 3 }
 ```
 
-### Nested Property Extraction
-
 ```typescript
 import { $, get } from 'fluth'
 
-const source$ = $({ user: { profile: { name: 'Alice', age: 25 } } })
-const name$ = source$.pipe(get((value) => value?.user?.profile?.name))
-
-name$.then((name) => {
-  console.log('name:', name)
+const source$ = $({
+  data: {
+    users: [
+      { name: 'Alice', settings: { theme: 'dark' } },
+      { name: 'Bob', settings: { theme: 'light' } },
+    ],
+  },
 })
 
-console.log(name$.value) // 'Alice'
+const firstUserTheme$ = source$
+  .pipe(get((value) => value?.data?.users))
+  .pipe(get((users) => users?.[0]))
+  .pipe(get((user) => user?.settings?.theme))
+
+firstUserTheme$.then((theme) => {
+  console.log('theme:', theme)
+})
+
+console.log(firstUserTheme$.value) // 'dark'
 
 source$.set((value) => {
-  value.user.profile.name = 'Bob'
+  value.data.users[0].settings.theme = 'light'
 })
-
-// Output: name: Bob
-```
-
-### Computed Value Extraction
-
-```typescript
-import { $, get } from 'fluth'
-
-const source$ = $({ x: 3, y: 4 })
-const distance$ = source$.pipe(
-  get((value) => (value ? Math.sqrt(value.x * value.x + value.y * value.y) : 0))
-)
-
-distance$.then((distance) => {
-  console.log('distance:', distance)
-})
-
-console.log(distance$.value) // 5
-
-source$.set((value) => {
-  value.x = 6
-  value.y = 8
-})
-
-// Output: distance: 10
-```
-
-### Handling Undefined Values
-
-```typescript
-import { $, get } from 'fluth'
-
-const source$ = $<{ data?: { value: number } }>()
-const value$ = source$.pipe(get((value) => value?.data?.value))
-
-value$.then((val) => {
-  console.log('value:', val)
-})
-
-console.log(value$.value) // undefined
-
-source$.next({ data: { value: 42 } })
-
-// Output: value: 42
+// Output: theme: light
 ```

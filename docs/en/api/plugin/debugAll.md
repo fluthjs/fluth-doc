@@ -1,21 +1,20 @@
 # debugAll
 
-Debugging plugin that triggers debugger breakpoints on all nodes of the stream chain, used for deep debugging and flow tracing, can only be used on `Stream` nodes.
-:::warning Note
-Browsers may filter out `debugger` statements in `node_modules`, causing breakpoints to not work. You may need to manually enable `node_modules` debugging in your browser's developer tools settings -> ignore list.
-:::
+debugAll 是一个在流链的所有节点上输出执行结果的调试插件，用于调试和监控数据流，只能在 `Stream` 节点上使用。
 
-## Type Definition
+## 类型定义
 
 ```typescript
-debugAll: () => {
+debugAll: (resolvePrefix?: string, rejectPrefix?: string, ignoreUndefined?: boolean) => {
   executeAll: ({
     result,
+    status,
     onfulfilled,
     onrejected,
     root,
   }: {
     result: Promise<any> | any
+    status: PromiseStatus | null
     onfulfilled?: OnFulfilled
     onrejected?: OnRejected
     root: boolean
@@ -23,121 +22,160 @@ debugAll: () => {
 }
 ```
 
-## Return Value
+## 参数
 
-Returns an ExecuteAllPlugin that triggers debugger breakpoints on all nodes of the stream chain.
+- `resolvePrefix` (可选): 成功时的控制台前缀，默认为 `'resolve'`
+- `rejectPrefix` (可选): 失败时的控制台前缀，默认为 `'reject'`
+- `ignoreUndefined` (可选): 是否忽略 `undefined` 值的输出，默认为 `true`
 
-## Core Behavior
+## 详细说明
 
-- **executeAll plugin**: Executes on all nodes of the stream chain, not just a single node
-- **Debugger trigger**: Triggers a `debugger` statement on nodes that meet the conditions
-- **Promise handling**: For Promise results, waits for Promise resolution before triggering the debugger
-- **Original data**: Returns the original `result` without modifying the data flow
+- 在流链的所有节点上执行，而不是单个节点
+- 只在以下情况下输出：
+  - 根节点 (`root=true`)
+  - 有成功处理器的节点 (`onfulfilled`)
+  - 有错误处理器的节点 (`onrejected`) 且状态为 `REJECTED`
+- 对于 `Promise` 类型的结果，会等待 Promise 解析后再输出
+- 默认忽略 `undefined` 值的输出 (`ignoreUndefined=true`)，可通过第三个参数控制
+- 返回原始的 `result`，不修改数据流
 
-## Usage Scenarios
+## 示例
 
-### Scenario 1: Basic usage
+### 场景 1：基本调试输出
 
 ```typescript
 import { $ } from 'fluth'
+import { debugAll } from 'fluth'
+
+const stream$ = $().use(debugAll())
+
+stream$.next(1)
+// 输出: resolve 1
+
+const promise = Promise.resolve(2)
+stream$.next(promise)
+// 输出: resolve 2
+```
+
+### 场景 2：流链调试输出
+
+```typescript
+import { $ } from 'fluth'
+import { debugAll } from 'fluth'
 
 const promise$ = $().use(debugAll())
 
 promise$.then((value) => value + 1).then((value) => value + 1)
 
 promise$.next(1)
-// In browser devtools, a debugger breakpoint will be triggered at each node
+// 输出:
+// resolve 1
+// resolve 2
+// resolve 3
 ```
 
-### Scenario 2: Complex stream chain debugging
+### 场景 3：自定义前缀调试输出
 
 ```typescript
 import { $ } from 'fluth'
+import { debugAll } from 'fluth'
 
-// Test executeAll propagation in the stream chain
-const rootStream = $()
-rootStream.use(debugAll())
-
-const step1 = rootStream.then((value) => {
-  console.log('step1 processed:', value)
-  return value * 2
-})
-
-const step2 = step1.then((value) => {
-  console.log('step2 processed:', value)
-  return value + 10
-})
-
-step2.then((value) => {
-  console.log('final result:', value)
-})
-
-rootStream.next(5)
-// A debugger breakpoint will be triggered at each node:
-// 1. rootStream node
-// 2. step1 node
-// 3. step2 node
-// 4. final subscription node
-```
-
-### Scenario 3: Promise error debugging
-
-```typescript
-import { $ } from 'fluth'
-
-const promise$ = $().use(debugAll())
+// 自定义前缀
+const promise$ = $().use(debugAll('success', 'failure'))
 
 promise$.then((value) => value + 1)
 
-const rejectedPromise = Promise.reject(new Error('test error'))
+promise$.next(1)
+// 输出:
+// success 1
+// success 2
+
+const rejectedPromise = Promise.reject(new Error('error'))
 promise$.next(rejectedPromise)
-// A debugger breakpoint will be triggered during error handling
+// 输出: failure Error: error
 ```
 
-### Scenario 4: Flow tracing
+### 场景 4：与操作符结合的调试输出
 
 ```typescript
 import { $ } from 'fluth'
+import { debugAll, debounce } from 'fluth'
+
+const promise$ = $()
+  .use(debugAll())
+  .pipe(debounce(100))
+  .then((value) => value + 1)
+
+promise$.next(1)
+promise$.next(2)
+promise$.next(3)
+promise$.next(4)
+promise$.next(5)
+// 输出:
+// resolve 1
+// resolve 2
+// resolve 3
+// resolve 4
+// resolve 5
+// 100ms 后: resolve 6
+```
+
+### 场景 5：`undefined` 值处理
+
+```typescript
+import { $ } from 'fluth'
+import { debugAll } from 'fluth'
+
+// 默认忽略 undefined 值
+const stream1$ = $().use(debugAll())
+stream1$.next(undefined) // 无输出
+stream1$.next(null) // 输出: resolve null
+stream1$.next(0) // 输出: resolve 0
+stream1$.next('') // 输出: resolve ""
+stream1$.next(false) // 输出: resolve false
+
+// 不忽略 undefined 值
+const stream2$ = $().use(debugAll('resolve', 'reject', false))
+stream2$.next(undefined) // 输出: resolve undefined
+```
+
+### 场景 6：边界情况处理
+
+```typescript
+import { $ } from 'fluth'
+import { debugAll } from 'fluth'
 
 const stream$ = $().use(debugAll())
 
-// Create multiple processing steps
-const validation$ = stream$.then((data) => {
-  if (!data || typeof data !== 'object') {
-    throw new Error('Invalid data')
-  }
-  return { ...data, validated: true }
-})
+// 测试各种边界值
+stream$.next(null) // 输出: resolve null
+stream$.next(0) // 输出: resolve 0
+stream$.next('') // 输出: resolve ""
+stream$.next(false) // 输出: resolve false
+stream$.next(undefined) // 无输出（默认忽略）
 
-const transformation$ = validation$.then((data) => {
-  return {
-    ...data,
-    processed: true,
-    timestamp: Date.now(),
-  }
-})
+// Promise 边界情况
+const resolveUndefined = Promise.resolve(undefined)
+stream$.next(resolveUndefined) // 无输出（undefined 被忽略）
 
-const storage$ = transformation$.then((data) => {
-  console.log('Storing data:', data)
-  return { ...data, stored: true }
-})
-
-stream$.next({ id: 1, name: 'test' })
-// The debugger will pause at each step, allowing inspection of the data flow
+const rejectUndefined = Promise.reject(undefined)
+stream$.next(rejectUndefined) // 无输出（undefined 被忽略）
 ```
 
-## Notes
+### 场景 7：移除插件
 
-1. **Return value**: The plugin returns the original `result` without modifying the data flow
-2. **Promise handling**: For Promise results, waits for Promise resolution before triggering the debugger
-3. **Error handling**: For rejected Promises, triggers the debugger during error handling
-4. **Intelligent filtering**: Skips debugger trigger when `root=false` and there is no `onfulfilled` or `onrejected`
-5. **Remove plugin**: Can be removed via the `remove` method to stop debugging
-6. **Development environment**: The debugger is mainly for development; remove in production
-7. **Browser support**: Use in environments that support the `debugger` statement (browser devtools)
+```typescript
+import { $ } from 'fluth'
+import { debugAll } from 'fluth'
 
-## Relationship with Other Plugins
+const plugin = debugAll()
+const stream$ = $().use(plugin)
 
-- **vs debugNode**: `debugAll` triggers debugger breakpoints on all nodes; `debugNode` only triggers on a single node
-- **vs consoleAll**: Similar function, but `debugAll` triggers breakpoints, `consoleAll` outputs to the console
-- **Applicable scenarios**: `debugAll` is suitable for deep debugging of complex stream chains and step-by-step tracing
+stream$.then((value) => value + 1)
+stream$.next(1)
+// 输出: resolve 1, resolve 2
+
+stream$.remove(plugin)
+stream$.next(2)
+// 无输出
+```

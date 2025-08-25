@@ -1,6 +1,6 @@
-# Boundary
+# Boundary Explanation
 
-fluth offers a promise-like experience. However, a promise publishes data only once, while a fluth stream can publish multiple times, so boundary cases are more complex. Below are several important boundaries to understand.
+fluth implements a promise-like experience from the ground up, but while promise pushes data only once, fluth streams can push data multiple times, making fluth's boundary scenarios far more complex than promise. Below are explanations of some boundary scenarios:
 
 ## Synchrony and Asynchrony
 
@@ -60,13 +60,15 @@ console.log('start')
 // 3
 ```
 
-Design rationale: fluth mainly targets reactive programming in frontend logic. If every node were asynchronous, it would trigger frequent re-renders.
+Design rationale: fluth's main use case is reactive programming in frontend logic. If every data processing node were asynchronous, it would trigger frequent page re-renders.
 
-## Async Race
+## Race Conditions with Async
 
-Because fluth supports chained subscriptions and subscription nodes may be asynchronous, their completion time is uncertain.
+Because fluth supports chained subscriptions and subscription nodes may be asynchronous, the return time of asynchronous nodes is uncertain.
 
-If an asynchronous node has not finished yet and the stream pushes new data, the previous async result will neither be set as the node value nor passed downstream. The new data will start a new async operation instead.
+When an asynchronous node has not finished executing and the stream pushes new data, the data returned by the original asynchronous node will neither be set as the node's value nor passed to downstream nodes. Instead, the new data will be used to restart the asynchronous operation.
+
+As shown in the diagram, when the stream pushes new data, the data returned by the original asynchronous node is directly discarded, and the new data is used to restart the asynchronous operation:
 
 <div style="display: flex; justify-content: center">
   <img src="/raceCase.drawio.svg" alt="image" >
@@ -74,7 +76,9 @@ If an asynchronous node has not finished yet and the stream pushes new data, the
 
 ## Error Handling
 
-If a node throws an error during execution, the error will be passed to the next subscription node that defines an onRejected handler, just like promise. For intermediate nodes without an onRejected handler, fluth skips them but sets the node status to rejected.
+If a node throws an error during execution, this error will be passed to the next subscription node that defines an onRejected handler, consistent with promise error handling.
+
+For intermediate nodes that don't define onRejected handling, fluth will skip them directly but set the subscription node's status to `rejected`.
 
 <div style="display: flex; justify-content: center">
   <img src="/errorCase.drawio.svg" alt="image" >
@@ -82,7 +86,7 @@ If a node throws an error during execution, the error will be passed to the next
 
 ## Unsubscribe
 
-- When a node is [unsubscribed](/en/guide/base.html#unsubscribe) while it is pending, its downstream will not be triggered after it finishes.
-- When a node is [unsubscribed](/en/guide/base.html#unsubscribe), all of its child nodes are also unsubscribed. If child nodes are pending at that time, then after they finish:
-  - Their downstream nodes will not be triggered
-  - When all pending child nodes finish, the parent node is cleaned up to prevent memory leaks
+- When a node is [unsubscribed](/en/guide/base.html#unsubscribe) while it is in pending state, downstream nodes will not be triggered after the node completes execution.
+- When a node is [unsubscribed](/en/guide/base.html#unsubscribe), all of its child nodes are also unsubscribed. If child nodes are in pending state at that time, after the child nodes complete execution:
+  - Downstream nodes of the child nodes will not be triggered
+  - When all child nodes finish their pending state, the parent node will be cleaned up to prevent memory leaks.

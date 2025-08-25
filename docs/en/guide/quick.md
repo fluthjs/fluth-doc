@@ -13,28 +13,11 @@ yarn add fluth
 pnpm add fluth
 ```
 
-## What is fluth?
+## Usage
 
-fluth is a Promise-like stream programming library that allows a Promise to publish data repeatedly. If you are familiar with Promise, you already know the basics of fluth!
+### Step 1: Create and Subscribe to a Stream
 
-```typescript
-// Promise can only publish once
-const promise = Promise.resolve('hello')
-promise.then(console.log) // Output: hello
-
-// fluth can publish repeatedly
-import { $ } from 'fluth'
-const stream$ = $()
-stream$.then(console.log)
-
-stream$.next('hello') // Output: hello
-stream$.next('world') // Output: world
-stream$.next('!') // Output: !
-```
-
-## Step 1: Create and Subscribe to a Stream
-
-### Create an empty stream
+#### Create an empty stream
 
 ```typescript
 import { $ } from 'fluth'
@@ -52,7 +35,7 @@ stream$.next('First message') // Output: Received data: First message
 stream$.next('Second message') // Output: Received data: Second message
 ```
 
-### Create a stream with an initial value
+#### Create a stream with an initial value
 
 ```typescript
 // Create a stream with an initial value
@@ -67,9 +50,9 @@ stream$.thenImmediate((data) => {
 stream$.next('new data') // Output: Received data: new data
 ```
 
-## Step 2: Chained Subscription
+### Step 2: Chained Subscription
 
-Like `Promise`, `fluth` supports chained operations:
+Like Promise, fluth supports chained operations:
 
 ```typescript
 import { $ } from 'fluth'
@@ -88,14 +71,14 @@ stream$.next('hello') // Output: [HELLO]
 stream$.next('world') // Output: [WORLD]
 ```
 
-## Step 3: Push
+### Step 3: Push
 
 You can push data using either the next or set method. The difference is:
 
 - The next method directly pushes a new value, suitable for simple data types
 - The set method automatically creates an immutable object, suitable for complex objects and handles deep copy automatically
 
-### Use next to push new data
+#### Use next to push new data
 
 ```typescript
 const stream$ = $(0)
@@ -108,7 +91,7 @@ stream$.next(1) // Output: Current value: 1
 stream$.next(2) // Output: Current value: 2
 ```
 
-### Use set for immutable updates
+#### Use set for immutable updates
 
 ```typescript
 const stream$ = $({ key1: { key11: 'test' }, key2: { key22: 'test' } })
@@ -124,7 +107,7 @@ console.log(oldValue?.key2 === stream$.value?.key2) // false - modified object r
 console.log(oldValue?.key1 === stream$.value?.key1) // true - unchanged object reference remains the same
 ```
 
-## Step 4: Partial Subscription
+### Step 4: Partial Subscription
 
 ```typescript
 import { $, change } from 'fluth'
@@ -144,7 +127,7 @@ stream$.set((state) => {
 }) // Output: key2 changed
 ```
 
-## Step 5: Conditional Subscription
+### Step 5: Conditional Subscription
 
 ```typescript
 import { $, filter } from 'fluth'
@@ -161,9 +144,9 @@ stream$.next(3) // No output
 stream$.next(4) // Output: Even number: 4
 ```
 
-## Step 6: Stream Composition
+### Step 6: Stream Composition
 
-### Combine the latest values of multiple streams
+#### Combine the latest values of multiple streams
 
 ```typescript
 import { $, combine } from 'fluth'
@@ -185,7 +168,7 @@ name$.next('lucy') // Output: User: lucy, Age: 30
 age$.next(31) // Output: User: lucy, Age: 31
 ```
 
-### Wait for all streams to complete
+#### Wait for all streams to complete
 
 ```typescript
 import { $, finish } from 'fluth'
@@ -208,17 +191,17 @@ task3$.next('Task 3 completed', true)
 // Output: All tasks completed: { result1: "Task 1 completed", result2: "Task 2 completed", result3: "Task 3 completed" }
 ```
 
-## Step 7: Practical Application Scenarios
+### Step 7: Practical Application Scenarios
 
-### Debounced User Input
+#### User Input Debouncing
 
 ```typescript
 import { $, throttle } from 'fluth'
 
 const searchInput$ = $()
 
-// Use the throttle operator, control frequency to 300ms
-searchInput$.pipe(throttle(300)).then((keyword) => {
+// Use throttle plugin, only process the last input within 300ms
+searchInput$.use(throttle(300)).then((keyword) => {
   console.log('Search:', keyword)
   // Execute search logic
 })
@@ -255,4 +238,47 @@ appState$
   })
 
 // Listen for loading state changes
+appState$
+  .get((state) => state.loading)
+  .then((loading) => {
+    console.log(loading ? 'Loading...' : 'Loading complete')
+  })
+
+// Simulate login process
+appState$.set((state) => {
+  state.loading = true
+})
+
+setTimeout(() => {
+  appState$.set((state) => {
+    state.loading = false
+    state.user = { name: 'john', id: 1 }
+  })
+}, 1000)
+```
+
+### Common Questions
+
+#### How to unsubscribe?
+
+```typescript
+const stream$ = $()
+const observable$ = stream$.then((data) => console.log(data))
+
+// Unsubscribe
+observable$.unsubscribe()
+```
+
+#### How to handle errors?
+
+```typescript
+const stream$ = $()
+
+stream$.then(
+  (data) => console.log('Success:', data),
+  (error) => console.log('Error:', error)
+)
+
+stream$.next('Normal data')
+stream$.next(Promise.reject('Error message'))
 ```
