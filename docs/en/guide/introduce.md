@@ -19,13 +19,15 @@ promise$.then(
 )
 
 promise$.next(1)
-promise$.next(Promise.reject(2))
-promise$.next(3)
+promise$.next(2)
+promise$.next(Promise.reject(3))
+console.log('end')
 
 // Logs:
 // resolve 1
-// reject 2
-// resolve 3
+// resolve 2
+// end
+// reject 3
 ```
 
 ```typescript
