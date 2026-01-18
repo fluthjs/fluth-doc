@@ -93,7 +93,7 @@ export default {
                   items: [
                     { text: 'consoleNode', link: '/en/api/plugin/consoleNode' },
                     { text: 'debugNode', link: '/en/api/plugin/debugNode' },
-                    { text: 'delayExec', link: '/en/api/plugin/delayExec' },
+                    { text: 'delayNode', link: '/en/api/plugin/delayNode' },
                   ],
                 },
                 {
@@ -102,6 +102,7 @@ export default {
                   items: [
                     { text: 'consoleAll', link: '/en/api/plugin/consoleAll' },
                     { text: 'debugAll', link: '/en/api/plugin/debugAll' },
+                    { text: 'delayAll', link: '/en/api/plugin/delayAll' },
                   ],
                 },
                 {
