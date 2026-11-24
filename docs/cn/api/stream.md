@@ -19,7 +19,8 @@ Stream 继承[Observable](/cn/api/observable)，除了 Observable 的属性和�
 - 详情
 
   - 当前流推送数据，payload 为数据，当为 Promise.reject(xxx) 或者 Promise.reject(xxx) 时，后续 then 表现和 promise 的 then 一致；
-  - 第二个参数代表当前流是否结束当设置为 true 后续 set、next 将不再执行，并且在流执行完每个节点后会触发节点的 afterComplete 回调函数，然后自动调用节点的 unsubscribe 方法
+  - 第二个参数代表当前流是否结束当设置为 true 后续 set、next 将不再执行，并且在流执行完每个节点后会触发节点的 afterComplete 回调函数，然后自动调用节点的 unsubscribe 方法；
+  - 每次调用 `next()` 都会刷新根流的 `_rootPromise` 标识：若下游存在尚未完成的旧异步回调，其结果会被静默丢弃（类似 `switchMap` 的覆盖式竞态语义）。详情及适用/不适用场景请参考[边界说明 - 竞态异步](/cn/guide/boundary#竞态异步)
 
 - 示例
   ```typescript
