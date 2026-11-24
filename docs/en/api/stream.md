@@ -19,7 +19,8 @@ Stream inherits from [Observable](/en/api/observable). In addition to Observable
 - Details
 
   - Current stream pushes data, payload is the data. When it's Promise.reject(xxx) or Promise.reject(xxx), subsequent then behaves consistently with promise's then;
-  - The second parameter indicates whether the current stream ends. When set to true, subsequent set and next will no longer execute, and after the stream executes each node, it will trigger the node's afterComplete callback function, then automatically call the node's unsubscribe method
+  - The second parameter indicates whether the current stream ends. When set to true, subsequent set and next will no longer execute, and after the stream executes each node, it will trigger the node's afterComplete callback function, then automatically call the node's unsubscribe method;
+  - Each `next()` call refreshes the root stream's `_rootPromise` identifier: if there are unfinished async callbacks from an earlier push, their results are silently discarded (`switchMap`-like overwrite race semantics). See [Boundary - Race Conditions with Async](/en/guide/boundary#race-conditions-with-async) for details and suitable/unsuitable scenarios
 
 - Example
   ```typescript
